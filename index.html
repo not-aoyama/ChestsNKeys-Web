@@ -7,13 +7,18 @@
         <title>Chests 'n' Keys - A game that exists</title>
     </head>
     <body>
+        <!-- Scripts -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script type="module" src="https://unpkg.com/archipelago.js/dist/archipelago.min.js"></script>
+        <script src="./assets/login.js"></script>
+
         <noscript>
             <h2>Ruh-roh! You need JavaScript!</h2>
             <p>If you don't have JavaScript enabled in your browser, this "game" just plain won't work. Sorry about that.</p>
         </noscript>
         <div id="login-screen">
             <h1>This will be a logo someday.</h1>
-            <form id="login-form">
+            <div id="login-form">
                 <label for="host-port">Host and Port</label>
                 <input type="text" id="host-port-input" name="host-port" placeholder="Example: archipelago.gg:38281">
                 <label for="slot-name">Slot Name</label>
@@ -21,7 +26,7 @@
                 <label for="password">Password</label>
                 <input type="password" id="password-input" name="password" placeholder="Leave blank if no password">
                 <input type="submit" id="login-submit" value="Login">
-            </form>
+            </div>
         </div>
         <footer>The low-effort abomination that is Chests 'n' Keys was thrust upon you by NOT aoyama.</footer>
     </body>
