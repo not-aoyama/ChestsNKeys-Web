@@ -27,7 +27,8 @@ $(document).ready(function () {
                 console.log("Chee-hoo! You're now logged in!");
             })
             .catch((error) => {
-                console.log("Ruh-roh, failed to connect!", error);
+                console.log(error[0]);
+                $("#error-message").text("Well, THAT just happened.");
             });
     });
 });
