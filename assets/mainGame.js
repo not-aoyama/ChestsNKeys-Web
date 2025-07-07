@@ -1,3 +1,5 @@
+var keysEnabled;
+
 // Display the main game screen, complete with a desk and the given number of chests.
 function setupMainGameContainer(numChests) {
     // Create and display the ul tag representing the desk.
