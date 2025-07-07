@@ -2,7 +2,7 @@
 This file contains all of the event listeners that the Archipelago.js Client needs to function.
 */
 
-import { setupMainGameContainer, setKeysEnabled } from "./mainGame.js";
+import { setupMainGameContainer, setKeysEnabled, displayLocationChecked } from "./mainGame.js";
 
 export const connectedListener = (packet) => {
     /*
@@ -31,6 +31,8 @@ export const disconnectedListener = (packet) => {
 };
 
 export const locationsCheckedListener = (locations) => {
-    // Debug print statement.
-    console.log(locations);
+    // Update the appearance of every location that has been checked.
+    for (var i = 0; i < locations.length; i++) {
+        displayLocationChecked(locations[i]);
+    }
 };

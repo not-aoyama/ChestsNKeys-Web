@@ -18,8 +18,12 @@ export function setupMainGameContainer(numChests) {
     $(desk).text("Click for a free item!");
     $(desk).click(() => {
         client.check(DESK_ID);
+        console.log("Location checked.");
     })
     $("#locations-list").append(desk);
+    // If the desk has already been checked on/before startup, show it in the GUI.
+    if (client.room.checkedLocations.includes(DESK_ID))
+        displayLocationChecked(DESK_ID);
 
     // Create and display a ul tag representing each of the chests.
     for (var i = 1; i <= numChests; i++) {
@@ -36,4 +40,14 @@ export function setupMainGameContainer(numChests) {
 // This setter method allows keysEnabled to be accessed in other JS files.
 export function setKeysEnabled(newKeysEnabled) {
     keysEnabled = newKeysEnabled;
+}
+
+// Updates the appearance and functionality of the location with the given ID to show it has been checked.
+export function displayLocationChecked(locationId) {
+    // So far, this function is only functional with the desk. Will implement everything else later.
+    if (locationId == DESK_ID) {
+        $("#desk").text("No more free items.");
+        // Remove the click function.
+        $("#desk").prop("onclick", null).off("click");
+    }
 }
