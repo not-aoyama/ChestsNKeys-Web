@@ -36,6 +36,7 @@ $(document).ready(function () {
 
         // Set up event listeners for the Client.
         client.socket.on("connected", connectedListener);
+        client.socket.on("disconnected", disconnectedListener);
 
         client
             .login(
@@ -45,8 +46,6 @@ $(document).ready(function () {
                 {password: connectionInfo.password}
             )
             .then(() => {
-                console.log("Chee-hoo! You're now logged in!");
-
                 // Save the login credentials for later so the player doesn't have to enter them again next time.
                 localStorage.setItem("host-port", connectionInfo.hostport);
                 localStorage.setItem("slot-name", connectionInfo.slot);

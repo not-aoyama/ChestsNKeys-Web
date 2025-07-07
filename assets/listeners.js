@@ -18,3 +18,11 @@ const connectedListener = (packet) => {
     // Set up and display the main game container.
     setupMainGameContainer(numChests);
 };
+
+const disconnectedListener = (packet) => {
+    /*
+    Someday, I'll change this code to try to reconnect every 10 seconds,
+    but for now, I'll just send an alert because it's easier.
+    */
+    alert("You've been disconnected from the server! Reload the page and log in again in order to reconnect.");
+};
