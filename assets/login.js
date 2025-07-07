@@ -38,6 +38,10 @@ $(document).ready(function () {
                 localStorage.setItem("host-port", connectionInfo.hostport);
                 localStorage.setItem("slot-name", connectionInfo.slot);
                 localStorage.setItem("password", connectionInfo.password);
+
+                // Hide the login menu and show the actual game.
+                $("#login-container").hide();
+                $("#main-game-container").show();
             })
             .catch((error) => {
                 console.log("Ruh-roh, failed to connect!", error);
@@ -45,5 +49,5 @@ $(document).ready(function () {
     });
 
     // Now that the text fields and login button are ready, it's safe to display the login menu.
-    $("#login-screen").show();
+    $("#login-container").show();
 });
