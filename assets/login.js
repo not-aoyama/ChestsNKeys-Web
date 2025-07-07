@@ -2,7 +2,11 @@ import {
     Client
 } from "https://unpkg.com/archipelago.js/dist/archipelago.min.js";
 
-var client;
+import {
+    connectedListener, disconnectedListener, locationsCheckedListener
+} from "./listeners.js";
+
+export var client;
 
 $(document).ready(function () {
     /*
@@ -37,6 +41,7 @@ $(document).ready(function () {
         // Set up event listeners for the Client.
         client.socket.on("connected", connectedListener);
         client.socket.on("disconnected", disconnectedListener);
+        client.room.on("locationsChecked", locationsCheckedListener);
 
         client
             .login(
