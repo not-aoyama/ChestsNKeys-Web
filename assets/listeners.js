@@ -2,7 +2,16 @@
 This file contains all of the event listeners that the Archipelago.js Client needs to function.
 */
 
-import { setupMainGameContainer, setKeysEnabled, displayLocationChecked, ITEM_THAT_DOES_NOTHING_ID, ITEM_ID_PREFIX, displayChestUnlocked } from "./mainGame.js";
+import { client } from "./login.js";
+import {
+    setupMainGameContainer,
+    setKeysEnabled,
+    displayLocationChecked,
+    ITEM_THAT_DOES_NOTHING_ID,
+    ITEM_ID_PREFIX,
+    LOCATION_ID_PREFIX,
+    displayChestUnlocked
+} from "./mainGame.js";
 
 export const connectedListener = (packet) => {
     /*
@@ -32,10 +41,15 @@ export const disconnectedListener = (packet) => {
 
 export const itemsReceivedListener = (items, index) => {
     for (let item of items) {
-        // If the item isn't an Item That Does Nothing, it's a key. Unlock its corresponding chest.
+        /*
+        If the item isn't an Item That Does Nothing, it's a key. Unlock its corresponding chest.
+        That is, unless the chest is already empty. Then, leave it be.
+        */
         if (item.id != ITEM_THAT_DOES_NOTHING_ID) {
             var chestNumber = item.id - ITEM_ID_PREFIX;
-            displayChestUnlocked(chestNumber);
+            if (!client.room.checkedLocations.includes(LOCATION_ID_PREFIX + chestNumber)) {
+                displayChestUnlocked(chestNumber);
+            }
         }
     }
 };
