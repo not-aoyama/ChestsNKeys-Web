@@ -15,6 +15,15 @@ $(document).ready(function () {
 
     // Connect to the server when the login button is clicked.
     $("#login-submit").click(function () {
+        /*
+        Hide the login button and display a loading symbol.
+        This way, the player won't send multiple connection requests at a time.
+        Also hide any previously shown error message to avoid confusion.
+        */
+        $("#login-submit").hide();
+        $("#error-message").hide();
+        $("#loader").show();
+
         var connectionInfo = {
             hostport: $("#host-port-input").val(),
             game: "Chests 'n' Keys",
@@ -48,7 +57,28 @@ $(document).ready(function () {
                 $("#login-container").hide();
             })
             .catch((error) => {
-                console.log("Ruh-roh, failed to connect!", error);
+                // Display the correct error message.
+                if (error.errors) {
+                    const errorType = error.errors[0];
+                    switch (errorType) {
+                        case "InvalidSlot":
+                            $("#error-message").text("Invalid slot name.");
+                            break;
+                        case "InvalidPassword":
+                            $("#error-message").text("Incorrect password.");
+                            break;
+                        default:
+                            $("#error-message").text("Failed to connect to slot. Reason: " + errorType);
+                    }
+                } else {
+                    // If error.errors is undefined, it's probably because the host/port are incorrect.
+                    $("#error-message").text("Failed to connect to server. Are your host URL and port correct?");
+                }
+
+                // Hide the loading symbol and show the login button so the user can try logging in again.
+                $("#loader").hide();
+                $("#error-message").show();
+                $("#login-submit").show();
             });
     });
 
