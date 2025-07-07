@@ -12,6 +12,7 @@ import {
     LOCATION_ID_PREFIX,
     displayChestUnlocked
 } from "./mainGame.js";
+import { displayIfWin } from "./win.js";
 
 export const connectedListener = (packet) => {
     /*
@@ -59,4 +60,7 @@ export const locationsCheckedListener = (locations) => {
     for (var i = 0; i < locations.length; i++) {
         displayLocationChecked(locations[i]);
     }
+
+    // Check if all chests have been opened yet, and display the win message if so.
+    displayIfWin();
 };

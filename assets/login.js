@@ -1,10 +1,8 @@
-import {
-    Client
-} from "https://unpkg.com/archipelago.js/dist/archipelago.min.js";
-
+import { Client } from "https://unpkg.com/archipelago.js/dist/archipelago.min.js";
 import {
     connectedListener, disconnectedListener, itemsReceivedListener, locationsCheckedListener
 } from "./listeners.js";
+import { displayIfWin } from "./win.js";
 
 export var client;
 
@@ -60,6 +58,9 @@ $(document).ready(function () {
                 // Hide the login menu to make way for the actual game to be shown.
                 // The actual game will be shown by the connectionListener.
                 $("#login-container").hide();
+
+                // Now that we've connected, we can check if we've already won and display the win message.
+                displayIfWin();
             })
             .catch((error) => {
                 // Display the correct error message.

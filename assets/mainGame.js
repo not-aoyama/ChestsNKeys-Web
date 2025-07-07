@@ -6,7 +6,7 @@ i.e. everything after the login screen and before the win screen.
 import { client } from "./login.js";
 
 export const LOCATION_ID_PREFIX = 420000;
-const DESK_ID = LOCATION_ID_PREFIX;
+export const DESK_ID = LOCATION_ID_PREFIX;
 export const ITEM_ID_PREFIX = 69000;
 export const ITEM_THAT_DOES_NOTHING_ID = ITEM_ID_PREFIX + 420;
 
@@ -42,7 +42,6 @@ export function setupMainGameContainer(numChests) {
 
     // If any location has been checked on/before startup, display that.
     for (let locationId of client.room.checkedLocations) {
-        console.log(locationId);
         displayLocationChecked(locationId);
     }
 
