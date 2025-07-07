@@ -16,21 +16,30 @@ export function setupMainGameContainer(numChests) {
     var desk = document.createElement("ul");
     $(desk).attr("id", "desk");
     $(desk).text("Click for a free item!");
+    // Make it so the desk sends a check when clicked on.
     $(desk).click(() => {
         client.check(DESK_ID);
-        console.log("Location checked.");
     })
     $("#locations-list").append(desk);
-    // If the desk has already been checked on/before startup, show it in the GUI.
-    if (client.room.checkedLocations.includes(DESK_ID))
-        displayLocationChecked(DESK_ID);
 
     // Create and display a ul tag representing each of the chests.
     for (var i = 1; i <= numChests; i++) {
         var chest = document.createElement("ul");
         $(chest).attr("id", "chest" + i);
-        $(chest).text("Chest " + i);
+        
+        // The chest will be locked by default.
+        $(chest).text("Chest " + i + " (Locked)");
         $("#locations-list").append(chest);
+
+        // Unlock the chest if keys are disabled or (TODO) if its corresponding key has been received.
+        if (!keysEnabled) {
+            displayChestUnlocked(i);
+        }
+    }
+
+    // If any location has been checked on/before startup, display that.
+    for (let locationId of client.room.checkedLocations) {
+        displayLocationChecked(locationId);
     }
 
     // Show the main game container now that it is ready!
@@ -44,10 +53,28 @@ export function setKeysEnabled(newKeysEnabled) {
 
 // Updates the appearance and functionality of the location with the given ID to show it has been checked.
 export function displayLocationChecked(locationId) {
-    // So far, this function is only functional with the desk. Will implement everything else later.
     if (locationId == DESK_ID) {
         $("#desk").text("No more free items.");
+
         // Remove the click function.
         $("#desk").prop("onclick", null).off("click");
+    } else { // if the location is a chest
+        var chestNumber = locationId - LOCATION_ID_PREFIX;
+        var chestID = "#chest" + chestNumber;
+        $(chestID).text("Chest " + chestNumber + " (Empty)");
+
+        // Remove the click function.
+        $(chestID).prop("onclick", null).off("click");
     }
+}
+
+// Updates the appearance and functionality of the chest with the given ID to show it has been unlocked.
+function displayChestUnlocked(chestNumber) {
+    var chestID = "#chest" + chestNumber;
+    $(chestID).text("Chest " + chestNumber + " (Unlocked)");
+
+    // Now that the chest is unlocked, clicking it should send a check.
+    $(chestID).click(() => {
+        client.check(LOCATION_ID_PREFIX + chestNumber);
+    });
 }
