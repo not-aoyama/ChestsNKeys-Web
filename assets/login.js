@@ -24,6 +24,10 @@ $(document).ready(function () {
         };
 
         client = new Client();
+
+        // Set up event listeners for the Client.
+        client.socket.on("connected", connectedListener);
+
         client
             .login(
                 connectionInfo.hostport,
@@ -39,9 +43,9 @@ $(document).ready(function () {
                 localStorage.setItem("slot-name", connectionInfo.slot);
                 localStorage.setItem("password", connectionInfo.password);
 
-                // Hide the login menu and show the actual game.
+                // Hide the login menu to make way for the actual game to be shown.
+                // The actual game will be shown by the connectionListener.
                 $("#login-container").hide();
-                $("#main-game-container").show();
             })
             .catch((error) => {
                 console.log("Ruh-roh, failed to connect!", error);
