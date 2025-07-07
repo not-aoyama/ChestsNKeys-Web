@@ -5,6 +5,12 @@ const connectedListener = (packet) => {
     // Debug print statement
     console.log(packet);
 
-    // Show the main game now that we are connected!
-    $("#main-game-container").show();
+    /*
+    Find the total amount of chests in this slot.
+    This is the total amount of locations (checked and missing) - 1, because the desk is the only non-chest location.
+    */
+   var numChests = packet.checked_locations.length + packet.missing_locations.length - 1;
+
+   // Set up and display the main game container.
+   setupMainGameContainer(numChests);
 };
