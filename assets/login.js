@@ -40,8 +40,23 @@ $(document).ready(function () {
                 localStorage.setItem("password", connectionInfo.password);
             })
             .catch((error) => {
-                console.log(error[0]);
-                $("#error-message").text("Well, THAT just happened.");
+                // Display the correct error message.
+                if (error.errors) {
+                    const errorType = error.errors[0];
+                    switch (errorType) {
+                        case "InvalidSlot":
+                            $("#error-message").text("Invalid slot name.");
+                            break;
+                        case "InvalidPassword":
+                            $("#error-message").text("Incorrect password.");
+                            break;
+                        default:
+                            $("#error-message").text("Failed to connect to slot. Reason: " + errorType);
+                    }
+                } else {
+                    // If error.errors is undefined, it's probably because the host/port are incorrect.
+                    $("#error-message").text("Failed to connect to server. Are your host URL and port correct?");
+                }
             });
     });
 
