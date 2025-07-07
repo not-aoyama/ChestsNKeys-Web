@@ -7,6 +7,8 @@ import { client } from "./login.js";
 
 const LOCATION_ID_PREFIX = 420000;
 const DESK_ID = LOCATION_ID_PREFIX;
+export const ITEM_ID_PREFIX = 69000;
+export const ITEM_THAT_DOES_NOTHING_ID = ITEM_ID_PREFIX + 420;
 
 var keysEnabled;
 
@@ -31,8 +33,9 @@ export function setupMainGameContainer(numChests) {
         $(chest).text("Chest " + i + " (Locked)");
         $("#locations-list").append(chest);
 
-        // Unlock the chest if keys are disabled or (TODO) if its corresponding key has been received.
-        if (!keysEnabled) {
+        // Unlock the chest if keys are disabled or if its corresponding key has been received.
+        // For some reason, client.items.received is always empty, even when it shouldn't be.
+        if (!keysEnabled || client.items.received.includes(ITEM_ID_PREFIX + i)) {
             displayChestUnlocked(i);
         }
     }
@@ -69,7 +72,7 @@ export function displayLocationChecked(locationId) {
 }
 
 // Updates the appearance and functionality of the chest with the given ID to show it has been unlocked.
-function displayChestUnlocked(chestNumber) {
+export function displayChestUnlocked(chestNumber) {
     var chestID = "#chest" + chestNumber;
     $(chestID).text("Chest " + chestNumber + " (Unlocked)");
 

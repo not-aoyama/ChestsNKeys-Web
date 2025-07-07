@@ -2,7 +2,7 @@
 This file contains all of the event listeners that the Archipelago.js Client needs to function.
 */
 
-import { setupMainGameContainer, setKeysEnabled, displayLocationChecked } from "./mainGame.js";
+import { setupMainGameContainer, setKeysEnabled, displayLocationChecked, ITEM_THAT_DOES_NOTHING_ID, ITEM_ID_PREFIX, displayChestUnlocked } from "./mainGame.js";
 
 export const connectedListener = (packet) => {
     /*
@@ -28,6 +28,16 @@ export const disconnectedListener = (packet) => {
     but for now, I'll just send an alert because it's easier.
     */
     alert("You've been disconnected from the server! Reload the page and log in again in order to reconnect.");
+};
+
+export const itemsReceivedListener = (items, index) => {
+    for (let item of items) {
+        // If the item isn't an Item That Does Nothing, it's a key. Unlock its corresponding chest.
+        if (item.id != ITEM_THAT_DOES_NOTHING_ID) {
+            var chestNumber = item.id - ITEM_ID_PREFIX;
+            displayChestUnlocked(chestNumber);
+        }
+    }
 };
 
 export const locationsCheckedListener = (locations) => {
