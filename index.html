@@ -5,19 +5,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <title>Chests 'n' Keys - A game that exists</title>
-    </head>
-    <body>
+
         <!-- Scripts -->
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <!-- We only need to import one of the local JS files. It imports all the others. -->
         <script type="module" src="./assets/scripts/login.js"></script>
 
+        <!-- Stylesheet -->
+        <link rel="stylesheet" href="assets/style.css"> 
+    </head>
+    <body>
         <noscript>
             <h2>Ruh-roh! You need JavaScript!</h2>
             <p>If you don't have JavaScript enabled in your browser, this "game" just plain won't work. Sorry about that.</p>
         </noscript>
         <div id="login-container" style="display: none;">
-            <h1>This will be a logo someday.</h1>
+            <img src="assets/images/placeholder-logo.png" alt="Chests 'n' Keys" id="title-logo">
             <div id="login-form">
                 <label for="host-port">Host and Port</label>
                 <input type="text" id="host-port-input" name="host-port" placeholder="Example: archipelago.gg:38281">
