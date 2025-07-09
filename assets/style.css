@@ -2,11 +2,16 @@ body {
     text-align: center;
     /* For now, light background color and dark text color. */
     background-color: #bfbacb;
-    color: #000000;
+    color: black;
     margin: 0;
     padding: 0;
     overflow-y: auto;
     font-family: Arial, sans-serif;
+    min-height: 100vh; /* body takes up at least the entire height of the window. */
+    /* These three lines center the login form vertically. */
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 
     /* TODO: add background image or gradient. */
 }
@@ -14,12 +19,73 @@ body {
 .container {
     /* All containers will start out hidden, except for the login container. */
     display: none;
+    overflow-y: auto;
 }
 
 #login-container {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #2b2d46;
+    color: white;
+    border-radius: 5px;
+    padding: 20px;
+    margin: auto; /* Centers the menu horizontally. */
+    width: 300px;
+}
+
+#login-form {  
+    width: 80%;
 }
 
 #title-logo {
-    width: 50%;
+    width: 100%; /* The logo will be no wider than the width of the login menu. */
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 30px; /* Set the alt text to 30px. */
+}
+
+#login-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+
+.login-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #484649;
+    color: white;
+}
+
+.login-input::placeholder {
+    color: #999;
+}
+
+#error-message {
+    color: red;
+    font-size: 15.5px;
+}
+
+#login-submit {
+    width: 100%;
+    background-color: #795bc7;
+    color: white;
+    padding: 10px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#login-submit:hover {
+    background-color: #684dac;
+}
+
+footer {
+    font-size: 12px;
 }
