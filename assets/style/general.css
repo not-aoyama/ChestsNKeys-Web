@@ -1,0 +1,27 @@
+body {
+    text-align: center;
+    /* For now, light background color and dark text color. */
+    background-color: #bfbacb;
+    color: black;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    font-family: Arial, sans-serif;
+    min-height: 100vh; /* body takes up at least the entire height of the window. */
+    /* These three lines center the login form vertically. */
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    /* TODO: add background image or gradient. */
+}
+
+.container {
+    /* All containers will start out hidden, except for the login container. */
+    display: none;
+    overflow-y: auto;
+}
+
+footer {
+    font-size: 12px;
+}
