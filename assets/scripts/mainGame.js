@@ -14,8 +14,8 @@ var keysEnabled;
 
 // Display the main game screen, complete with a desk and the given number of chests.
 export function setupMainGameContainer(numChests) {
-    // Create and display the ul tag representing the desk.
-    var desk = document.createElement("ul");
+    // Create and display the li tag representing the desk.
+    var desk = document.createElement("li");
     $(desk).attr("id", "desk");
     $(desk).text("Click for a free item!");
     // Make it so the desk sends a check when clicked on.
@@ -24,9 +24,9 @@ export function setupMainGameContainer(numChests) {
     })
     $("#locations-list").append(desk);
 
-    // Create and display a ul tag representing each of the chests.
+    // Create and display a li tag representing each of the chests.
     for (var i = 1; i <= numChests; i++) {
-        var chest = document.createElement("ul");
+        var chest = document.createElement("li");
         $(chest).attr("id", "chest" + i);
         
         // The chest will be locked by default.
