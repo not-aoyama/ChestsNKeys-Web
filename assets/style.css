@@ -1,3 +1,25 @@
+body {
+    text-align: center;
+    /* For now, light background color and dark text color. */
+    background-color: #bfbacb;
+    color: #000000;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    font-family: Arial, sans-serif;
+
+    /* TODO: add background image or gradient. */
+}
+
+.container {
+    /* All containers will start out hidden, except for the login container. */
+    display: none;
+}
+
+#login-container {
+    display: block;
+}
+
 #title-logo {
     width: 50%;
 }
