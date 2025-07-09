@@ -30,9 +30,11 @@
                 <input type="password" class="login-input" id="password-input" name="password" placeholder="Leave blank if no password">
                 <p id="error-message"><!-- This element is empty by default. --></p>
                 <input type="submit" id="login-submit" value="Login">
-                <div id="loader" style="display: none;">
-                    <!-- This is shown while the client is attempting to connect to the server. -->
-                     <p>Loading...</p>
+                <div class="loader" id="login-loader">
+                    <!--
+                    This is shown while the client is attempting to connect to the server.
+                    It's empty, but it has a visible border and animation thanks to CSS.
+                    -->
                 </div>
             </div>
         </div>

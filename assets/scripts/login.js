@@ -24,7 +24,7 @@ $(document).ready(function () {
         */
         $("#login-submit").hide();
         $("#error-message").hide();
-        $("#loader").show();
+        $("#login-loader").show();
 
         var connectionInfo = {
             hostport: $("#host-port-input").val(),
@@ -82,7 +82,7 @@ $(document).ready(function () {
                 }
 
                 // Hide the loading symbol and show the login button so the user can try logging in again.
-                $("#loader").hide();
+                $("#login-loader").hide();
                 $("#error-message").show();
                 $("#login-submit").show();
             });
