@@ -1,0 +1,17 @@
+#locations-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#locations-list li {
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+    /*
+    Background color for debugging purposes.
+    The background will be transparent once the li tags have their text replaced with images.
+    */
+    background-color: rgba(225, 225, 225, 25);
+    /* Causes the list items to be laid out in a grid. */
+    display: inline-block;
+}
