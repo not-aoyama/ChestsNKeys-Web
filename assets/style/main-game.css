@@ -14,4 +14,39 @@
     background-color: rgba(225, 225, 225, 25);
     /* Causes the list items to be laid out in a grid. */
     display: inline-block;
+    cursor: pointer;
+}
+
+li object {
+    /* Every image inside of a li will be no bigger than that li. */
+    width: 100%;
+    height: 100%;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+#free-item-unchecked-svg {
+    animation: color-shift 5s linear infinite;
+}
+
+#free-item-unchecked-svg:hover {
+    animation: color-shift-light 5s linear infinite;
+}
+
+@keyframes color-shift {
+    0% { fill: hsl(0, 100%, 50%); }
+    25% { fill: hsl(90, 100%, 50%); }
+    50% { fill: hsl(180, 100%, 50%); }
+    75% { fill: hsl(270, 100%, 50%); }
+    100% { fill: hsl(360, 100%, 50%); }
+}
+
+@keyframes color-shift-light {
+    0% { fill: hsl(0, 100%, 75%); }
+    25% { fill: hsl(90, 100%, 75%); }
+    50% { fill: hsl(180, 100%, 75%); }
+    75% { fill: hsl(270, 100%, 75%); }
+    100% { fill: hsl(360, 100%, 75%); }
 }

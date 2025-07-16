@@ -17,9 +17,15 @@ export function setupMainGameContainer(numChests) {
     // Create and display the li tag representing the desk.
     var desk = document.createElement("li");
     $(desk).attr("id", "desk");
-    $(desk).text("Click for a free item!");
+    $(desk).attr("class", "clickable");
+    // The li tag will contain an object tag that imports an SVG from a file.
+    var deskSvgObject = document.createElement("object");
+    $(deskSvgObject).attr("type", "image/svg+xml");
+    $(deskSvgObject).attr("data", "./assets/images/Free Item.svg");
+    $(desk).append(deskSvgObject);
     // Make it so the desk sends a check when clicked on.
     $(desk).click(() => {
+        alert("Desk clicked.");
         client.check(DESK_ID);
     })
     $("#locations-list").append(desk);
