@@ -14,7 +14,6 @@
     background-color: rgba(225, 225, 225, 25);
     /* Causes the list items to be laid out in a grid. */
     display: inline-block;
-    cursor: pointer;
 }
 
 li object {
@@ -49,4 +48,8 @@ li object {
     50% { fill: hsl(180, 100%, 75%); }
     75% { fill: hsl(270, 100%, 75%); }
     100% { fill: hsl(360, 100%, 75%); }
+}
+
+#free-item-checked-svg {
+    fill: #4b4b4b;
 }

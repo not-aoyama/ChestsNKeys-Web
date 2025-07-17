@@ -63,7 +63,17 @@ export function setKeysEnabled(newKeysEnabled) {
 // Updates the appearance and functionality of the location with the given ID to show it has been checked.
 export function displayLocationChecked(locationId) {
     if (locationId == DESK_ID) {
-        $("#desk").text("No more free items.");
+        // Empty the SVG from the li tag so it can be replaced with a new SVG.
+        $("#desk").text("");
+
+        // The li tag will contain an object tag that imports an SVG from a file.
+        var deskSvgObject = document.createElement("object");
+        $(deskSvgObject).attr("type", "image/svg+xml");
+        $(deskSvgObject).attr("data", "./assets/images/No More Free Item.svg");
+        $("#desk").append(deskSvgObject);
+
+        // Return the cursor to normal. (It was a pointer before, to show that this was clickable.)
+        $("#desk").attr("class", "");
 
         // Remove the click function.
         $("#desk").prop("onclick", null).off("click");
