@@ -17,7 +17,10 @@ export function setupMainGameContainer(numChests) {
     // Create and display the li tag representing the desk.
     var desk = document.createElement("li");
     $(desk).attr("id", "desk");
+    // CSS gives all "clickable"-class objects a pointer cursor to show they can be clicked.
     $(desk).attr("class", "clickable");
+    // Create a tooltip for the li
+    $(desk).attr("title", "Click for a free item!");
     // The li tag will contain an object tag that imports an SVG from a file.
     var deskSvgObject = document.createElement("object");
     $(deskSvgObject).attr("type", "image/svg+xml");
@@ -73,7 +76,10 @@ export function displayLocationChecked(locationId) {
         $("#desk").append(deskSvgObject);
 
         // Return the cursor to normal. (It was a pointer before, to show that this was clickable.)
-        $("#desk").attr("class", "");
+        $("#desk").attr("class", null);
+
+        // Change the tooltip
+        $("#desk").attr("title", "No more free items.");
 
         // Remove the click function.
         $("#desk").prop("onclick", null).off("click");
