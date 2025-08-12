@@ -3,45 +3,13 @@
 
 <svg
    version="1.1"
-   id="svg1"
    width="682.66669"
    height="682.66669"
    viewBox="0 0 682.66669 682.66669"
-   sodipodi:docname="Empty Chest.svg"
-   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs1">
-    <inkscape:path-effect
-       effect="spiro"
-       id="path-effect2"
-       is_visible="true"
-       lpeversion="1" />
-  </defs>
-  <sodipodi:namedview
-     id="namedview1"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="0.44"
-     inkscape:cx="344.31818"
-     inkscape:cy="325"
-     inkscape:window-width="1280"
-     inkscape:window-height="650"
-     inkscape:window-x="-6"
-     inkscape:window-y="-6"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg1" />
-  <path
-     id="path3"
-     style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:5;stroke-opacity:0.67292"
-     inkscape:label="Chest Bottom"
+   <title>Chest (empty)</title>
+   <path
+     style="fill-opacity:1;stroke:none;"
      d="M 207.38217,7.1722126 C 183.68169,21.81635 159.46478,31.611413 137.51499,38.162446 V 101.02963 H 255.91928 V 7.1722126 Z m 53.87891,0 V 74.754243 h 79.07227 2 79.07226 V 7.1722126 h -79.07226 -2 z m 165.48633,0 V 101.02963 h 118.4043 V 38.162446 C 523.20193,31.611413 498.985,21.81635 475.28452,7.1722126 Z M 106.70444,45.744478 c -30.59268,5.980153 -51.703129,5.61914 -51.703129,5.61914 v 71.792962 h 285.332039 2 285.33203 V 51.363618 c 0,0 -21.11046,0.361013 -51.70313,-5.61914 v 66.285152 h -30.81054 v -0.28516 h -202.81836 -2 -202.81836 v 0.28516 H 106.70444 Z M 69.66928,133.94369 v 274.04492 h 270.66407 2 270.66406 V 133.94369 h -270.66406 -2 z m -7.439453,286.6211 c 0,0 59.155863,160.56348 16.902344,254.92968 h 261.201179 2 261.20117 c -42.25351,-94.3662 16.90234,-254.92968 16.90234,-254.92968 h -278.10351 -2 z m 58.738283,35.58398 h 219.36524 2 219.36523 l -4.87305,14.38672 c 0,0 -29.49051,89.92532 -12.52148,159.12305 l 3.31445,13.51171 h -205.28515 -2 -205.28516 l 3.31445,-13.51171 C 155.33167,560.46081 125.84116,470.53549 125.84116,470.53549 Z m 31.3457,22.0332 c 7.42386,26.27527 21.16909,86.08229 11.42579,142.95508 H 264.97592 V 478.18197 Z m 117.79688,0 v 142.95508 h 70.22266 2 70.22265 V 478.18197 h -70.22265 -2 z m 147.58008,0 V 621.13705 H 518.9271 c -9.74329,-56.87279 4.00191,-116.67981 11.42578,-142.95508 z" />
 </svg>
