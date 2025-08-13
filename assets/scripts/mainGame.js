@@ -48,8 +48,14 @@ export function setupMainGameContainer(numChests) {
         var svgTag = fileContents.children[0];
         
         for (var i = 1; i <= numChests; i++) {
+            // Create the li tag representing the chest.
             var chest = document.createElement("li");
             $(chest).attr("id", "chest" + i);
+
+            // Add a number label to the chest.
+            var label = document.createElement("span");
+            $(label).text(i);
+            $(chest).append(label);
 
             // Unlock the chest if keys are disabled or if its corresponding key has been received.
             if (!keysEnabled || client.items.received.includes(ITEM_ID_PREFIX + i)) {
@@ -92,7 +98,7 @@ export function displayLocationChecked(locationId) {
             var svgTag = fileContents.children[0];
 
             // Empty the SVG from the li tag so it can be replaced with a new SVG.
-            $("#desk").text("");
+            $("#desk svg").remove();
 
             // Return the cursor to normal. (It was a pointer before, to show that this was clickable.)
             $("#desk").attr("class", null);
@@ -116,7 +122,7 @@ export function displayLocationChecked(locationId) {
             var svgTag = fileContents.children[0];
 
             // Empty the SVG from the li tag so it can be replaced with a new SVG.
-            $(chestID).text("");
+            $(chestID + " svg").remove();
 
             // Return the cursor to normal. (It was a pointer before, to show that this was clickable.)
             $(chestID).attr("class", null);
@@ -143,7 +149,7 @@ export function displayChestUnlocked(chestNumber) {
         var svgTag = data.children[0];
 
         // Empty the SVG from the li tag so it can be replaced with a new SVG.
-        $(chestID).text("");
+        $(chestID + " svg").remove();
         
         // Edit the li's tooltip
         $(chestID).attr("title", "Chest " + chestNumber + " (Unlocked)");
