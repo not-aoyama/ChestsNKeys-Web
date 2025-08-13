@@ -13,6 +13,9 @@ export const ITEM_THAT_DOES_NOTHING_ID = ITEM_ID_PREFIX + 420;
 // Whether keys are enabled in this slot. This is determined by reading the slot data from the server.
 var keysEnabled;
 
+// The number of possible hue values for an HSL color. This will be important later.
+const NUMBER_HUES = 300;
+
 // Display the main game screen, complete with a desk and the given number of chests.
 export function setupMainGameContainer(numChests) {
     // Create and display the li tag representing the desk.
@@ -56,6 +59,10 @@ export function setupMainGameContainer(numChests) {
             var label = document.createElement("span");
             $(label).text(i);
             $(chest).append(label);
+
+            // Give the chest a unique color so it stands out!
+            var hue = NUMBER_HUES / numChests * i;
+            $(chest).css("fill", "hsl(" + hue + ", 90%, 50%)");
 
             // Unlock the chest if keys are disabled or if its corresponding key has been received.
             if (!keysEnabled || client.items.received.includes(ITEM_ID_PREFIX + i)) {
