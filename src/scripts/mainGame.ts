@@ -6,15 +6,15 @@ i.e. everything after the login screen and before the win screen.
 import * as $ from "jquery";
 import { client } from "./login.js";
 // @ts-ignore
-import { svg as freeItem } from "bundle-text:../../assets/images/Free Item.svg";
+import freeItemSvg from "bundle-text:../../assets/images/Free Item.svg";
 // @ts-ignore
-import { svg as noMoreFreeItems } from "bundle-text:../../assets/images/No More Free Item.svg";
+import noMoreFreeItemsSvg from "bundle-text:../../assets/images/No More Free Item.svg";
 // @ts-ignore
-import { svg as emptyChest } from "bundle-text:../../assets/images/Empty Chest.svg";
+import emptyChestSvg from "bundle-text:../../assets/images/Empty Chest.svg";
 // @ts-ignore
-import { svg as lockedChest } from "bundle-text:../../assets/images/Locked Chest.svg";
+import lockedChestSvg from "bundle-text:../../assets/images/Locked Chest.svg";
 // @ts-ignore
-import { svg as unlockedChest } from "bundle-text:../../assets/images/Unlocked Chest.svg";
+import unlockedChestSvg from "bundle-text:../../assets/images/Unlocked Chest.svg";
 
 export const LOCATION_ID_PREFIX = 420000;
 export const DESK_ID = LOCATION_ID_PREFIX;
@@ -33,7 +33,7 @@ export function setupMainGameContainer(numChests) {
     var desk = document.createElement("li");
     $(desk).attr("id", "desk");
     // The li tag will contain an svg tag that is imported from an SVG file.
-    $(desk).append(freeItem.cloneNode(true));
+    $(desk).append(freeItemSvg);
 
     // main-game.css will display that this desk is clickable if it's part of the "clickable" class.
     $(desk).attr("class", "clickable");
@@ -63,8 +63,15 @@ export function setupMainGameContainer(numChests) {
         var hue = NUMBER_HUES / numChests * i;
         $(chest).css("fill", "hsl(" + hue + ", 90%, 50%)");
 
+        /*
+        Add this chest to the displayed locations.
+        We have to do this before any SVG is added, or else displayChestUnlocked() will reference an element that 
+        doesn't yet exist on the page and will therefore fail.
+        */
+        $("#locations-list").append(chest);
+
         // Unlock the chest if keys are disabled or if its corresponding key has been received.
-        if (!keysEnabled || client.items.received.includes(ITEM_ID_PREFIX + i)) {
+        if (!keysEnabled || client.items.received.map(item => item.id).includes(ITEM_ID_PREFIX + i)) {
             displayChestUnlocked(i);
         }
         // Otherwise, the chest will be locked.
@@ -73,11 +80,8 @@ export function setupMainGameContainer(numChests) {
             $(chest).attr("title", "Chest " + i + " (Locked)");
 
             // Add the SVG icon inside of the li. We have to make a copy each time.
-            $(chest).append(lockedChest.cloneNode(true));
+            $(chest).append(lockedChestSvg);
         }
-
-        // Add this chest to the displayed locations.
-        $("#locations-list").append(chest);
 
         // If any location has been checked on/before startup, display that.
         for (let locationId of client.room.checkedLocations) {
@@ -110,7 +114,7 @@ export function displayLocationChecked(locationId) {
         $("#desk").prop("onclick", null).off("click");
 
         // Put the SVG tag inside of the li.
-        $("#desk").append(noMoreFreeItems.cloneNode(true));
+        $("#desk").append(noMoreFreeItemsSvg);
     } else { // if the location is a chest
         var chestNumber = locationId - LOCATION_ID_PREFIX;
         var chestID = "#chest" + chestNumber;
@@ -128,7 +132,7 @@ export function displayLocationChecked(locationId) {
         $(chestID).prop("onclick", null).off("click");
 
         // Put the SVG tag inside of the li.
-        $(chestID).append(emptyChest.cloneNode(true));
+        $(chestID).append(emptyChestSvg);
     }
 }
 
@@ -151,5 +155,5 @@ export function displayChestUnlocked(chestNumber) {
     });
 
     // Add the SVG icon.
-    $(chestID).append(unlockedChest.cloneNode(true));
+    $(chestID).append(unlockedChestSvg);
 }
