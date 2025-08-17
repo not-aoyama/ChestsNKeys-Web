@@ -1,0 +1,11 @@
+#text-client {
+    height: 20%;
+}
+
+#log {
+    border: 1px solid black;
+    width: 95%;
+    height: 80%;
+    margin: auto;
+    background-color: #9c98a6;
+}

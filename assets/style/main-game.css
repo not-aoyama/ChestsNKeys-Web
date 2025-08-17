@@ -1,6 +1,12 @@
+#main-game-container {
+    height: 95vh; /* Make the main game take up almost the entire height of the window. */
+}
+
 #locations-list {
     list-style-type: none;
     padding: 0;
+    height: 70%;
+    overflow-y: auto;
 }
 
 #locations-list li {
@@ -10,6 +16,12 @@
     cursor: default;
     /* Causes the list items to be laid out in a grid. */
     display: inline-block;
+    /*
+    Hides everything not within the bounds of the li.
+    This prevents there from being big vertical gaps between rows, 
+    as well as the desk li being out of alignment with the other lis.
+    */
+    overflow-y: hidden;
 }
 
 li svg {
@@ -17,6 +29,17 @@ li svg {
     width: 100%;
     height: 100%;
     z-index: 0;
+    /* Allows the SVG to overlap with its label without sticking outside of the li. */
+    position: relative;
+    top: -25px;
+}
+
+li#desk svg {
+    /*
+    Special rule for the SVG representing the free item.
+    This SVG must have a top of 0px, or else it will stick outside of the top of its li.
+    */
+    top: 0px;
 }
 
 #locations-list li.clickable {
@@ -47,11 +70,11 @@ li svg {
 /* Chest number labels */
 li span {
     color: white;
-    position: absolute; /* Allows the label and the image to overlap */
+    position: relative; /* Allows the label and the image to overlap */
+    top: 20px;
     z-index: 1;
     width: 100px;
     font-size: 16pt;
     font-weight: bold;
-    padding-top: 20px;
     cursor: inherit;
 }
