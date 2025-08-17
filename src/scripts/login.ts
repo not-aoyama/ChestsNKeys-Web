@@ -1,8 +1,6 @@
 import * as $ from "jquery";
 import { Client } from "archipelago.js";
-import {
-    connectedListener, disconnectedListener, itemsReceivedListener, locationsCheckedListener
-} from "./listeners.js";
+import { setupClientListeners } from "./listeners.js";
 import { displayIfWin } from "./win.js";
 
 export var client: Client;
@@ -38,10 +36,7 @@ $(document).ready(function () {
         client = new Client();
 
         // Set up event listeners for the Client.
-        client.socket.on("connected", connectedListener);
-        client.socket.on("disconnected", disconnectedListener);
-        client.items.on("itemsReceived", itemsReceivedListener);
-        client.room.on("locationsChecked", locationsCheckedListener);
+        setupClientListeners();
 
         client
             .login(
