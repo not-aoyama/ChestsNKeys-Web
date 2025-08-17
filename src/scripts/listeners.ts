@@ -13,6 +13,7 @@ import {
     LOCATION_ID_PREFIX,
     displayChestUnlocked
 } from "./mainGame.js";
+import { addToLog } from "./textClient.js";
 import { displayIfWin } from "./win.js";
 
 const connectedListener = (packet : ConnectedPacket) => {
@@ -67,8 +68,8 @@ const locationsCheckedListener = (locations : number[]) => {
 };
 
 const messageListener = (text : string, nodes : MessageNode[]) => {
-    console.log(text);
-    console.log(nodes);
+    // For now, just add the text to the log and ignore the nodes.
+    addToLog(text);
 }
 
 // Adds all listeners to the client.
