@@ -17,3 +17,144 @@
     text-align: left;
     margin: 2.5px 0;
 }
+
+.locationMessage {
+    color: #00FF7F;
+}
+
+.entranceMessage {
+    color: #6495ED;
+}
+
+.playerMessage, .itemMessage {
+    font-weight: bold;
+}
+
+.thisPlayerMessage {
+    color: rgb(238, 0, 238);
+}
+
+.otherPlayerMessage {
+    color: rgb(250, 250, 210);
+}
+
+/* Just for filler items. This is overridden for any item that is non-filler. */
+.itemMessage {
+    color: rgb(6, 217, 217);
+}
+
+/* Just for items that are progression and nothing else. This is overridden for items with multiple flags. */
+.itemMessage.progressionItemMessage {
+    color: rgb(117, 87, 198);
+}
+
+/* Just for items that are useful and nothing else. This is overridden for items with multiple flags. */
+.itemMessage.usefulItemMessage {
+    color: rgb(78, 99, 166);
+}
+
+/* Just for items that are progression and useful, but not traps. This is overridden for items with all three flags. */
+.itemMessage.progressionItemMessage.usefulItemMessage {
+    color: rgb(255, 223, 0);
+}
+
+/* Just for items that are traps and nothing else. This is overridden for items with multiple flags. */
+.itemMessage.trapItemMessage {
+    color: rgb(203, 105, 94);
+}
+
+/* Just for items that are progression and traps, but not useful. This is overridden for items with all three flags. */
+.itemMessage.progressionItemMessage.trapItemMessage {
+    color: rgb(255, 172, 28);
+}
+
+/* Just for items that are useful and traps, but not progression. This is overridden for items with all three flags. */
+.itemMessage.usefulItemMessage.trapItemMessage {
+    color: rgb(155, 89, 182);
+}
+
+/* Items that are progression, useful, and traps all at once somehow. */
+.itemMessage.progressionItemMessage.usefulItemMessage.trapItemMessage {
+    color: rgb(128, 255, 128);
+}
+
+/* Classes for color messages from the server */
+.bold {
+    font-weight: bold;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.black {
+    color: black;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
+}
+
+.yellow {
+    color: yellow;
+}
+
+.blue {
+    color: blue;
+}
+
+.magenta {
+    color: magenta;
+}
+
+.cyan {
+    color: cyan;
+}
+
+.white {
+    color: white;
+}
+
+.black_bg {
+    background-color: black;
+    color: white;
+}
+
+.red_bg {
+    background-color: red;
+    color: black;
+}
+
+.green_bg {
+    background-color: green;
+    color: black;
+}
+
+.yellow_bg {
+    background-color: yellow;
+    color: black;
+}
+
+.blue_bg {
+    background-color: blue;
+    color: white;
+}
+
+.magenta_bg {
+    background-color: magenta;
+    color: black;
+}
+
+.cyan_bg {
+    background-color: cyan;
+    color: black;
+}
+
+.white_bg {
+    background-color: white;
+    color: black;
+}

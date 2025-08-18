@@ -68,8 +68,8 @@ const locationsCheckedListener = (locations : number[]) => {
 };
 
 const messageListener = (text : string, nodes : MessageNode[]) => {
-    // For now, just add the text to the log and ignore the nodes.
-    addToLog(text);
+    // IDK why the string parameter is necessary. All we need are the nodes.
+    addToLog(nodes);
 }
 
 // Adds all listeners to the client.

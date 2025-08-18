@@ -68,7 +68,7 @@ li#desk svg {
 }
 
 /* Chest number labels */
-li span {
+#locations-list li span {
     color: white;
     position: relative; /* Allows the label and the image to overlap */
     top: 20px;
