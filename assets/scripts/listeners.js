@@ -9382,15 +9382,32 @@ function addToLog(message) {
         */ let node = message[i];
         // Each node represents a part of the message and will be stored in its own span tag.
         let span = document.createElement("span");
-        // The CSS class(es) of the span will depend on what type the node is.
-        let spanClass = "";
+        // The hover text and CSS class(es) of the span will depend on what type the node is.
+        let spanClass;
+        let spanHoverText;
         switch(node.type){
             case "item":
-                // The CSS classes will depend on what type of item this node represents.
+                // The hover text CSS classes will depend on what type of item this node represents.
                 spanClass = "itemMessage";
-                if (node.item.progression) spanClass += " progressionItemMessage";
-                if (node.item.useful) spanClass += " usefulItemMessage";
-                if (node.item.trap) spanClass += " trapItemMessage";
+                let itemClasses = [];
+                if (node.item.progression) {
+                    spanClass += " progressionItemMessage";
+                    itemClasses.push("progression");
+                }
+                if (node.item.useful) {
+                    spanClass += " usefulItemMessage";
+                    itemClasses.push("useful");
+                }
+                if (node.item.trap) {
+                    spanClass += " trapItemMessage";
+                    itemClasses.push("trap");
+                }
+                // If no item classes were added so far, this item's only class is "filler".
+                if (itemClasses.length == 0) itemClasses.push("filler");
+                // List all the item classes in the hover text.
+                spanHoverText = "Item class: " + itemClasses[0];
+                for(let i = 1; i < itemClasses.length; i++)// Add a comma for every item class other than the first one.
+                spanHoverText += ", " + itemClasses[i];
                 break;
             case "location":
                 spanClass = "locationMessage";
@@ -9410,10 +9427,13 @@ function addToLog(message) {
                 spanClass = "playerMessage";
                 if ((0, _login.client).name == node.player.name) spanClass += " thisPlayerMessage";
                 else spanClass += " otherPlayerMessage";
+                // The hover text will show which game the player is playing.
+                spanHoverText = "Game: " + node.player.game;
                 break;
         }
-        // Set the span's class and content
+        // Set the span's class, hover text, and content
         _jquery(span).attr("class", spanClass);
+        _jquery(span).attr("title", spanHoverText);
         _jquery(span).text(node.text);
         // Add the span to the li.
         _jquery(li).append(span);
