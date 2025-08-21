@@ -669,9 +669,23 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 },{}],"6qtxO":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
+/*
+At first, the form to send a chat message and the checkbox to filter out irrelevant messages will exist as HTML, but
+they will be non-functional.
+This function adds event listeners to them to make them work!
+*/ parcelHelpers.export(exports, "setupTextClient", ()=>setupTextClient);
 parcelHelpers.export(exports, "addToLog", ()=>addToLog);
 var _jquery = require("jquery");
 var _login = require("./login");
+function setupTextClient() {
+    // Pressing the "Send Chat" button will send a chat message.
+    _jquery("#send-chat-submit").click(sendChat);
+    // Pressing the Enter key while in the chat text box will send a chat message.
+    _jquery("#send-chat-input").keypress((event)=>{
+        // Check if Enter key was pressed (has code 13)
+        if (event.which == 13) sendChat();
+    });
+}
 function addToLog(message) {
     // The entire message will be stored in a single li tag.
     var li = document.createElement("li");
@@ -742,8 +756,19 @@ function addToLog(message) {
     // Add the message to the end of the log.
     _jquery("#log").append(li);
 }
+function sendChat() {
+    // Get the text that's currently in the chat textbox.
+    var textbox = _jquery("#send-chat-input");
+    var message = textbox.val();
+    // Do nothing if the textbox is empty.
+    if (message == "") return;
+    // Make the textbox empty.
+    textbox.val("");
+    // Send the message to the server!
+    (0, _login.client).messages.say(message);
+}
 
-},{"jquery":"hgMhh","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./login":"ly455"}],"hgMhh":[function(require,module,exports,__globalThis) {
+},{"jquery":"hgMhh","./login":"ly455","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hgMhh":[function(require,module,exports,__globalThis) {
 /*!
  * jQuery JavaScript Library v3.7.1
  * https://jquery.com/
@@ -7444,36 +7469,6 @@ function addToLog(message) {
     return jQuery;
 });
 
-},{}],"gkKU3":[function(require,module,exports,__globalThis) {
-exports.interopDefault = function(a) {
-    return a && a.__esModule ? a : {
-        default: a
-    };
-};
-exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, '__esModule', {
-        value: true
-    });
-};
-exports.exportAll = function(source, dest) {
-    Object.keys(source).forEach(function(key) {
-        if (key === 'default' || key === '__esModule' || Object.prototype.hasOwnProperty.call(dest, key)) return;
-        Object.defineProperty(dest, key, {
-            enumerable: true,
-            get: function() {
-                return source[key];
-            }
-        });
-    });
-    return dest;
-};
-exports.export = function(dest, destName, get) {
-    Object.defineProperty(dest, destName, {
-        enumerable: true,
-        get: get
-    });
-};
-
 },{}],"ly455":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -9202,7 +9197,37 @@ class Client {
     }
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8WNDW":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports,__globalThis) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, '__esModule', {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === 'default' || key === '__esModule' || Object.prototype.hasOwnProperty.call(dest, key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}],"8WNDW":[function(require,module,exports,__globalThis) {
 /*
 This file contains all of the event listeners that the Archipelago.js Client needs to function.
 */ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -9223,6 +9248,8 @@ const connectedListener = (packet)=>{
     else (0, _mainGameJs.setKeysEnabled)(true);
     // Set up and display the main game container.
     (0, _mainGameJs.setupMainGameContainer)(numChests);
+    // Set up the text client/log.
+    (0, _textClientJs.setupTextClient)();
 };
 const disconnectedListener = ()=>{
     /*

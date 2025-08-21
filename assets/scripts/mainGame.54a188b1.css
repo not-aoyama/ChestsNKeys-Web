@@ -69,7 +69,7 @@ li#desk svg {
   fill: #4b4b4b;
 }
 
-li span {
+#locations-list li span {
   color: #fff;
   z-index: 1;
   width: 100px;

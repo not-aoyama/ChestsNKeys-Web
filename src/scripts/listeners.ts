@@ -13,7 +13,7 @@ import {
     LOCATION_ID_PREFIX,
     displayChestUnlocked
 } from "./mainGame.js";
-import { addToLog } from "./textClient.js";
+import { addToLog, setupTextClient } from "./textClient.js";
 import { displayIfWin } from "./win.js";
 
 const connectedListener = (packet : ConnectedPacket) => {
@@ -32,6 +32,9 @@ const connectedListener = (packet : ConnectedPacket) => {
 
     // Set up and display the main game container.
     setupMainGameContainer(numChests);
+
+    // Set up the text client/log.
+    setupTextClient();
 };
 
 const disconnectedListener = () => {

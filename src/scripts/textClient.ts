@@ -2,7 +2,25 @@ import { ItemMessageNode, LocationMessageNode, MessageNode, PlayerMessageNode, T
 import * as $ from "jquery";
 import { client } from "./login";
 
-export function addToLog(message : MessageNode[]) {
+/*
+At first, the form to send a chat message and the checkbox to filter out irrelevant messages will exist as HTML, but
+they will be non-functional.
+This function adds event listeners to them to make them work!
+*/
+export function setupTextClient() : void {
+    // Pressing the "Send Chat" button will send a chat message.
+    $("#send-chat-submit").click(sendChat);
+
+    // Pressing the Enter key while in the chat text box will send a chat message.
+    $("#send-chat-input").keypress((event) => {
+        // Check if Enter key was pressed (has code 13)
+        if (event.which == 13) {
+            sendChat();
+        }
+    });
+}
+
+export function addToLog(message : MessageNode[]) : void {
     // The entire message will be stored in a single li tag.
     var li = document.createElement("li");
 
@@ -90,4 +108,20 @@ export function addToLog(message : MessageNode[]) {
     
     // Add the message to the end of the log.
     $("#log").append(li);
+}
+
+function sendChat() : void {
+    // Get the text that's currently in the chat textbox.
+    var textbox = $("#send-chat-input");
+    var message : string = textbox.val();
+
+    // Do nothing if the textbox is empty.
+    if (message == "")
+        return;
+
+    // Make the textbox empty.
+    textbox.val("");
+
+    // Send the message to the server!
+    client.messages.say(message);
 }

@@ -9181,6 +9181,8 @@ const connectedListener = (packet)=>{
     else (0, _mainGameJs.setKeysEnabled)(true);
     // Set up and display the main game container.
     (0, _mainGameJs.setupMainGameContainer)(numChests);
+    // Set up the text client/log.
+    (0, _textClientJs.setupTextClient)();
 };
 const disconnectedListener = ()=>{
     /*
@@ -9368,9 +9370,23 @@ module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><!
 },{}],"6qtxO":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
+/*
+At first, the form to send a chat message and the checkbox to filter out irrelevant messages will exist as HTML, but
+they will be non-functional.
+This function adds event listeners to them to make them work!
+*/ parcelHelpers.export(exports, "setupTextClient", ()=>setupTextClient);
 parcelHelpers.export(exports, "addToLog", ()=>addToLog);
 var _jquery = require("jquery");
 var _login = require("./login");
+function setupTextClient() {
+    // Pressing the "Send Chat" button will send a chat message.
+    _jquery("#send-chat-submit").click(sendChat);
+    // Pressing the Enter key while in the chat text box will send a chat message.
+    _jquery("#send-chat-input").keypress((event)=>{
+        // Check if Enter key was pressed (has code 13)
+        if (event.which == 13) sendChat();
+    });
+}
 function addToLog(message) {
     // The entire message will be stored in a single li tag.
     var li = document.createElement("li");
@@ -9441,7 +9457,18 @@ function addToLog(message) {
     // Add the message to the end of the log.
     _jquery("#log").append(li);
 }
+function sendChat() {
+    // Get the text that's currently in the chat textbox.
+    var textbox = _jquery("#send-chat-input");
+    var message = textbox.val();
+    // Do nothing if the textbox is empty.
+    if (message == "") return;
+    // Make the textbox empty.
+    textbox.val("");
+    // Send the message to the server!
+    (0, _login.client).messages.say(message);
+}
 
-},{"jquery":"hgMhh","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./login":"ly455"}]},["9hT45","jSjH5"], "jSjH5", "parcelRequire04ca", {})
+},{"jquery":"hgMhh","./login":"ly455","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["9hT45","jSjH5"], "jSjH5", "parcelRequire04ca", {})
 
 //# sourceMappingURL=win.js.map
