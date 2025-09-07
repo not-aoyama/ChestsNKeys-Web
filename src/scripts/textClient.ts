@@ -2,6 +2,9 @@ import { ItemMessageNode, LocationMessageNode, MessageNode, PlayerMessageNode, T
 import * as $ from "jquery";
 import { client } from "./login";
 
+const SERVER_HELP_MSG : string = "Now that you are connected, you can use !help to list commands to run via the " +
+    "server. If your client supports it, you may have additional local commands you can list with /help.";
+
 /*
 At first, the form to send a chat message and the checkbox to filter out irrelevant messages will exist as HTML, but
 they will be non-functional.
@@ -10,6 +13,9 @@ This function adds event listeners to them to make them work!
 export function setupTextClient() : void {
     // Pressing the "Send Chat" button will send a chat message.
     $("#send-chat-submit").click(sendChat);
+
+    // Clicking the "Only messages about me" checkbox will toggle whether irrelevant messages are shown.
+    $("#only-relevant-messages").click(toggleShowOnlyRelevantMessages);
 
     // Pressing the Enter key while in the chat text box will send a chat message.
     $("#send-chat-input").keypress((event) => {
@@ -23,6 +29,9 @@ export function setupTextClient() : void {
 export function addToLog(message : MessageNode[]) : void {
     // The entire message will be stored in a single li tag.
     var li = document.createElement("li");
+
+    // Whether or not this message is relevant to the player.
+    var isRelevant = false;
 
     // Add each of the message nodes to the li.
     for (let i = 0; i < message.length; i++) {
@@ -78,6 +87,23 @@ export function addToLog(message : MessageNode[]) : void {
                 break;
             case "text":
                 spanClass = "textualMessage";
+
+                /*
+                The next few lines of code will check the text to see if this node is relevant.
+                This takes time, so if we've already marked a previous node of this message as relevant,
+                break out of the switch statement.
+                */
+                if (isRelevant)
+                    break;
+
+                // The message from the server about using !help and /help should be considered relevant.
+                if (node.text == SERVER_HELP_MSG)
+                    isRelevant = true;
+
+                // If the text contains the player's name, the message is relevant.
+                if (node.text.match(client.name))
+                    isRelevant = true;
+
                 break;
             case "entrance":
                 spanClass = "entranceMessage";
@@ -87,6 +113,9 @@ export function addToLog(message : MessageNode[]) : void {
                 spanClass = "playerMessage";
                 if (client.name == node.player.name) {
                     spanClass += " thisPlayerMessage";
+
+                    // Since this message has a node referring to this player, the entire message is relevant!
+                    isRelevant = true;
                 } else {
                     spanClass += " otherPlayerMessage";
                 }
@@ -105,9 +134,33 @@ export function addToLog(message : MessageNode[]) : void {
         // Add the span to the li.
         $(li).append(span);
     }
+
+    // If this message is not relevant to the player,
+    // give the li the "irrelevant" class so it can be hidden if the user wants.
+    if (!isRelevant) {
+        $(li).attr("class", "irrelevant");
+
+        // If the "only messages about me" checkbox is clicked,
+        // make this message hidden.
+
+        // I don't know why the ".checked" part is in red underline. It works just fine!
+        // Anyways, this code checks if the checkbox is checked.
+        if (document.getElementById("only-relevant-messages").checked) {
+            $(li).hide();
+        }
+    }
+
+    // Before adding the message to the log, check to see if the log is scrolled to the bottom.
+    var log = document.getElementById("log");
+    var isScrolledToBottom : boolean = log.scrollHeight - log.clientHeight <= log.scrollTop + 1;
     
     // Add the message to the end of the log.
     $("#log").append(li);
+
+    // If the log was scrolled all the way down before,
+    // make the log automatically stay scrolled all the way down.
+    if (isScrolledToBottom)
+        log.scrollTop = log.scrollHeight - log.clientHeight;
 }
 
 function sendChat() : void {
@@ -124,4 +177,16 @@ function sendChat() : void {
 
     // Send the message to the server!
     client.messages.say(message);
+}
+
+function toggleShowOnlyRelevantMessages() : void {
+    // I don't know why the ".checked" part is in red underline. It works just fine!
+    // Anyways, this code checks if the checkbox is checked.
+    if (document.getElementById("only-relevant-messages").checked) {
+        // If it is checked, hide all the log messages that are irrelevant.
+        $(".irrelevant").hide();
+    } else {
+        // Otherwise, show the irrelevant log messages again.
+        $(".irrelevant").css("display", "list-item");
+    }
 }
