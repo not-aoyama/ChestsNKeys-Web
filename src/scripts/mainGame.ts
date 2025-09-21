@@ -22,13 +22,13 @@ export const ITEM_ID_PREFIX = 69000;
 export const ITEM_THAT_DOES_NOTHING_ID = ITEM_ID_PREFIX + 420;
 
 // Whether keys are enabled in this slot. This is determined by reading the slot data from the server.
-var keysEnabled;
+var keysEnabled : boolean;
 
 // The number of possible hue values for an HSL color. This will be important later.
 const NUMBER_HUES = 300;
 
 // Display the main game screen, complete with a desk and the given number of chests.
-export function setupMainGameContainer(numChests) {
+export function setupMainGameContainer(numChests : number) : void {
     // Create and display the li tag representing the desk.
     var desk = document.createElement("li");
     $(desk).attr("id", "desk");
@@ -94,12 +94,12 @@ export function setupMainGameContainer(numChests) {
 }
 
 // This setter method allows keysEnabled to be accessed in other JS files.
-export function setKeysEnabled(newKeysEnabled) {
+export function setKeysEnabled(newKeysEnabled : boolean) : void {
     keysEnabled = newKeysEnabled;
 }
 
 // Updates the appearance and functionality of the location with the given ID to show it has been checked.
-export function displayLocationChecked(locationId) {
+export function displayLocationChecked(locationId : number) : void {
     if (locationId == DESK_ID) {
         // Empty the SVG from the li tag so it can be replaced with a new SVG.
         $("#desk svg").remove();
@@ -137,7 +137,7 @@ export function displayLocationChecked(locationId) {
 }
 
 // Updates the appearance and functionality of the chest with the given ID to show it has been unlocked.
-export function displayChestUnlocked(chestNumber) {
+export function displayChestUnlocked(chestNumber : number) : void {
     var chestID = "#chest" + chestNumber;
 
     // Empty the SVG from the li tag so it can be replaced with a new SVG.
@@ -156,4 +156,16 @@ export function displayChestUnlocked(chestNumber) {
 
     // Add the SVG icon.
     $(chestID).append(unlockedChestSvg);
+
+    // Play a "chest unlocked" sound.
+    playSound("chest-unlock-sound");
+}
+
+function playSound(soundId : string) : void {
+    var audioToPlay : HTMLElement = document.getElementById(soundId);
+    if (audioToPlay instanceof HTMLAudioElement)
+        audioToPlay.play();
+    else
+        console.warn("Tried to play audio with ID " + soundId + ", but the element with this ID either doesn't " + 
+            "exist or is not an audio element.");
 }
