@@ -143,9 +143,9 @@ export function addToLog(message : MessageNode[]) : void {
         // If the "only messages about me" checkbox is clicked,
         // make this message hidden.
 
-        // I don't know why the ".checked" part is in red underline. It works just fine!
-        // Anyways, this code checks if the checkbox is checked.
-        if (document.getElementById("only-relevant-messages").checked) {
+        // This code checks if the checkbox is checked.
+        var checkbox = document.getElementById("only-relevant-messages");
+        if ((checkbox as HTMLInputElement).checked) {
             $(li).hide();
         }
     }
@@ -180,9 +180,9 @@ function sendChat() : void {
 }
 
 function toggleShowOnlyRelevantMessages() : void {
-    // I don't know why the ".checked" part is in red underline. It works just fine!
-    // Anyways, this code checks if the checkbox is checked.
-    if (document.getElementById("only-relevant-messages").checked) {
+    // This code checks if the checkbox is checked.
+    var checkbox = document.getElementById("only-relevant-messages");
+    if ((checkbox as HTMLInputElement).checked) {
         // If it is checked, hide all the log messages that are irrelevant.
         $(".irrelevant").hide();
     } else {
