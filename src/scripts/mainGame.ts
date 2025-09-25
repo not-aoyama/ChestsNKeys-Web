@@ -24,6 +24,16 @@ export const ITEM_THAT_DOES_NOTHING_ID = ITEM_ID_PREFIX + 420;
 // Whether keys are enabled in this slot. This is determined by reading the slot data from the server.
 var keysEnabled : boolean;
 
+/*
+So, here's the thing. At first, before the player does anything, the client processes all the checks that have happened
+in the history of the multiworld. So, a bunch of chests are "opened" without the player actually doing anything during
+this session. During this time, we consider the game to be "loading".
+
+To start with, the game is in a "loading" state, so this variable is true. Once it's set to false, that means every
+check that happens from here on out is a result of the player's current actions.
+*/
+var isLoading : boolean = true;
+
 // The number of possible hue values for an HSL color. This will be important later.
 const NUMBER_HUES = 300;
 
@@ -91,6 +101,9 @@ export function setupMainGameContainer(numChests : number) : void {
         // Show the main game container now that it is ready!
         $("#main-game-container").show();
     }
+
+    // Now that everything is set up, the game is no longer loading!
+    isLoading = false;
 }
 
 // This setter method allows keysEnabled to be accessed in other JS files.
@@ -134,6 +147,14 @@ export function displayLocationChecked(locationId : number) : void {
         // Put the SVG tag inside of the li.
         $(chestID).append(emptyChestSvg);
     }
+
+    // Play a sound to show that the chest was opened.
+    // We'll do this even for the free item, since I'm too lazy to search for another sound effect.
+    // However, do NOT do this if the game is still loading, i.e. the player didn't click it.
+    // We don't want the "chest open" sound to play if the chest was opened the last time the player logged in,
+    // and the display is just being updated to show that.
+    if (!isLoading)
+        playSound("chest-open-sound");
 }
 
 // Updates the appearance and functionality of the chest with the given ID to show it has been unlocked.
