@@ -138,27 +138,33 @@ export function displayLocationChecked(locationId : number) : void {
 
 // Updates the appearance and functionality of the chest with the given ID to show it has been unlocked.
 export function displayChestUnlocked(chestNumber : number) : void {
-    var chestID = "#chest" + chestNumber;
+    var chestHtmlID = "#chest" + chestNumber;
 
     // Empty the SVG from the li tag so it can be replaced with a new SVG.
-    $(chestID + " svg").remove();
+    $(chestHtmlID + " svg").remove();
 
     // Edit the li's tooltip
-    $(chestID).attr("title", "Chest " + chestNumber + " (Unlocked)");
+    $(chestHtmlID).attr("title", "Chest " + chestNumber + " (Unlocked)");
 
     // main-game.css gives all "clickable"-class objects a pointer cursor to show they can be clicked.
-    $(chestID).attr("class", "clickable");
+    $(chestHtmlID).attr("class", "clickable");
 
     // Now that the chest is unlocked, clicking it should send a check.
-    $(chestID).click(() => {
-        client.check(LOCATION_ID_PREFIX + chestNumber);
+    var chestLocationID = LOCATION_ID_PREFIX + chestNumber;
+    $(chestHtmlID).click(() => {
+        client.check(chestLocationID);
     });
 
     // Add the SVG icon.
-    $(chestID).append(unlockedChestSvg);
+    $(chestHtmlID).append(unlockedChestSvg);
 
     // Play a "chest unlocked" sound.
-    playSound("chest-unlock-sound");
+    // That is, unless this chest is already empty. In that case, the user doesn't need to be alerted.
+    // Also unless keys are disabled. In that case, the chest doesn't need to be unlocked because it was never 
+    // locked in the first place.
+    let chestIsEmpty = client.room.checkedLocations.includes(chestLocationID);
+    if (keysEnabled && !chestIsEmpty)
+        playSound("chest-unlock-sound");
 }
 
 function playSound(soundId : string) : void {
