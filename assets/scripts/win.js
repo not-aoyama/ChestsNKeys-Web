@@ -9256,6 +9256,9 @@ const LOCATION_ID_PREFIX = 420000;
 const DESK_ID = LOCATION_ID_PREFIX;
 const ITEM_ID_PREFIX = 69000;
 const ITEM_THAT_DOES_NOTHING_ID = ITEM_ID_PREFIX + 420;
+// URLs for sounds
+const CHEST_UNLOCK_SOUND = "assets/sounds/815493__xkeril__mechanical-switch-latch-02.wav";
+const CHEST_OPEN_SOUND = "assets/sounds/771164__steprock__treasure-chest-open.mp3";
 // Whether keys are enabled in this slot. This is determined by reading the slot data from the server.
 var keysEnabled;
 /*
@@ -9350,7 +9353,7 @@ function displayLocationChecked(locationId) {
     // However, do NOT do this if the game is still loading, i.e. the player didn't click it.
     // We don't want the "chest open" sound to play if the chest was opened the last time the player logged in,
     // and the display is just being updated to show that.
-    if (!isLoading) playSound("chest-open-sound");
+    if (!isLoading) playSound(CHEST_OPEN_SOUND);
 }
 function displayChestUnlocked(chestNumber) {
     var chestHtmlID = "#chest" + chestNumber;
@@ -9372,12 +9375,43 @@ function displayChestUnlocked(chestNumber) {
     // Also unless keys are disabled. In that case, the chest doesn't need to be unlocked because it was never 
     // locked in the first place.
     let chestIsEmpty = (0, _loginJs.client).room.checkedLocations.includes(chestLocationID);
-    if (keysEnabled && !chestIsEmpty) playSound("chest-unlock-sound");
+    if (keysEnabled && !chestIsEmpty) playSound(CHEST_UNLOCK_SOUND);
 }
-function playSound(soundId) {
-    var audioToPlay = document.getElementById(soundId);
-    if (audioToPlay instanceof HTMLAudioElement) audioToPlay.play();
-    else console.warn("Tried to play audio with ID " + soundId + ", but the element with this ID either doesn't " + "exist or is not an audio element.");
+function playSound(soundURL) {
+    /*
+    Create a new audio element every time this function is called.
+    This way, multiple of the same sound can play at the same time.
+    */ var audioToPlay = document.createElement("audio");
+    var audioSource = document.createElement("source");
+    _jquery(audioSource).attr("src", soundURL);
+    // Use the extension to determine the audio type.
+    var fileExtension = soundURL.split(".").at(-1);
+    switch(fileExtension){
+        case "mp3":
+            _jquery(audioSource).attr("type", "audio/mpeg");
+            break;
+        case "wav":
+            _jquery(audioSource).attr("type", "audio/wav");
+            break;
+        default:
+            // Unsupported audio type
+            console.warn(soundURL + " is not a supported audio type.");
+            return;
+    }
+    // Add text to be displayed if the audio tag isn't supported.
+    _jquery(audioToPlay).text("Your browser does not support the audio element.");
+    // Add the audio source to the audio.
+    _jquery(audioToPlay).append(audioSource);
+    /*
+    Make the audio delete itself once it's finished playing.
+    This way, the page isn't cluttered with hundreds of audio elements that aren't being used.
+    */ audioToPlay.addEventListener("ended", (event)=>{
+        _jquery(event.target).remove();
+    });
+    // Add the audio source to the HTML page so that it will work.
+    _jquery("#audio-container").append(audioToPlay);
+    // It's playtime! :D
+    audioToPlay.play();
 }
 
 },{"jquery":"hgMhh","./login.js":"ly455","bundle-text:../../assets/images/Free Item.svg":"iKdNn","bundle-text:../../assets/images/No More Free Item.svg":"ddYWf","bundle-text:../../assets/images/Empty Chest.svg":"66Z07","bundle-text:../../assets/images/Locked Chest.svg":"gUeNL","bundle-text:../../assets/images/Unlocked Chest.svg":"erxC6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iKdNn":[function(require,module,exports,__globalThis) {

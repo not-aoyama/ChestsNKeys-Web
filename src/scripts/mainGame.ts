@@ -21,6 +21,10 @@ export const DESK_ID = LOCATION_ID_PREFIX;
 export const ITEM_ID_PREFIX = 69000;
 export const ITEM_THAT_DOES_NOTHING_ID = ITEM_ID_PREFIX + 420;
 
+// URLs for sounds
+const CHEST_UNLOCK_SOUND = "assets/sounds/815493__xkeril__mechanical-switch-latch-02.wav";
+const CHEST_OPEN_SOUND = "assets/sounds/771164__steprock__treasure-chest-open.mp3";
+
 // Whether keys are enabled in this slot. This is determined by reading the slot data from the server.
 var keysEnabled : boolean;
 
@@ -154,7 +158,7 @@ export function displayLocationChecked(locationId : number) : void {
     // We don't want the "chest open" sound to play if the chest was opened the last time the player logged in,
     // and the display is just being updated to show that.
     if (!isLoading)
-        playSound("chest-open-sound");
+        playSound(CHEST_OPEN_SOUND);
 }
 
 // Updates the appearance and functionality of the chest with the given ID to show it has been unlocked.
@@ -185,14 +189,50 @@ export function displayChestUnlocked(chestNumber : number) : void {
     // locked in the first place.
     let chestIsEmpty = client.room.checkedLocations.includes(chestLocationID);
     if (keysEnabled && !chestIsEmpty)
-        playSound("chest-unlock-sound");
+        playSound(CHEST_UNLOCK_SOUND);
 }
 
-function playSound(soundId : string) : void {
-    var audioToPlay : HTMLElement = document.getElementById(soundId);
-    if (audioToPlay instanceof HTMLAudioElement)
-        audioToPlay.play();
-    else
-        console.warn("Tried to play audio with ID " + soundId + ", but the element with this ID either doesn't " + 
-            "exist or is not an audio element.");
+function playSound(soundURL : string) : void {
+    /*
+    Create a new audio element every time this function is called.
+    This way, multiple of the same sound can play at the same time.
+    */
+    var audioToPlay : HTMLAudioElement = document.createElement("audio");
+    var audioSource : HTMLElement = document.createElement("source");
+    $(audioSource).attr("src", soundURL);
+
+    // Use the extension to determine the audio type.
+    var fileExtension = soundURL.split(".").at(-1);
+    switch(fileExtension) {
+        case "mp3":
+            $(audioSource).attr("type", "audio/mpeg");
+            break;
+        case "wav":
+            $(audioSource).attr("type", "audio/wav");
+            break;
+        default:
+            // Unsupported audio type
+            console.warn(soundURL + " is not a supported audio type.");
+            return;
+    }
+
+    // Add text to be displayed if the audio tag isn't supported.
+    $(audioToPlay).text("Your browser does not support the audio element.");
+    
+    // Add the audio source to the audio.
+    $(audioToPlay).append(audioSource);
+
+    /*
+    Make the audio delete itself once it's finished playing.
+    This way, the page isn't cluttered with hundreds of audio elements that aren't being used.
+    */
+    audioToPlay.addEventListener("ended", (event) => {
+        $(event.target).remove();
+    });
+
+    // Add the audio source to the HTML page so that it will work.
+    $("#audio-container").append(audioToPlay);
+
+    // It's playtime! :D
+    audioToPlay.play();
 }
