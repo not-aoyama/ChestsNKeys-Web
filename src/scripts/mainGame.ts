@@ -5,6 +5,7 @@ i.e. everything after the login screen and before the win screen.
 
 import * as $ from "jquery";
 import { client } from "./login.js";
+import { areSoundsEnabled } from "./settings.js";
 // @ts-ignore
 import freeItemSvg from "bundle-text:../../assets/images/Free Item.svg";
 // @ts-ignore
@@ -193,6 +194,10 @@ export function displayChestUnlocked(chestNumber : number) : void {
 }
 
 function playSound(soundURL : string) : void {
+    // This method will do nothing if sounds are disabled.
+    if (!areSoundsEnabled())
+        return;
+    
     /*
     Create a new audio element every time this function is called.
     This way, multiple of the same sound can play at the same time.

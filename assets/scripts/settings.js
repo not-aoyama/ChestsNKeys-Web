@@ -667,7 +667,12 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 }
 
 },{}],"hHf3b":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+// Enables other scripts to see whether sound is enabled
+parcelHelpers.export(exports, "areSoundsEnabled", ()=>areSoundsEnabled);
 var _jquery = require("jquery");
+var soundsEnabled = true;
 _jquery(document).ready(()=>{
     // Show the settings menu when the settings button is clicked.
     _jquery("#settings-button").click(()=>{
@@ -677,9 +682,20 @@ _jquery(document).ready(()=>{
     _jquery("#settings-x").click(()=>{
         _jquery("#settings-menu").hide();
     });
+    // Clicking the "Enable audio" checkbox will toggle whether audio is enabled.
+    _jquery("#enable-sounds").click(toggleSoundsEnabled);
 });
+function toggleSoundsEnabled() {
+    // This code checks if the checkbox is checked.
+    var checkbox = document.getElementById("enable-sounds");
+    // If it is checked, enable sounds. Otherwise, disable them.
+    soundsEnabled = checkbox.checked;
+}
+function areSoundsEnabled() {
+    return soundsEnabled;
+}
 
-},{"jquery":"hgMhh"}],"hgMhh":[function(require,module,exports,__globalThis) {
+},{"jquery":"hgMhh","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hgMhh":[function(require,module,exports,__globalThis) {
 /*!
  * jQuery JavaScript Library v3.7.1
  * https://jquery.com/
@@ -7379,6 +7395,36 @@ _jquery(document).ready(()=>{
     if (typeof noGlobal === "undefined") window1.jQuery = window1.$ = jQuery;
     return jQuery;
 });
+
+},{}],"gkKU3":[function(require,module,exports,__globalThis) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, '__esModule', {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === 'default' || key === '__esModule' || Object.prototype.hasOwnProperty.call(dest, key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
 
 },{}]},["6sMxa","hHf3b"], "hHf3b", "parcelRequire04ca", {})
 
