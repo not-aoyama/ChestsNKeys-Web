@@ -5,7 +5,7 @@ i.e. everything after the login screen and before the win screen.
 
 import * as $ from "jquery";
 import { client } from "./login.js";
-import { areSoundsEnabled } from "./settings.js";
+import { areSoundsEnabled, getVolume } from "./settings.js";
 // @ts-ignore
 import freeItemSvg from "bundle-text:../../assets/images/Free Item.svg";
 // @ts-ignore
@@ -226,6 +226,9 @@ function playSound(soundURL : string) : void {
     
     // Add the audio source to the audio.
     $(audioToPlay).append(audioSource);
+
+    // Set the volume of the audio to whatever is in the settings.
+    audioToPlay.volume = getVolume();
 
     /*
     Make the audio delete itself once it's finished playing.

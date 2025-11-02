@@ -1,21 +1,24 @@
 import * as $ from "jquery";
 
 var soundsEnabled : boolean = true;
+var volume : number = 1;
 
 $(document).ready(() => {
     // Load settings from local storage. Use defaults if the settings aren't there.
-    if (
-        localStorage.getItem("sounds-enabled") == null || 
-        localStorage.getItem("sounds-enabled") == "true"
-    ) {
+    if (localStorage.getItem("sounds-enabled") == null) {
         soundsEnabled = true;
         $("#enable-sounds").prop("checked", true);
-    } else if (localStorage.getItem("sounds-enabled") == "false") {
-        soundsEnabled = false;
-        $("#enable-sounds").prop("checked", false);
     } else {
-        // Hopefully, this setting should always be either null, true, or false.
-        console.warn("Invalid value for sounds-enabled in localStorage");
+        soundsEnabled = (localStorage.getItem("sounds-enabled") == "true");
+        $("#enable-sounds").prop("checked", soundsEnabled);
+    }
+
+    if (localStorage.getItem("volume") == null) {
+        volume = 1;
+        $("#sound-volume").attr("value", 1);
+    } else {
+        volume = parseFloat(localStorage.getItem("volume")); // convert string to float
+        $("#sound-volume").attr("value", volume);
     }
 
     // Toggle whether the settings menu is shown when the settings button is clicked.
@@ -35,6 +38,9 @@ $(document).ready(() => {
 
     // Clicking the "Enable audio" checkbox will toggle whether audio is enabled.
     $("#enable-sounds").click(toggleSoundsEnabled);
+
+    // Adjusting the "Sound volume" slider will change the volume.
+    $("#sound-volume").change(adjustVolume);
 });
 
 function toggleSoundsEnabled() : void {
@@ -42,12 +48,24 @@ function toggleSoundsEnabled() : void {
     var checkbox = document.getElementById("enable-sounds");
     // If it is checked, enable sounds. Otherwise, disable them.
     soundsEnabled = (checkbox as HTMLInputElement).checked;
-
     // Save this setting to local storage so it can be remembered if the page is reloaded.
     localStorage.setItem("sounds-enabled", "" + soundsEnabled);
+}
+
+function adjustVolume() : void {
+    // This code gets the current value of the volume slider.
+    var volumeSlider = document.getElementById("sound-volume");
+    volume = parseFloat((volumeSlider as HTMLInputElement).value);
+    // Save this setting to local storage so it can be remembered if the page is reloaded.
+    localStorage.setItem("volume", "" + volume);
 }
 
 // Enables other scripts to see whether sound is enabled
 export function areSoundsEnabled() : boolean {
     return soundsEnabled;
+}
+
+// Enables other scripts to see what the volume is set to
+export function getVolume() : number {
+    return volume;
 }

@@ -671,18 +671,27 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 // Enables other scripts to see whether sound is enabled
 parcelHelpers.export(exports, "areSoundsEnabled", ()=>areSoundsEnabled);
+// Enables other scripts to see what the volume is set to
+parcelHelpers.export(exports, "getVolume", ()=>getVolume);
 var _jquery = require("jquery");
 var soundsEnabled = true;
+var volume = 1;
 _jquery(document).ready(()=>{
     // Load settings from local storage. Use defaults if the settings aren't there.
-    if (localStorage.getItem("sounds-enabled") == null || localStorage.getItem("sounds-enabled") == "true") {
+    if (localStorage.getItem("sounds-enabled") == null) {
         soundsEnabled = true;
         _jquery("#enable-sounds").prop("checked", true);
-    } else if (localStorage.getItem("sounds-enabled") == "false") {
-        soundsEnabled = false;
-        _jquery("#enable-sounds").prop("checked", false);
-    } else // Hopefully, this setting should always be either null, true, or false.
-    console.warn("Invalid value for sounds-enabled in localStorage");
+    } else {
+        soundsEnabled = localStorage.getItem("sounds-enabled") == "true";
+        _jquery("#enable-sounds").prop("checked", soundsEnabled);
+    }
+    if (localStorage.getItem("volume") == null) {
+        volume = 1;
+        _jquery("#sound-volume").attr("value", 1);
+    } else {
+        volume = parseFloat(localStorage.getItem("volume")); // convert string to float
+        _jquery("#sound-volume").attr("value", volume);
+    }
     // Toggle whether the settings menu is shown when the settings button is clicked.
     _jquery("#settings-button").click(()=>{
         // If the settings menu is hidden, show it.
@@ -695,6 +704,8 @@ _jquery(document).ready(()=>{
     });
     // Clicking the "Enable audio" checkbox will toggle whether audio is enabled.
     _jquery("#enable-sounds").click(toggleSoundsEnabled);
+    // Adjusting the "Sound volume" slider will change the volume.
+    _jquery("#sound-volume").change(adjustVolume);
 });
 function toggleSoundsEnabled() {
     // This code checks if the checkbox is checked.
@@ -704,8 +715,18 @@ function toggleSoundsEnabled() {
     // Save this setting to local storage so it can be remembered if the page is reloaded.
     localStorage.setItem("sounds-enabled", "" + soundsEnabled);
 }
+function adjustVolume() {
+    // This code gets the current value of the volume slider.
+    var volumeSlider = document.getElementById("sound-volume");
+    volume = parseFloat(volumeSlider.value);
+    // Save this setting to local storage so it can be remembered if the page is reloaded.
+    localStorage.setItem("volume", "" + volume);
+}
 function areSoundsEnabled() {
     return soundsEnabled;
+}
+function getVolume() {
+    return volume;
 }
 
 },{"jquery":"hgMhh","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hgMhh":[function(require,module,exports,__globalThis) {
