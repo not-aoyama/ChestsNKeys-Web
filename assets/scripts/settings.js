@@ -674,9 +674,20 @@ parcelHelpers.export(exports, "areSoundsEnabled", ()=>areSoundsEnabled);
 var _jquery = require("jquery");
 var soundsEnabled = true;
 _jquery(document).ready(()=>{
-    // Show the settings menu when the settings button is clicked.
+    // Load settings from local storage. Use defaults if the settings aren't there.
+    if (localStorage.getItem("sounds-enabled") == null || localStorage.getItem("sounds-enabled") == "true") {
+        soundsEnabled = true;
+        _jquery("#enable-sounds").prop("checked", true);
+    } else if (localStorage.getItem("sounds-enabled") == "false") {
+        soundsEnabled = false;
+        _jquery("#enable-sounds").prop("checked", false);
+    } else // Hopefully, this setting should always be either null, true, or false.
+    console.warn("Invalid value for sounds-enabled in localStorage");
+    // Toggle whether the settings menu is shown when the settings button is clicked.
     _jquery("#settings-button").click(()=>{
-        _jquery("#settings-menu").show();
+        // If the settings menu is hidden, show it.
+        if (_jquery("#settings-menu").css("display") == "none") _jquery("#settings-menu").show();
+        else _jquery("#settings-menu").hide();
     });
     // Hide the settings menu when the X button is clicked.
     _jquery("#settings-x").click(()=>{
@@ -690,6 +701,8 @@ function toggleSoundsEnabled() {
     var checkbox = document.getElementById("enable-sounds");
     // If it is checked, enable sounds. Otherwise, disable them.
     soundsEnabled = checkbox.checked;
+    // Save this setting to local storage so it can be remembered if the page is reloaded.
+    localStorage.setItem("sounds-enabled", "" + soundsEnabled);
 }
 function areSoundsEnabled() {
     return soundsEnabled;
