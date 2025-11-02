@@ -1,0 +1,39 @@
+.popup-menu {
+    background-color: rgba(43, 45, 70, 0.9);
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 30vw;
+    min-width: 290px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    /* Make popup menus float above everything else */
+    z-index: 3;
+    /* Position the popup menu in the center of the screen */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Popup menus should be hidden by default. */
+    display: none;
+}
+
+/* Format text inside of popup menus */
+.popup-menu * {
+    color: white;
+    /* Add vertical spacing */
+    margin: 10px 0;
+    /* Make everything on the same line together unless there is a br */
+    display: inline;
+}
+
+/* Place X icon in the top right */
+.popup-menu .x-icon {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    margin: 0;
+}
+
+/* Make the input elements all the same height so the rows are evenly spaced. */
+.popup-menu input {
+    height: 16px;
+}

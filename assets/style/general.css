@@ -22,6 +22,27 @@ body {
     overflow-y: auto;
 }
 
+.icon-button {
+    /* Remove default button styling */
+    background: none;
+    border: none;
+    /* Make the cursor indicate that this button is clickable */
+    cursor: pointer;
+}
+
+.icon-button:hover img {
+    opacity: 50%;
+}
+
+#settings-button {
+    /* Make settings button float over everything else, except pop-ups */
+    z-index: 2;
+    /* Pin the button to the bottom right corner */
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
 footer {
     font-size: 12px;
 }

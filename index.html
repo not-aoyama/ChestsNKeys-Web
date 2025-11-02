@@ -7,12 +7,14 @@
         <title>Chests 'n' Keys - A game that exists</title>
 
         <!-- Scripts -->
-        <!-- We only need to import one of the local JS files. It imports all the others. -->
+        <!-- We only need to import some of the local JS files. login.js imports most of the others. -->
         <script src="assets/scripts/login.js"></script>
+        <script src="assets/scripts/settings.js"></script>
 
         <!-- Stylesheet -->
         <link rel="stylesheet" href="assets/style/general.css">
         <link rel="stylesheet" href="assets/style/login.css">
+        <link rel="stylesheet" href="assets/style/popups.css">
         <link rel="stylesheet" href="assets/style/main-game.css">
         <link rel="stylesheet" href="assets/style/text-client.css">
     </head>
@@ -60,6 +62,24 @@
         </div>
         <div id="win-message" class="container">
             <h1>U R WINNAR!!!1</h1>
+        </div>
+        <button type="button" id="settings-button" class="icon-button">
+            <img src="assets/images/Settings.svg" width="50" height="50" title="Settings" />
+        </button>
+        <div id="settings-menu" class="popup-menu">
+            <button type="button" id="settings-x" class="icon-button x-icon">
+                <img src="assets/images/X.svg" width="25" height="25" title="Close settings menu" />
+            </button>
+            <h2>Settings</h2>
+            <br><br>
+            <label for="enable-sounds">Enable sounds:</label>
+            <input type="checkbox" id="enable-sounds" checked />
+            <br>
+            <label for="sound-volume">Sound volume:</label>
+            <input type="range" id="sound-volume" min="0" max="1" step="0.01" value="1" />
+            <br>
+            <label for="enable-animations">Enable chest open animations:</label>
+            <input type="checkbox" id="enable-animations" checked />
         </div>
         <footer>
             The low-effort abomination that is Chests 'n' Keys was thrust upon you by NOT aoyama.

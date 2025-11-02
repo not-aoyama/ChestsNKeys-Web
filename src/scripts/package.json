@@ -29,6 +29,10 @@
       "source": "mainGame.ts",
       "distDir": "../../assets/scripts/"
     },
+    "settings": {
+      "source": "settings.ts",
+      "distDir": "../../assets/scripts"
+    },
     "textClient": {
       "source": "textClient.ts",
       "distDir": "../../assets/scripts/"
