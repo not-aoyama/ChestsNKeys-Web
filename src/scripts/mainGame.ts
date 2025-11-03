@@ -4,6 +4,7 @@ i.e. everything after the login screen and before the win screen.
 */
 
 import * as $ from "jquery";
+import {Item} from "archipelago.js";
 import { client } from "./login.js";
 import { areSoundsEnabled, getVolume } from "./settings.js";
 // @ts-ignore
@@ -107,6 +108,9 @@ export function setupMainGameContainer(numChests : number) : void {
         $("#main-game-container").show();
     }
 
+    // Update the website icon to show whether any items are in logic.
+    updateIcon();
+
     // Now that everything is set up, the game is no longer loading!
     isLoading = false;
 }
@@ -193,6 +197,7 @@ export function displayChestUnlocked(chestNumber : number) : void {
         playSound(CHEST_UNLOCK_SOUND);
 }
 
+// Plays the sound with the given URL.
 function playSound(soundURL : string) : void {
     // This method will do nothing if sounds are disabled.
     if (!areSoundsEnabled())
@@ -243,4 +248,38 @@ function playSound(soundURL : string) : void {
 
     // It's playtime! :D
     audioToPlay.play();
+}
+
+// Updates the website icon so that it's red if there are any unlocked, unopened chests, and black otherwise.
+export function updateIcon() : void {
+    let iconRed : boolean = false; // Whether or not the icon should be red.
+    // Loop through all of the unchecked locations.
+    for (let locationID of client.room.missingLocations) {
+        // Is this location the Free Item?
+        if (locationID == DESK_ID) {
+            // If so, this item is in logic no matter what! The icon should be red.
+            // We can skip the rest of the loop.
+            iconRed = true;
+            break;
+        } else {
+            // The location is a chest.
+            // If keys are disabled, the chest can be opened no matter what.
+            // If they're enabled, we need to check if we have the chest's corresponding key.
+            let keyID = locationID - LOCATION_ID_PREFIX + ITEM_ID_PREFIX;
+            if (!keysEnabled || client.items.received.map(item => item.id).includes(keyID)) {
+                // The chest can be opened! We don't need to continue through the rest of the loop.
+                iconRed = true;
+                break;
+            }
+        }
+    }
+
+    // If the icon should be red, set it to red.
+    if (iconRed) {
+        $("#website-icon").attr("href", "assets/images/Red Chest.svg");
+    }
+    // Otherwise, set it to black (the normal Unlocked Chest image)
+    else {
+        $("#website-icon").attr("href", "assets/images/Unlocked Chest.svg");
+    }
 }

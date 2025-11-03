@@ -5,13 +5,14 @@ This file contains all of the event listeners that the Archipelago.js Client nee
 import { ConnectedPacket, Item, MessageNode } from "archipelago.js";
 import { client } from "./login.js";
 import {
-    setupMainGameContainer,
-    setKeysEnabled,
+    displayChestUnlocked,
     displayLocationChecked,
     ITEM_THAT_DOES_NOTHING_ID,
     ITEM_ID_PREFIX,
     LOCATION_ID_PREFIX,
-    displayChestUnlocked
+    setKeysEnabled,
+    setupMainGameContainer,
+    updateIcon
 } from "./mainGame.js";
 import { addToLog, setupTextClient } from "./textClient.js";
 import { displayIfWin } from "./win.js";
@@ -56,6 +57,9 @@ const itemsReceivedListener = (items : Item[], index : number) => {
             if (!client.room.checkedLocations.includes(LOCATION_ID_PREFIX + chestNumber)) {
                 displayChestUnlocked(chestNumber);
             }
+
+            // Now that a new chest might be openable, update the website icon.
+            updateIcon();
         }
     }
 };
@@ -65,6 +69,9 @@ const locationsCheckedListener = (locations : number[]) => {
     for (var i = 0; i < locations.length; i++) {
         displayLocationChecked(locations[i]);
     }
+
+    // Now that there may no longer be any openable chests, update the website icon.
+    updateIcon();
 
     // Check if all chests have been opened yet, and display the win message if so.
     displayIfWin();

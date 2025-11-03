@@ -684,6 +684,8 @@ parcelHelpers.export(exports, "setKeysEnabled", ()=>setKeysEnabled);
 parcelHelpers.export(exports, "displayLocationChecked", ()=>displayLocationChecked);
 // Updates the appearance and functionality of the chest with the given ID to show it has been unlocked.
 parcelHelpers.export(exports, "displayChestUnlocked", ()=>displayChestUnlocked);
+// Updates the website icon so that it's red if there are any unlocked, unopened chests, and black otherwise.
+parcelHelpers.export(exports, "updateIcon", ()=>updateIcon);
 var _jquery = require("jquery");
 var _loginJs = require("./login.js");
 var _settingsJs = require("./settings.js");
@@ -766,6 +768,8 @@ function setupMainGameContainer(numChests) {
         // Show the main game container now that it is ready!
         _jquery("#main-game-container").show();
     }
+    // Update the website icon to show whether any items are in logic.
+    updateIcon();
     // Now that everything is set up, the game is no longer loading!
     isLoading = false;
 }
@@ -827,6 +831,7 @@ function displayChestUnlocked(chestNumber) {
     let chestIsEmpty = (0, _loginJs.client).room.checkedLocations.includes(chestLocationID);
     if (keysEnabled && !chestIsEmpty) playSound(CHEST_UNLOCK_SOUND);
 }
+// Plays the sound with the given URL.
 function playSound(soundURL) {
     // This method will do nothing if sounds are disabled.
     if (!(0, _settingsJs.areSoundsEnabled)()) return;
@@ -866,6 +871,30 @@ function playSound(soundURL) {
     _jquery("#audio-container").append(audioToPlay);
     // It's playtime! :D
     audioToPlay.play();
+}
+function updateIcon() {
+    let iconRed = false; // Whether or not the icon should be red.
+    // Loop through all of the unchecked locations.
+    for (let locationID of (0, _loginJs.client).room.missingLocations)// Is this location the Free Item?
+    if (locationID == DESK_ID) {
+        // If so, this item is in logic no matter what! The icon should be red.
+        // We can skip the rest of the loop.
+        iconRed = true;
+        break;
+    } else {
+        // The location is a chest.
+        // If keys are disabled, the chest can be opened no matter what.
+        // If they're enabled, we need to check if we have the chest's corresponding key.
+        let keyID = locationID - LOCATION_ID_PREFIX + ITEM_ID_PREFIX;
+        if (!keysEnabled || (0, _loginJs.client).items.received.map((item)=>item.id).includes(keyID)) {
+            // The chest can be opened! We don't need to continue through the rest of the loop.
+            iconRed = true;
+            break;
+        }
+    }
+    // If the icon should be red, set it to red.
+    if (iconRed) _jquery("#website-icon").attr("href", "assets/images/Red Chest.svg");
+    else _jquery("#website-icon").attr("href", "assets/images/Unlocked Chest.svg");
 }
 
 },{"jquery":"hgMhh","./login.js":"ly455","./settings.js":"hHf3b","bundle-text:../../assets/images/Free Item.svg":"iKdNn","bundle-text:../../assets/images/No More Free Item.svg":"ddYWf","bundle-text:../../assets/images/Empty Chest.svg":"66Z07","bundle-text:../../assets/images/Locked Chest.svg":"gUeNL","bundle-text:../../assets/images/Unlocked Chest.svg":"erxC6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hgMhh":[function(require,module,exports,__globalThis) {
@@ -9364,11 +9393,15 @@ const itemsReceivedListener = (items, index)=>{
         */ if (item.id != (0, _mainGameJs.ITEM_THAT_DOES_NOTHING_ID)) {
         var chestNumber = item.id - (0, _mainGameJs.ITEM_ID_PREFIX);
         if (!(0, _loginJs.client).room.checkedLocations.includes((0, _mainGameJs.LOCATION_ID_PREFIX) + chestNumber)) (0, _mainGameJs.displayChestUnlocked)(chestNumber);
+        // Now that a new chest might be openable, update the website icon.
+        (0, _mainGameJs.updateIcon)();
     }
 };
 const locationsCheckedListener = (locations)=>{
     // Update the appearance of every location that has been checked.
     for(var i = 0; i < locations.length; i++)(0, _mainGameJs.displayLocationChecked)(locations[i]);
+    // Now that there may no longer be any openable chests, update the website icon.
+    (0, _mainGameJs.updateIcon)();
     // Check if all chests have been opened yet, and display the win message if so.
     (0, _winJs.displayIfWin)();
 };
