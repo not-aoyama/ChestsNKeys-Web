@@ -9,6 +9,7 @@
         <!-- Scripts -->
         <!-- We only need to import some of the local JS files. login.js imports most of the others. -->
         <script src="assets/scripts/login.js"></script>
+        <script src="assets/scripts/credits.js"></script>
         <script src="assets/scripts/settings.js"></script>
 
         <!-- Stylesheet -->
@@ -81,10 +82,32 @@
             <label for="enable-animations">Enable chest open animations:</label>
             <input type="checkbox" id="enable-animations" checked />
         </div>
+        <div id="credits-menu" class="popup-menu">
+            <button type="button" id="credits-x" class="icon-button x-icon">
+                <img src="assets/images/X.svg" width="25" height="25" title="Close settings menu" />
+            </button>
+            <h2>Credits</h2>
+            <h3>Code</h3>
+            <ul>
+                <li><b><a href="https://github.com/brev95">brev95</a></b>: Helped compile the code</li>
+                <li><b><a href="https://github.com/not-aoyama">NOT aoyama</a></b>: Everything else</li>
+            </ul>
+            <h3>Visuals</h3>
+            <ul>
+                <li><b>Solar Icons</b>: <a href="https://www.svgrepo.com/svg/526221/settings">Settings icon</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY license</a>)</li>
+                <li><b>SVG Repo</b>: <a href="https://www.svgrepo.com/svg/12848/x-symbol">X icon</a> (<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>)</li>
+                <li><b><a href="https://github.com/not-aoyama">NOT aoyama</a></b>: Everything else</li>
+            </ul>
+            <h3>Audio</h3>
+            <ul>
+                <li><b>steprock</b>: <a href="https://freesound.org/s/771164/">Chest open sound</a> (<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>)</li>
+                <li><b>xkeril</b>: <a href="https://freesound.org/s/815493/">Chest unlock sound</a> (<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>)</li>
+            </ul>
+        </div>
         <footer>
             The low-effort abomination that is Chests 'n' Keys was thrust upon you by NOT aoyama.
             <br>
-            Special thanks to brev95 for helping compile the code!
+            <a id="credits-link">Click here for the full list of credits!</a>
         </footer>
     </body>
 </html>

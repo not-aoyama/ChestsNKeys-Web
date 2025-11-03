@@ -46,3 +46,9 @@ body {
 footer {
     font-size: 12px;
 }
+
+#credits-link {
+    /* Make this link look like it has an HREF, even though it doesn't */
+    text-decoration: underline;
+    cursor: pointer;
+}

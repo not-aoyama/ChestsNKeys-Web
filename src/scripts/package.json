@@ -17,6 +17,10 @@
   "homepage": "https://github.com/not-aoyama/ChestsNKeys-Web",
   "description": "",
   "targets": {
+    "credits": {
+      "source": "credits.ts",
+      "distDir": "../../assets/scripts/"
+    },
     "listeners": {
       "source": "listeners.ts",
       "distDir": "../../assets/scripts/"

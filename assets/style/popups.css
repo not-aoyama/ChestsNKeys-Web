@@ -19,10 +19,6 @@
 /* Format text inside of popup menus */
 .popup-menu * {
     color: white;
-    /* Add vertical spacing */
-    margin: 10px 0;
-    /* Make everything on the same line together unless there is a br */
-    display: inline;
 }
 
 /* Place X icon in the top right */
@@ -36,4 +32,21 @@
 /* Make the input elements all the same height so the rows are evenly spaced. */
 .popup-menu input {
     height: 16px;
+}
+
+#settings-menu * {
+    /* Make everything on the same line together unless there is a br */
+    display: inline;
+    /* Add vertical spacing */
+    margin: 10px 0;
+}
+
+#credits-menu h3 {
+    margin-bottom: 0;
+}
+
+#credits-menu ul {
+    margin-top: 0;
+    list-style-type: none;
+    padding: 0;
 }
