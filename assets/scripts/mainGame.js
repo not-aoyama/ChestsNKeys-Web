@@ -9441,6 +9441,8 @@ function setupTextClient() {
     });
 }
 function addToLog(message) {
+    // Debug console log statement
+    console.log(message);
     // The entire message will be stored in a single li tag.
     var li = document.createElement("li");
     // Whether or not this message is relevant to the player.
@@ -9514,10 +9516,17 @@ function addToLog(message) {
                 spanHoverText = "Game: " + node.player.game;
                 break;
         }
-        // Set the span's class, hover text, and content
+        // Set the span's class and hover text.
         _jquery(span).attr("class", spanClass);
         _jquery(span).attr("title", spanHoverText);
-        _jquery(span).text(node.text);
+        // Set the span's content to be this node's text.
+        // This node might contain "\n", which should be rendered as a newline character but is not.
+        // We will replace these with <br> tags.
+        let linesOfText = node.text.split("\n");
+        for(let i = 0; i < linesOfText.length; i++){
+            if (i > 0) _jquery(span).append(document.createElement("br"));
+            _jquery(span).append(linesOfText[i]);
+        }
         // Add the span to the li.
         _jquery(li).append(span);
     }
