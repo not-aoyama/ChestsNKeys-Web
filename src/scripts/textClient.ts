@@ -27,6 +27,9 @@ export function setupTextClient() : void {
 }
 
 export function addToLog(message : MessageNode[]) : void {
+    // Debug console log statement
+    console.log(message);
+
     // The entire message will be stored in a single li tag.
     var li = document.createElement("li");
 
@@ -126,10 +129,20 @@ export function addToLog(message : MessageNode[]) : void {
                 break;
         }
 
-        // Set the span's class, hover text, and content
+        // Set the span's class and hover text.
         $(span).attr("class", spanClass);
         $(span).attr("title", spanHoverText);
-        $(span).text(node.text);
+
+        // Set the span's content to be this node's text.
+        // This node might contain "\n", which should be rendered as a newline character but is not.
+        // We will replace these with <br> tags.
+        let linesOfText : string[] = node.text.split("\n");
+        for (let i = 0; i < linesOfText.length; i++) {
+            if (i > 0) {
+                $(span).append(document.createElement("br"));
+            }
+            $(span).append(linesOfText[i]);
+        }
 
         // Add the span to the li.
         $(li).append(span);
