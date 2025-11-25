@@ -20,6 +20,10 @@
     Hides everything not within the bounds of the li.
     This prevents there from being big vertical gaps between rows, 
     as well as the desk li being out of alignment with the other lis.
+
+    TODO: figure out how to make stuff outside the bounds of the li visible
+    WITHOUT making big vertical gaps appear between rows.
+    This way, item icons won't be clipped as they ascend upwards.
     */
     overflow-y: hidden;
 }
@@ -40,6 +44,31 @@ li#desk svg {
     This SVG must have a top of 0px, or else it will stick outside of the top of its li.
     */
     top: 0px;
+}
+
+/* div containing an SVG representing a sent item */
+div.item-icon {
+    width: 50%;
+    height: 50%;
+    position: relative;
+    z-index: 1;
+    left: 25%; /* Puts the div at the horizontal center of the chest */
+    /* Animation to make the item SVG move upwards and fade away. */
+    animation: move-up-fade 1s linear;
+}
+
+@keyframes move-up-fade {
+    0% {
+        top: -85px;
+        opacity: 100%;
+    }
+    75% {
+        opacity: 100%;
+    }
+    100% {
+        top: -103px;
+        opacity: 0%;
+    }
 }
 
 #locations-list li.clickable {

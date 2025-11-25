@@ -30,6 +30,31 @@ li#desk svg {
   top: 0;
 }
 
+div.item-icon {
+  z-index: 1;
+  width: 50%;
+  height: 50%;
+  animation: 1s linear move-up-fade;
+  position: relative;
+  left: 25%;
+}
+
+@keyframes move-up-fade {
+  0% {
+    opacity: 1;
+    top: -85px;
+  }
+
+  75% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    top: -103px;
+  }
+}
+
 #locations-list li.clickable {
   cursor: pointer;
   fill-opacity: 1;

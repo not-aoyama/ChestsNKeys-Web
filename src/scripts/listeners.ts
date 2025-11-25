@@ -6,6 +6,7 @@ import { ConnectedPacket, Item, MessageNode } from "archipelago.js";
 import { client } from "./login.js";
 import {
     displayChestUnlocked,
+    displayItemSent,
     displayLocationChecked,
     ITEM_THAT_DOES_NOTHING_ID,
     ITEM_ID_PREFIX,
@@ -65,9 +66,13 @@ const itemsReceivedListener = (items : Item[], index : number) => {
 };
 
 const locationsCheckedListener = (locations : number[]) => {
-    // Update the appearance of every location that has been checked.
+    /*
+    Update the appearance of every location that has been checked.
+    Also, display the item sent from each newly checked location.
+    */
     for (var i = 0; i < locations.length; i++) {
         displayLocationChecked(locations[i]);
+        displayItemSent(locations[i]);
     }
 
     // Now that there may no longer be any openable chests, update the website icon.

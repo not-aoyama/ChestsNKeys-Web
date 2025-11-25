@@ -17,6 +17,8 @@ import emptyChestSvg from "bundle-text:../../assets/images/Empty Chest.svg";
 import lockedChestSvg from "bundle-text:../../assets/images/Locked Chest.svg";
 // @ts-ignore
 import unlockedChestSvg from "bundle-text:../../assets/images/Unlocked Chest.svg";
+// @ts-ignore
+import apIconSvg from "bundle-text:../../assets/images/AP Icon.svg";
 
 export const LOCATION_ID_PREFIX = 420000;
 export const DESK_ID = LOCATION_ID_PREFIX;
@@ -282,4 +284,44 @@ export function updateIcon() : void {
     else {
         $("#website-icon").attr("href", "assets/images/Unlocked Chest.svg");
     }
+}
+
+export function displayItemSent(locationID : number) {
+    // Get the item that is at this location.
+    client.scout([locationID]).then((items : Item[]) => {
+        // There should only be one item in the list because we only scouted one location.
+        let item : Item = items[0];
+
+        console.log(item); // Debug statement until I figure out what to do.
+
+        let liID : string; // ID of the li tag representing the location with the given ID
+        if (locationID == DESK_ID) {
+            // Location is the Desk
+            liID = "#desk";
+        } else {
+            // Location is a chest
+            let chestNumber = locationID - LOCATION_ID_PREFIX;
+            liID = "#chest" + chestNumber;
+        }
+
+        /*
+        Append an SVG representing the item.
+        The SVG will be contained in a div tag. This way, we can attach an event listener to the div.
+        I can't figure out how to attach the event listener to the SVG itself.
+        */
+        let svgContainer = document.createElement("div");
+        $(svgContainer).append(apIconSvg); // only one SVG icon for the time being
+        $(svgContainer).attr("class", "item-icon");
+        /*
+        Make the div delete itself once its animation is finished.
+        This way, the page isn't cluttered with hundreds of SVGs that aren't being used.
+        */
+        svgContainer.addEventListener("animationend", (event) => {
+            $(event.target).remove();
+        });
+
+        $(liID).append(svgContainer);
+    }).catch((reason : any) => {
+        console.warn("Caught an error in displayItemSent()! Reason: " + reason);
+    });
 }

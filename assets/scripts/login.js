@@ -9167,8 +9167,13 @@ const itemsReceivedListener = (items, index)=>{
     }
 };
 const locationsCheckedListener = (locations)=>{
-    // Update the appearance of every location that has been checked.
-    for(var i = 0; i < locations.length; i++)(0, _mainGameJs.displayLocationChecked)(locations[i]);
+    /*
+    Update the appearance of every location that has been checked.
+    Also, display the item sent from each newly checked location.
+    */ for(var i = 0; i < locations.length; i++){
+        (0, _mainGameJs.displayLocationChecked)(locations[i]);
+        (0, _mainGameJs.displayItemSent)(locations[i]);
+    }
     // Now that there may no longer be any openable chests, update the website icon.
     (0, _mainGameJs.updateIcon)();
     // Check if all chests have been opened yet, and display the win message if so.
@@ -9206,6 +9211,7 @@ parcelHelpers.export(exports, "displayLocationChecked", ()=>displayLocationCheck
 parcelHelpers.export(exports, "displayChestUnlocked", ()=>displayChestUnlocked);
 // Updates the website icon so that it's red if there are any unlocked, unopened chests, and black otherwise.
 parcelHelpers.export(exports, "updateIcon", ()=>updateIcon);
+parcelHelpers.export(exports, "displayItemSent", ()=>displayItemSent);
 var _jquery = require("jquery");
 var _loginJs = require("./login.js");
 var _settingsJs = require("./settings.js");
@@ -9224,6 +9230,9 @@ var _lockedChestSvgDefault = parcelHelpers.interopDefault(_lockedChestSvg);
 // @ts-ignore
 var _unlockedChestSvg = require("bundle-text:../../assets/images/Unlocked Chest.svg");
 var _unlockedChestSvgDefault = parcelHelpers.interopDefault(_unlockedChestSvg);
+// @ts-ignore
+var _apIconSvg = require("bundle-text:../../assets/images/AP Icon.svg");
+var _apIconSvgDefault = parcelHelpers.interopDefault(_apIconSvg);
 const LOCATION_ID_PREFIX = 420000;
 const DESK_ID = LOCATION_ID_PREFIX;
 const ITEM_ID_PREFIX = 69000;
@@ -9416,8 +9425,42 @@ function updateIcon() {
     if (iconRed) _jquery("#website-icon").attr("href", "assets/images/Red Chest.svg");
     else _jquery("#website-icon").attr("href", "assets/images/Unlocked Chest.svg");
 }
+function displayItemSent(locationID) {
+    // Get the item that is at this location.
+    (0, _loginJs.client).scout([
+        locationID
+    ]).then((items)=>{
+        // There should only be one item in the list because we only scouted one location.
+        let item = items[0];
+        console.log(item); // Debug statement until I figure out what to do.
+        let liID; // ID of the li tag representing the location with the given ID
+        if (locationID == DESK_ID) // Location is the Desk
+        liID = "#desk";
+        else {
+            // Location is a chest
+            let chestNumber = locationID - LOCATION_ID_PREFIX;
+            liID = "#chest" + chestNumber;
+        }
+        /*
+        Append an SVG representing the item.
+        The SVG will be contained in a div tag. This way, we can attach an event listener to the div.
+        I can't figure out how to attach the event listener to the SVG itself.
+        */ let svgContainer = document.createElement("div");
+        _jquery(svgContainer).append((0, _apIconSvgDefault.default)); // only one SVG icon for the time being
+        _jquery(svgContainer).attr("class", "item-icon");
+        /*
+        Make the div delete itself once its animation is finished.
+        This way, the page isn't cluttered with hundreds of SVGs that aren't being used.
+        */ svgContainer.addEventListener("animationend", (event)=>{
+            _jquery(event.target).remove();
+        });
+        _jquery(liID).append(svgContainer);
+    }).catch((reason)=>{
+        console.warn("Caught an error in displayItemSent()! Reason: " + reason);
+    });
+}
 
-},{"jquery":"hgMhh","./login.js":"ly455","./settings.js":"hHf3b","bundle-text:../../assets/images/Free Item.svg":"iKdNn","bundle-text:../../assets/images/No More Free Item.svg":"ddYWf","bundle-text:../../assets/images/Empty Chest.svg":"66Z07","bundle-text:../../assets/images/Locked Chest.svg":"gUeNL","bundle-text:../../assets/images/Unlocked Chest.svg":"erxC6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hHf3b":[function(require,module,exports,__globalThis) {
+},{"jquery":"hgMhh","./login.js":"ly455","./settings.js":"hHf3b","bundle-text:../../assets/images/Free Item.svg":"iKdNn","bundle-text:../../assets/images/No More Free Item.svg":"ddYWf","bundle-text:../../assets/images/Empty Chest.svg":"66Z07","bundle-text:../../assets/images/Locked Chest.svg":"gUeNL","bundle-text:../../assets/images/Unlocked Chest.svg":"erxC6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","bundle-text:../../assets/images/AP Icon.svg":"2U4T9"}],"hHf3b":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 // Enables other scripts to see whether sound is enabled
@@ -9494,6 +9537,9 @@ module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><!
 
 },{}],"erxC6":[function(require,module,exports,__globalThis) {
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><!-- Created with Inkscape (http://www.inkscape.org/) --><svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:svg=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"682.66669\" height=\"682.66669\" viewBox=\"0 0 682.66669 682.66669\" xml:space=\"preserve\">\n  <path style=\"stroke: none; display: inline\" d=\"M 207.21615,58.203125 C 185.99092,87.946272 160.5364,111.60147 137.34896,122.85547 v 52.7832 c 5.28251,-2.21258 11.4736,-5.09262 18.42383,-8.8164 23.79607,-12.74944 55.52803,-35.14398 86.59375,-73.88477 l 3.75391,-4.679688 h 94.71289 1 94.71289 l 3.75391,4.679688 c 31.06571,38.74079 62.79768,61.13533 86.59375,73.88477 6.95023,3.72378 13.14131,6.60382 18.42383,8.8164 v -52.7832 c -23.18743,-11.254 -48.64195,-34.909198 -69.86719,-64.652345 h -133.61719 -1 z m 53.87891,55.054685 v 231.17578 h 79.73828 1 79.73828 V 113.25781 h -79.73828 -1 z m -5.3418,2.56836 c -31.40383,37.11186 -63.38404,59.75136 -88.17383,73.03321 -12.13598,6.50221 -22.42041,10.70283 -30.23047,13.45117 v 172.33789 h 118.4043 z m 171.16016,0 v 258.82227 h 118.4043 V 202.31055 c -7.81007,-2.74834 -18.09449,-6.94897 -30.23047,-13.45117 -24.78979,-13.28185 -56.77,-35.92135 -88.17383,-73.03321 z m -320.375,21.29492 c -30.097646,11.92075 -51.703125,19.23243 -51.703125,19.23243 v 252.11914 h 285.998045 1 285.99805 V 156.35352 c 0,0 -21.60549,-7.31168 -51.70313,-19.23243 l -1.38867,257.93946 c -97.66543,0.007 -174.06734,0.0117 -232.90625,0.0137 -0.12631,0 -0.37385,-1e-5 -0.5,0 -0.12615,-1e-5 -0.37369,0 -0.5,0 -58.83891,-0.002 -135.24086,-0.007 -232.90625,-0.0137 z M 62.063811,420.56445 c 0,0 59.155859,160.56349 16.902343,254.92969 h 261.201166 0.66602 1 0.66602 261.20117 c -42.25351,-94.3662 16.90234,-254.92969 16.90234,-254.92969 h -278.10351 -0.66602 -1 -0.66602 z m 58.738279,35.58399 h 219.36523 0.66602 1 0.66602 219.36523 l -4.87305,14.38672 c 0,0 -29.4905,89.92531 -12.52148,159.12304 l 3.31445,13.51172 h -205.28515 -0.66602 -1 -0.66602 -205.28515 l 3.31445,-13.51172 C 155.16565,560.46047 125.67514,470.53516 125.67514,470.53516 Z m 31.3457,22.0332 c 7.42386,26.27527 21.16908,86.08229 11.42578,142.95508 H 264.8099 V 478.18164 Z m 117.79688,0 v 142.95508 h 70.22265 0.66602 1 0.66602 70.22265 V 478.18164 h -70.22265 -0.66602 -1 -0.66602 z m 147.91211,0 v 142.95508 h 101.23633 c -9.7433,-56.87279 4.00192,-116.67981 11.42578,-142.95508 z\"/>\n</svg>";
+
+},{}],"2U4T9":[function(require,module,exports,__globalThis) {
+module.exports = "<?xml version=\"1.0\" encoding=\"utf-8\"?><!-- Generator: Adobe Illustrator 26.4.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\" x=\"0px\" y=\"0px\" viewBox=\"0 0 2034 2112\" style=\"enable-background: new 0 0 2034 2112\" xml:space=\"preserve\">\n<style>.st0 {\n  fill: #c97682;\n}\n\n.st1 {\n  fill: #75c275;\n}\n\n.st2 {\n  fill: #eee391;\n}\n\n.st3 {\n  fill: #ca94c2;\n}\n\n.st4 {\n  fill: #767ebd;\n}\n\n.st5 {\n  fill: #d9a07d;\n}\n</style>\n<g>\n\t<path class=\"st0\" d=\"M943.7,755.54c0,23.44-1.51,46.89-4.54,69.58c24.96,4.54,50.67,7.18,77.14,7.18s52.18-2.65,77.14-7.18\r\n\t\tc-3.02-22.69-4.54-46.13-4.54-69.58c0-214.4,128.95-399.31,313.48-480.99C1343.76,118.38,1192.89,7.21,1016.3,7.21\r\n\t\tS688.83,118.38,630.22,274.55C814.75,356.23,943.7,541.14,943.7,755.54z\"/>\n\t<path class=\"st1\" d=\"M1202.34,755.54c0,10.59,0.38,21.55,1.51,31.76c1.13,20.04,4.16,39.7,8.32,58.61\r\n\t\tc4.16,18.91,9.83,37.06,16.64,54.83c7.18,19.66,15.88,38.19,26.09,56.34c94.16-88.49,220.83-142.93,359.99-142.93\r\n\t\ts265.83,54.45,359.98,142.93c33.65-59.75,52.56-128.57,52.56-201.55c0-227.26-184.91-412.55-412.55-412.55\r\n\t\tc-26.47,0-52.18,2.65-77.14,7.18c-18.91,3.78-37.44,8.32-55.21,14.75c-18.91,6.05-37.06,13.99-54.83,23.44\r\n\t\tC1294.23,456.43,1202.34,595.59,1202.34,755.54z\"/>\n\t<path class=\"st2\" d=\"M417.71,814.15c139.15,0,265.83,54.45,359.99,142.93c10.21-18.15,18.91-36.68,26.09-56.34\r\n\t\tc6.81-17.77,12.48-35.92,16.64-54.83s7.18-38.57,8.32-58.61c1.14-10.21,1.51-21.18,1.51-31.76c0-159.95-91.51-299.11-224.99-367.55\r\n\t\tc-17.77-9.07-35.92-16.64-55.21-23.07c-17.77-6.43-36.3-10.97-55.21-14.75c-24.96-4.54-50.67-7.18-77.14-7.18\r\n\t\tc-227.64,0-412.55,185.29-412.55,412.55c0,72.98,18.91,141.8,52.56,201.55C151.88,868.6,278.55,814.15,417.71,814.15z\"/>\n\t<path class=\"st3\" d=\"M1943.49,1090.95c-11.72-15.12-24.2-29.49-37.81-43.11c-74.49-74.49-177.35-120.25-290.79-120.25\r\n\t\ts-215.92,45.75-290.79,120.25c-13.24,13.23-25.71,27.6-37.44,42.73c-11.72,15.12-22.31,31.01-31.39,48.02\r\n\t\tc-13.23,22.69-23.82,46.89-32.14,72.23c187.55,80.16,319.15,266.59,319.15,483.26c0,17.4-0.75,34.79-2.64,51.8\r\n\t\tc24.58,4.54,49.54,6.81,75.25,6.81c227.64,0,412.55-184.91,412.55-412.55c0-73.36-19.29-142.18-52.94-201.55\r\n\t\tC1965.42,1121.95,1954.83,1106.07,1943.49,1090.95z\"/>\n\t<path class=\"st4\" d=\"M809.46,1210.82c-8.32-25.34-18.91-49.54-32.14-72.23c-9.07-17.02-19.66-32.9-31.39-48.02\r\n\t\tc-11.34-15.13-23.82-29.5-37.44-42.73C634,973.35,531.15,927.59,417.71,927.59s-216.29,45.75-290.79,120.25\r\n\t\tc-13.61,13.23-26.09,27.6-37.44,42.73c-11.72,15.12-22.31,31.01-31.39,48.02c-33.65,59.37-52.94,128.19-52.94,201.55\r\n\t\tc0,227.64,184.91,412.55,412.55,412.55c25.71,0,50.67-2.27,75.25-6.81c-1.89-17.02-2.64-34.41-2.64-51.8\r\n\t\tC490.31,1477.4,621.9,1290.98,809.46,1210.82z\"/>\n\t<path class=\"st5\" d=\"M1202.72,1326.15c-17.77-9.07-36.3-17.02-55.59-23.44c-17.77-6.05-36.68-10.97-55.59-14.37\r\n\t\tc-24.58-4.54-49.54-6.81-75.25-6.81s-50.67,2.27-75.25,6.81c-18.91,3.4-37.81,8.32-55.59,14.37\r\n\t\tc-19.28,6.43-37.81,14.37-55.59,23.44c-134.24,68.06-226.13,207.6-226.13,367.93c0,4.54,0,9.45,0.38,13.99\r\n\t\tc0.38,20.42,2.65,40.46,6.43,59.75c3.02,18.91,7.94,37.81,13.99,55.58C679,1987.89,834.04,2107,1016.3,2107\r\n\t\ts337.3-119.11,391.75-283.6c6.05-17.77,10.97-36.68,13.99-55.58c3.78-19.66,6.05-39.7,6.43-60.12c0.38-4.54,0.38-9.07,0.38-13.61\r\n\t\tC1428.84,1533.75,1336.96,1394.21,1202.72,1326.15z\"/>\n</g>\n</svg>";
 
 },{}],"6qtxO":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");

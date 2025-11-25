@@ -1,6 +1,10 @@
 import * as $ from "jquery";
 import { Client } from "archipelago.js";
 import { setupClientListeners } from "./listeners.js";
+import {
+    displayItemSent,
+    LOCATION_ID_PREFIX
+} from "./mainGame.js";
 import { displayIfWin } from "./win.js";
 
 export var client: Client;
