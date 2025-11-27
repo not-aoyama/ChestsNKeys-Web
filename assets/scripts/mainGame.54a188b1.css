@@ -36,6 +36,7 @@ div.item-icon {
   height: 50%;
   animation: 1s linear move-up-fade;
   position: relative;
+  top: -85px;
   left: 25%;
 }
 

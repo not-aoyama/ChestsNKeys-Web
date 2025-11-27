@@ -7,6 +7,7 @@ import * as $ from "jquery";
 import {Item} from "archipelago.js";
 import { client } from "./login.js";
 import { areSoundsEnabled, getVolume } from "./settings.js";
+
 // @ts-ignore
 import freeItemSvg from "bundle-text:../../assets/images/Free Item.svg";
 // @ts-ignore
@@ -19,6 +20,8 @@ import lockedChestSvg from "bundle-text:../../assets/images/Locked Chest.svg";
 import unlockedChestSvg from "bundle-text:../../assets/images/Unlocked Chest.svg";
 // @ts-ignore
 import apIconSvg from "bundle-text:../../assets/images/AP Icon.svg";
+// @ts-ignore
+import apIconColorlessSvg from "bundle-text:../../assets/images/AP Icon colorless.svg";
 
 export const LOCATION_ID_PREFIX = 420000;
 export const DESK_ID = LOCATION_ID_PREFIX;
@@ -310,15 +313,37 @@ export function displayItemSent(locationID : number) {
         I can't figure out how to attach the event listener to the SVG itself.
         */
         let svgContainer = document.createElement("div");
-        $(svgContainer).append(apIconSvg); // only one SVG icon for the time being
+
+        // Choose which SVG icon to add based on the type of item.
+        // Use red AP icon for trap items.
+        if (item.trap) {
+            // The SVG file being imported shouldn't have its own colors. We want to add our own instead.
+            $(svgContainer).append(apIconColorlessSvg);
+            $(svgContainer).css("fill", "red");
+        }
+        // Use black AP icon for filler items.
+        else if (item.filler) {
+            // The SVG file being imported shouldn't have its own colors. We want to add our own instead.
+            $(svgContainer).append(apIconColorlessSvg);
+            $(svgContainer).css("fill", "black");
+        }
+        // Use the normal, rainbow-colored AP icon for normal items.
+        else {
+            // The normal SVG comes with its own colors.
+            $(svgContainer).append(apIconSvg);
+        }
+
+        // This class will be used for CSS styling
         $(svgContainer).attr("class", "item-icon");
+
         /*
         Make the div delete itself once its animation is finished.
         This way, the page isn't cluttered with hundreds of SVGs that aren't being used.
+        Currently commented out for debugging purposes.
         */
-        svgContainer.addEventListener("animationend", (event) => {
-            $(event.target).remove();
-        });
+        // svgContainer.addEventListener("animationend", (event) => {
+        //     $(event.target).remove();
+        // });
 
         $(liID).append(svgContainer);
     }).catch((reason : any) => {

@@ -52,6 +52,7 @@ div.item-icon {
     height: 50%;
     position: relative;
     z-index: 1;
+    top: -85px;
     left: 25%; /* Puts the div at the horizontal center of the chest */
     /* Animation to make the item SVG move upwards and fade away. */
     animation: move-up-fade 1s linear;

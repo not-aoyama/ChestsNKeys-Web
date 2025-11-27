@@ -708,6 +708,9 @@ var _unlockedChestSvgDefault = parcelHelpers.interopDefault(_unlockedChestSvg);
 // @ts-ignore
 var _apIconSvg = require("bundle-text:../../assets/images/AP Icon.svg");
 var _apIconSvgDefault = parcelHelpers.interopDefault(_apIconSvg);
+// @ts-ignore
+var _apIconColorlessSvg = require("bundle-text:../../assets/images/AP Icon colorless.svg");
+var _apIconColorlessSvgDefault = parcelHelpers.interopDefault(_apIconColorlessSvg);
 const LOCATION_ID_PREFIX = 420000;
 const DESK_ID = LOCATION_ID_PREFIX;
 const ITEM_ID_PREFIX = 69000;
@@ -921,21 +924,34 @@ function displayItemSent(locationID) {
         The SVG will be contained in a div tag. This way, we can attach an event listener to the div.
         I can't figure out how to attach the event listener to the SVG itself.
         */ let svgContainer = document.createElement("div");
-        _jquery(svgContainer).append((0, _apIconSvgDefault.default)); // only one SVG icon for the time being
+        // Choose which SVG icon to add based on the type of item.
+        // Use red AP icon for trap items.
+        if (item.trap) {
+            // The SVG file being imported shouldn't have its own colors. We want to add our own instead.
+            _jquery(svgContainer).append((0, _apIconColorlessSvgDefault.default));
+            _jquery(svgContainer).css("fill", "red");
+        } else if (item.filler) {
+            // The SVG file being imported shouldn't have its own colors. We want to add our own instead.
+            _jquery(svgContainer).append((0, _apIconColorlessSvgDefault.default));
+            _jquery(svgContainer).css("fill", "black");
+        } else // The normal SVG comes with its own colors.
+        _jquery(svgContainer).append((0, _apIconSvgDefault.default));
+        // This class will be used for CSS styling
         _jquery(svgContainer).attr("class", "item-icon");
         /*
         Make the div delete itself once its animation is finished.
         This way, the page isn't cluttered with hundreds of SVGs that aren't being used.
-        */ svgContainer.addEventListener("animationend", (event)=>{
-            _jquery(event.target).remove();
-        });
+        Currently commented out for debugging purposes.
+        */ // svgContainer.addEventListener("animationend", (event) => {
+        //     $(event.target).remove();
+        // });
         _jquery(liID).append(svgContainer);
     }).catch((reason)=>{
         console.warn("Caught an error in displayItemSent()! Reason: " + reason);
     });
 }
 
-},{"jquery":"hgMhh","./login.js":"ly455","./settings.js":"hHf3b","bundle-text:../../assets/images/Free Item.svg":"iKdNn","bundle-text:../../assets/images/No More Free Item.svg":"ddYWf","bundle-text:../../assets/images/Empty Chest.svg":"66Z07","bundle-text:../../assets/images/Locked Chest.svg":"gUeNL","bundle-text:../../assets/images/Unlocked Chest.svg":"erxC6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","bundle-text:../../assets/images/AP Icon.svg":"2U4T9"}],"hgMhh":[function(require,module,exports,__globalThis) {
+},{"jquery":"hgMhh","./login.js":"ly455","./settings.js":"hHf3b","bundle-text:../../assets/images/Free Item.svg":"iKdNn","bundle-text:../../assets/images/No More Free Item.svg":"ddYWf","bundle-text:../../assets/images/Empty Chest.svg":"66Z07","bundle-text:../../assets/images/Locked Chest.svg":"gUeNL","bundle-text:../../assets/images/Unlocked Chest.svg":"erxC6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","bundle-text:../../assets/images/AP Icon.svg":"2U4T9","bundle-text:../../assets/images/AP Icon colorless.svg":"6ZCis"}],"hgMhh":[function(require,module,exports,__globalThis) {
 /*!
  * jQuery JavaScript Library v3.7.1
  * https://jquery.com/
@@ -7643,6 +7659,7 @@ parcelHelpers.export(exports, "client", ()=>client);
 var _jquery = require("jquery");
 var _archipelagoJs = require("archipelago.js");
 var _listenersJs = require("./listeners.js");
+var _mainGameJs = require("./mainGame.js");
 var _winJs = require("./win.js");
 var client;
 _jquery(document).ready(function() {
@@ -7683,6 +7700,10 @@ _jquery(document).ready(function() {
             _jquery("#login-container").hide();
             // Now that we've connected, we can check if we've already won and display the win message.
             (0, _winJs.displayIfWin)();
+            /*
+                Display item animation for a specific chest.
+                For debugging purposes only; should be removed in the final product.
+                */ (0, _mainGameJs.displayItemSent)((0, _mainGameJs.LOCATION_ID_PREFIX) + 124);
         }).catch((error)=>{
             // Display the correct error message.
             if (error.errors) {
@@ -7709,7 +7730,7 @@ _jquery(document).ready(function() {
     _jquery("#login-container").show();
 });
 
-},{"jquery":"hgMhh","archipelago.js":"ka5Bw","./listeners.js":"8WNDW","./win.js":"jSjH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ka5Bw":[function(require,module,exports,__globalThis) {
+},{"jquery":"hgMhh","archipelago.js":"ka5Bw","./listeners.js":"8WNDW","./win.js":"jSjH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./mainGame.js":"6me0k"}],"ka5Bw":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "targetVersion", ()=>targetVersion);
@@ -9727,6 +9748,9 @@ module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><!
 
 },{}],"2U4T9":[function(require,module,exports,__globalThis) {
 module.exports = "<?xml version=\"1.0\" encoding=\"utf-8\"?><!-- Generator: Adobe Illustrator 26.4.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\" x=\"0px\" y=\"0px\" viewBox=\"0 0 2034 2112\" style=\"enable-background: new 0 0 2034 2112\" xml:space=\"preserve\">\n<style>.st0 {\n  fill: #c97682;\n}\n\n.st1 {\n  fill: #75c275;\n}\n\n.st2 {\n  fill: #eee391;\n}\n\n.st3 {\n  fill: #ca94c2;\n}\n\n.st4 {\n  fill: #767ebd;\n}\n\n.st5 {\n  fill: #d9a07d;\n}\n</style>\n<g>\n\t<path class=\"st0\" d=\"M943.7,755.54c0,23.44-1.51,46.89-4.54,69.58c24.96,4.54,50.67,7.18,77.14,7.18s52.18-2.65,77.14-7.18\r\n\t\tc-3.02-22.69-4.54-46.13-4.54-69.58c0-214.4,128.95-399.31,313.48-480.99C1343.76,118.38,1192.89,7.21,1016.3,7.21\r\n\t\tS688.83,118.38,630.22,274.55C814.75,356.23,943.7,541.14,943.7,755.54z\"/>\n\t<path class=\"st1\" d=\"M1202.34,755.54c0,10.59,0.38,21.55,1.51,31.76c1.13,20.04,4.16,39.7,8.32,58.61\r\n\t\tc4.16,18.91,9.83,37.06,16.64,54.83c7.18,19.66,15.88,38.19,26.09,56.34c94.16-88.49,220.83-142.93,359.99-142.93\r\n\t\ts265.83,54.45,359.98,142.93c33.65-59.75,52.56-128.57,52.56-201.55c0-227.26-184.91-412.55-412.55-412.55\r\n\t\tc-26.47,0-52.18,2.65-77.14,7.18c-18.91,3.78-37.44,8.32-55.21,14.75c-18.91,6.05-37.06,13.99-54.83,23.44\r\n\t\tC1294.23,456.43,1202.34,595.59,1202.34,755.54z\"/>\n\t<path class=\"st2\" d=\"M417.71,814.15c139.15,0,265.83,54.45,359.99,142.93c10.21-18.15,18.91-36.68,26.09-56.34\r\n\t\tc6.81-17.77,12.48-35.92,16.64-54.83s7.18-38.57,8.32-58.61c1.14-10.21,1.51-21.18,1.51-31.76c0-159.95-91.51-299.11-224.99-367.55\r\n\t\tc-17.77-9.07-35.92-16.64-55.21-23.07c-17.77-6.43-36.3-10.97-55.21-14.75c-24.96-4.54-50.67-7.18-77.14-7.18\r\n\t\tc-227.64,0-412.55,185.29-412.55,412.55c0,72.98,18.91,141.8,52.56,201.55C151.88,868.6,278.55,814.15,417.71,814.15z\"/>\n\t<path class=\"st3\" d=\"M1943.49,1090.95c-11.72-15.12-24.2-29.49-37.81-43.11c-74.49-74.49-177.35-120.25-290.79-120.25\r\n\t\ts-215.92,45.75-290.79,120.25c-13.24,13.23-25.71,27.6-37.44,42.73c-11.72,15.12-22.31,31.01-31.39,48.02\r\n\t\tc-13.23,22.69-23.82,46.89-32.14,72.23c187.55,80.16,319.15,266.59,319.15,483.26c0,17.4-0.75,34.79-2.64,51.8\r\n\t\tc24.58,4.54,49.54,6.81,75.25,6.81c227.64,0,412.55-184.91,412.55-412.55c0-73.36-19.29-142.18-52.94-201.55\r\n\t\tC1965.42,1121.95,1954.83,1106.07,1943.49,1090.95z\"/>\n\t<path class=\"st4\" d=\"M809.46,1210.82c-8.32-25.34-18.91-49.54-32.14-72.23c-9.07-17.02-19.66-32.9-31.39-48.02\r\n\t\tc-11.34-15.13-23.82-29.5-37.44-42.73C634,973.35,531.15,927.59,417.71,927.59s-216.29,45.75-290.79,120.25\r\n\t\tc-13.61,13.23-26.09,27.6-37.44,42.73c-11.72,15.12-22.31,31.01-31.39,48.02c-33.65,59.37-52.94,128.19-52.94,201.55\r\n\t\tc0,227.64,184.91,412.55,412.55,412.55c25.71,0,50.67-2.27,75.25-6.81c-1.89-17.02-2.64-34.41-2.64-51.8\r\n\t\tC490.31,1477.4,621.9,1290.98,809.46,1210.82z\"/>\n\t<path class=\"st5\" d=\"M1202.72,1326.15c-17.77-9.07-36.3-17.02-55.59-23.44c-17.77-6.05-36.68-10.97-55.59-14.37\r\n\t\tc-24.58-4.54-49.54-6.81-75.25-6.81s-50.67,2.27-75.25,6.81c-18.91,3.4-37.81,8.32-55.59,14.37\r\n\t\tc-19.28,6.43-37.81,14.37-55.59,23.44c-134.24,68.06-226.13,207.6-226.13,367.93c0,4.54,0,9.45,0.38,13.99\r\n\t\tc0.38,20.42,2.65,40.46,6.43,59.75c3.02,18.91,7.94,37.81,13.99,55.58C679,1987.89,834.04,2107,1016.3,2107\r\n\t\ts337.3-119.11,391.75-283.6c6.05-17.77,10.97-36.68,13.99-55.58c3.78-19.66,6.05-39.7,6.43-60.12c0.38-4.54,0.38-9.07,0.38-13.61\r\n\t\tC1428.84,1533.75,1336.96,1394.21,1202.72,1326.15z\"/>\n</g>\n</svg>";
+
+},{}],"6ZCis":[function(require,module,exports,__globalThis) {
+module.exports = "<?xml version=\"1.0\" encoding=\"utf-8\"?><!-- Generator: Adobe Illustrator 26.4.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\" x=\"0px\" y=\"0px\" viewBox=\"0 0 2034 2112\" style=\"enable-background: new 0 0 2034 2112\" xml:space=\"preserve\">\n<g>\n\t<path class=\"st0\" d=\"M943.7,755.54c0,23.44-1.51,46.89-4.54,69.58c24.96,4.54,50.67,7.18,77.14,7.18s52.18-2.65,77.14-7.18\r\n\t\tc-3.02-22.69-4.54-46.13-4.54-69.58c0-214.4,128.95-399.31,313.48-480.99C1343.76,118.38,1192.89,7.21,1016.3,7.21\r\n\t\tS688.83,118.38,630.22,274.55C814.75,356.23,943.7,541.14,943.7,755.54z\"/>\n\t<path class=\"st1\" d=\"M1202.34,755.54c0,10.59,0.38,21.55,1.51,31.76c1.13,20.04,4.16,39.7,8.32,58.61\r\n\t\tc4.16,18.91,9.83,37.06,16.64,54.83c7.18,19.66,15.88,38.19,26.09,56.34c94.16-88.49,220.83-142.93,359.99-142.93\r\n\t\ts265.83,54.45,359.98,142.93c33.65-59.75,52.56-128.57,52.56-201.55c0-227.26-184.91-412.55-412.55-412.55\r\n\t\tc-26.47,0-52.18,2.65-77.14,7.18c-18.91,3.78-37.44,8.32-55.21,14.75c-18.91,6.05-37.06,13.99-54.83,23.44\r\n\t\tC1294.23,456.43,1202.34,595.59,1202.34,755.54z\"/>\n\t<path class=\"st2\" d=\"M417.71,814.15c139.15,0,265.83,54.45,359.99,142.93c10.21-18.15,18.91-36.68,26.09-56.34\r\n\t\tc6.81-17.77,12.48-35.92,16.64-54.83s7.18-38.57,8.32-58.61c1.14-10.21,1.51-21.18,1.51-31.76c0-159.95-91.51-299.11-224.99-367.55\r\n\t\tc-17.77-9.07-35.92-16.64-55.21-23.07c-17.77-6.43-36.3-10.97-55.21-14.75c-24.96-4.54-50.67-7.18-77.14-7.18\r\n\t\tc-227.64,0-412.55,185.29-412.55,412.55c0,72.98,18.91,141.8,52.56,201.55C151.88,868.6,278.55,814.15,417.71,814.15z\"/>\n\t<path class=\"st3\" d=\"M1943.49,1090.95c-11.72-15.12-24.2-29.49-37.81-43.11c-74.49-74.49-177.35-120.25-290.79-120.25\r\n\t\ts-215.92,45.75-290.79,120.25c-13.24,13.23-25.71,27.6-37.44,42.73c-11.72,15.12-22.31,31.01-31.39,48.02\r\n\t\tc-13.23,22.69-23.82,46.89-32.14,72.23c187.55,80.16,319.15,266.59,319.15,483.26c0,17.4-0.75,34.79-2.64,51.8\r\n\t\tc24.58,4.54,49.54,6.81,75.25,6.81c227.64,0,412.55-184.91,412.55-412.55c0-73.36-19.29-142.18-52.94-201.55\r\n\t\tC1965.42,1121.95,1954.83,1106.07,1943.49,1090.95z\"/>\n\t<path class=\"st4\" d=\"M809.46,1210.82c-8.32-25.34-18.91-49.54-32.14-72.23c-9.07-17.02-19.66-32.9-31.39-48.02\r\n\t\tc-11.34-15.13-23.82-29.5-37.44-42.73C634,973.35,531.15,927.59,417.71,927.59s-216.29,45.75-290.79,120.25\r\n\t\tc-13.61,13.23-26.09,27.6-37.44,42.73c-11.72,15.12-22.31,31.01-31.39,48.02c-33.65,59.37-52.94,128.19-52.94,201.55\r\n\t\tc0,227.64,184.91,412.55,412.55,412.55c25.71,0,50.67-2.27,75.25-6.81c-1.89-17.02-2.64-34.41-2.64-51.8\r\n\t\tC490.31,1477.4,621.9,1290.98,809.46,1210.82z\"/>\n\t<path class=\"st5\" d=\"M1202.72,1326.15c-17.77-9.07-36.3-17.02-55.59-23.44c-17.77-6.05-36.68-10.97-55.59-14.37\r\n\t\tc-24.58-4.54-49.54-6.81-75.25-6.81s-50.67,2.27-75.25,6.81c-18.91,3.4-37.81,8.32-55.59,14.37\r\n\t\tc-19.28,6.43-37.81,14.37-55.59,23.44c-134.24,68.06-226.13,207.6-226.13,367.93c0,4.54,0,9.45,0.38,13.99\r\n\t\tc0.38,20.42,2.65,40.46,6.43,59.75c3.02,18.91,7.94,37.81,13.99,55.58C679,1987.89,834.04,2107,1016.3,2107\r\n\t\ts337.3-119.11,391.75-283.6c6.05-17.77,10.97-36.68,13.99-55.58c3.78-19.66,6.05-39.7,6.43-60.12c0.38-4.54,0.38-9.07,0.38-13.61\r\n\t\tC1428.84,1533.75,1336.96,1394.21,1202.72,1326.15z\"/>\n</g>\n</svg>";
 
 },{}]},["93lp4","6me0k"], "6me0k", "parcelRequire04ca", {})
 
