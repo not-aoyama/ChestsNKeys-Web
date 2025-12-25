@@ -66,7 +66,7 @@ $(document).ready(function () {
                 Display item animation for a specific chest.
                 For debugging purposes only; should be removed in the final product.
                 */
-               displayItemSent(LOCATION_ID_PREFIX + 124);
+                // displayItemSent(LOCATION_ID_PREFIX + 76);
             })
             .catch((error) => {
                 // Display the correct error message.

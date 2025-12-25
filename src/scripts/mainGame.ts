@@ -22,6 +22,12 @@ import unlockedChestSvg from "bundle-text:../../assets/images/Unlocked Chest.svg
 import apIconSvg from "bundle-text:../../assets/images/AP Icon.svg";
 // @ts-ignore
 import apIconColorlessSvg from "bundle-text:../../assets/images/AP Icon colorless.svg";
+// @ts-ignore
+import apIconProgressionSvg from "bundle-text:../../assets/images/AP Icon progression.svg";
+// @ts-ignore
+import keySvg from "bundle-text:../../assets/images/Key.svg";
+// @ts-ignore
+import poopIconSvg from "bundle-text:../../assets/images/poop-svgrepo-com.svg";
 
 export const LOCATION_ID_PREFIX = 420000;
 export const DESK_ID = LOCATION_ID_PREFIX;
@@ -315,22 +321,40 @@ export function displayItemSent(locationID : number) {
         let svgContainer = document.createElement("div");
 
         // Choose which SVG icon to add based on the type of item.
-        // Use red AP icon for trap items.
-        if (item.trap) {
-            // The SVG file being imported shouldn't have its own colors. We want to add our own instead.
-            $(svgContainer).append(apIconColorlessSvg);
-            $(svgContainer).css("fill", "red");
-        }
-        // Use black AP icon for filler items.
-        else if (item.filler) {
-            // The SVG file being imported shouldn't have its own colors. We want to add our own instead.
-            $(svgContainer).append(apIconColorlessSvg);
-            $(svgContainer).css("fill", "black");
-        }
-        // Use the normal, rainbow-colored AP icon for normal items.
-        else {
-            // The normal SVG comes with its own colors.
-            $(svgContainer).append(apIconSvg);
+        // Items from Chests 'n' Keys will have their own unique sprites.
+        if (item.game == "Chests 'n' Keys") {
+            // Use a poop icon for Items That Do Nothing.
+            if (item.id == ITEM_THAT_DOES_NOTHING_ID) {
+                $(svgContainer).append(poopIconSvg);
+                // Make the poop icon brown
+                $(svgContainer).css("fill", "#84551f");
+            }
+            // Every other item in this game is a key, so use a key icon.
+            else {
+                $(svgContainer).append(keySvg);
+            }
+        } else {
+            // Use progressive AP icon (AP icon with an arrow in the bottom right) for progression items
+            if (item.progression) {
+                $(svgContainer).append(apIconProgressionSvg);
+            }
+            // Use red AP icon for trap items.
+            else if (item.trap) {
+                // The SVG file being imported shouldn't have its own colors. We want to add our own instead.
+                $(svgContainer).append(apIconColorlessSvg);
+                $(svgContainer).css("fill", "red");
+            }
+            // Use black AP icon for filler items.
+            else if (item.filler) {
+                // The SVG file being imported shouldn't have its own colors. We want to add our own instead.
+                $(svgContainer).append(apIconColorlessSvg);
+                $(svgContainer).css("fill", "black");
+            }
+            // Use the normal, rainbow-colored AP icon for normal items.
+            else {
+                // The normal SVG comes with its own colors.
+                $(svgContainer).append(apIconSvg);
+            }
         }
 
         // This class will be used for CSS styling
@@ -341,9 +365,9 @@ export function displayItemSent(locationID : number) {
         This way, the page isn't cluttered with hundreds of SVGs that aren't being used.
         Currently commented out for debugging purposes.
         */
-        // svgContainer.addEventListener("animationend", (event) => {
-        //     $(event.target).remove();
-        // });
+        svgContainer.addEventListener("animationend", (event) => {
+            $(event.target).remove();
+        });
 
         $(liID).append(svgContainer);
     }).catch((reason : any) => {
