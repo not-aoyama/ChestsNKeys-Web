@@ -326,8 +326,6 @@ export function displayItemSent(locationID : number) {
             // Use a poop icon for Items That Do Nothing.
             if (item.id == ITEM_THAT_DOES_NOTHING_ID) {
                 $(svgContainer).append(poopIconSvg);
-                // Make the poop icon brown
-                $(svgContainer).css("fill", "#84551f");
             }
             // Every other item in this game is a key, so use a key icon.
             else {
@@ -365,9 +363,9 @@ export function displayItemSent(locationID : number) {
         This way, the page isn't cluttered with hundreds of SVGs that aren't being used.
         Currently commented out for debugging purposes.
         */
-        svgContainer.addEventListener("animationend", (event) => {
-            $(event.target).remove();
-        });
+        // svgContainer.addEventListener("animationend", (event) => {
+        //     $(event.target).remove();
+        // });
 
         $(liID).append(svgContainer);
     }).catch((reason : any) => {
