@@ -61,14 +61,6 @@ $(document).ready(function () {
 
                 // Now that we've connected, we can check if we've already won and display the win message.
                 displayIfWin();
-
-                /*
-                Display item animation for some of the chests.
-                For debugging purposes only; should be removed in the final product.
-                */
-                for (let i = 1; i <= 2; i++) {
-                    displayItemSent(LOCATION_ID_PREFIX + i);
-                }
             })
             .catch((error) => {
                 // Display the correct error message.

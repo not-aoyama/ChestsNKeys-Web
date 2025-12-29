@@ -84,6 +84,7 @@ export function setupMainGameContainer(numChests : number) : void {
         // Add a number label to the chest.
         var label = document.createElement("span");
         $(label).text(i);
+        $(label).attr("class", "chest-label");
         $(chest).append(label);
 
         // Give the chest a unique color so it stands out!
@@ -330,6 +331,27 @@ export function displayItemSent(locationID : number) {
             // Every other item in this game is a key, so use a key icon.
             else {
                 $(svgContainer).append(keySvg);
+
+                // Add a label for what number the key is.
+                let keyNumber = item.id - ITEM_ID_PREFIX;
+                let label = document.createElement("span");
+                $(label).text(keyNumber);
+                $(label).attr("class", "key-label");
+                $(svgContainer).append(label);
+
+                // Keys to chests in this slot should be colored the same as their corresponding chests.
+                if (item.receiver.slot == item.sender.slot) { // The sender is always this slot.
+                    // Get the ID of the corresponding chest
+                    let chestID = "#chest" + keyNumber;
+                    // Get the color of the corresponding chest
+                    let chestColor = $(chestID).css("fill");
+                    // Set the color of the key icon to match
+                    $(svgContainer).css("fill", chestColor);
+                }
+                // Keys to chests in other slots should be black.
+                else {
+                    $(svgContainer).css("fill", "black");
+                }
             }
         } else {
             // Use progressive AP icon (AP icon with an arrow in the bottom right) for progression items
@@ -361,11 +383,10 @@ export function displayItemSent(locationID : number) {
         /*
         Make the div delete itself once its animation is finished.
         This way, the page isn't cluttered with hundreds of SVGs that aren't being used.
-        Currently commented out for debugging purposes.
         */
-        // svgContainer.addEventListener("animationend", (event) => {
-        //     $(event.target).remove();
-        // });
+        svgContainer.addEventListener("animationend", (event) => {
+            $(event.target).remove();
+        });
 
         $(liID).append(svgContainer);
     }).catch((reason : any) => {

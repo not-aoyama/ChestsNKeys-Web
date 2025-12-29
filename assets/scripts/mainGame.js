@@ -762,6 +762,7 @@ function setupMainGameContainer(numChests) {
         // Add a number label to the chest.
         var label = document.createElement("span");
         _jquery(label).text(i);
+        _jquery(label).attr("class", "chest-label");
         _jquery(chest).append(label);
         // Give the chest a unique color so it stands out!
         var hue = NUMBER_HUES / numChests * i;
@@ -938,7 +939,24 @@ function displayItemSent(locationID) {
         if (item.game == "Chests 'n' Keys") {
             // Use a poop icon for Items That Do Nothing.
             if (item.id == ITEM_THAT_DOES_NOTHING_ID) _jquery(svgContainer).append((0, _poopSvgrepoComSvgDefault.default));
-            else _jquery(svgContainer).append((0, _keySvgDefault.default));
+            else {
+                _jquery(svgContainer).append((0, _keySvgDefault.default));
+                // Add a label for what number the key is.
+                let keyNumber = item.id - ITEM_ID_PREFIX;
+                let label = document.createElement("span");
+                _jquery(label).text(keyNumber);
+                _jquery(label).attr("class", "key-label");
+                _jquery(svgContainer).append(label);
+                // Keys to chests in this slot should be colored the same as their corresponding chests.
+                if (item.receiver.slot == item.sender.slot) {
+                    // Get the ID of the corresponding chest
+                    let chestID = "#chest" + keyNumber;
+                    // Get the color of the corresponding chest
+                    let chestColor = _jquery(chestID).css("fill");
+                    // Set the color of the key icon to match
+                    _jquery(svgContainer).css("fill", chestColor);
+                } else _jquery(svgContainer).css("fill", "black");
+            }
         } else {
             // Use progressive AP icon (AP icon with an arrow in the bottom right) for progression items
             if (item.progression) _jquery(svgContainer).append((0, _apIconProgressionSvgDefault.default));
@@ -958,10 +976,9 @@ function displayItemSent(locationID) {
         /*
         Make the div delete itself once its animation is finished.
         This way, the page isn't cluttered with hundreds of SVGs that aren't being used.
-        Currently commented out for debugging purposes.
-        */ // svgContainer.addEventListener("animationend", (event) => {
-        //     $(event.target).remove();
-        // });
+        */ svgContainer.addEventListener("animationend", (event)=>{
+            _jquery(event.target).remove();
+        });
         _jquery(liID).append(svgContainer);
     }).catch((reason)=>{
         console.warn("Caught an error in displayItemSent()! Reason: " + reason);
@@ -7676,7 +7693,6 @@ parcelHelpers.export(exports, "client", ()=>client);
 var _jquery = require("jquery");
 var _archipelagoJs = require("archipelago.js");
 var _listenersJs = require("./listeners.js");
-var _mainGameJs = require("./mainGame.js");
 var _winJs = require("./win.js");
 var client;
 _jquery(document).ready(function() {
@@ -7717,10 +7733,6 @@ _jquery(document).ready(function() {
             _jquery("#login-container").hide();
             // Now that we've connected, we can check if we've already won and display the win message.
             (0, _winJs.displayIfWin)();
-            /*
-                Display item animation for some of the chests.
-                For debugging purposes only; should be removed in the final product.
-                */ for(let i = 1; i <= 2; i++)(0, _mainGameJs.displayItemSent)((0, _mainGameJs.LOCATION_ID_PREFIX) + i);
         }).catch((error)=>{
             // Display the correct error message.
             if (error.errors) {
@@ -7747,7 +7759,7 @@ _jquery(document).ready(function() {
     _jquery("#login-container").show();
 });
 
-},{"jquery":"hgMhh","archipelago.js":"ka5Bw","./listeners.js":"8WNDW","./win.js":"jSjH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./mainGame.js":"6me0k"}],"ka5Bw":[function(require,module,exports,__globalThis) {
+},{"jquery":"hgMhh","archipelago.js":"ka5Bw","./listeners.js":"8WNDW","./win.js":"jSjH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ka5Bw":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "targetVersion", ()=>targetVersion);
@@ -9778,7 +9790,7 @@ module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><!
 module.exports = "<?xml version=\"1.0\" encoding=\"utf-8\"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --><svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"#84551f\" width=\"800px\" height=\"800px\" viewBox=\"0 0 512 512\"><path d=\"M451.36 369.14C468.66 355.99 480 335.41 480 312c0-39.77-32.24-72-72-72h-14.07c13.42-11.73 22.07-28.78 22.07-48 0-35.35-28.65-64-64-64h-5.88c3.57-10.05 5.88-20.72 5.88-32 0-53.02-42.98-96-96-96-5.17 0-10.15.74-15.11 1.52C250.31 14.64 256 30.62 256 48c0 44.18-35.82 80-80 80h-16c-35.35 0-64 28.65-64 64 0 19.22 8.65 36.27 22.07 48H104c-39.76 0-72 32.23-72 72 0 23.41 11.34 43.99 28.64 57.14C26.31 374.62 0 404.12 0 440c0 39.76 32.24 72 72 72h368c39.76 0 72-32.24 72-72 0-35.88-26.31-65.38-60.64-70.86z\"/></svg>";
 
 },{}],"4eT6U":[function(require,module,exports,__globalThis) {
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><!-- Created with Inkscape (http://www.inkscape.org/) --><svg xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:svg=\"http://www.w3.org/2000/svg\" width=\"512\" height=\"512\" viewBox=\"0 0 512 512\" version=\"1.1\" id=\"svg1\" inkscape:version=\"1.4.2 (f4327f4, 2025-05-13)\" sodipodi:docname=\"Key.svg\">\n  <sodipodi:namedview id=\"namedview1\" pagecolor=\"#ffffff\" bordercolor=\"#000000\" borderopacity=\"0.25\" inkscape:showpageshadow=\"2\" inkscape:pageopacity=\"0.0\" inkscape:pagecheckerboard=\"0\" inkscape:deskcolor=\"#d1d1d1\" inkscape:document-units=\"px\" inkscape:zoom=\"0.30935922\" inkscape:cx=\"321.63257\" inkscape:cy=\"-9.6974644\" inkscape:window-width=\"1280\" inkscape:window-height=\"650\" inkscape:window-x=\"-6\" inkscape:window-y=\"-6\" inkscape:window-maximized=\"1\" inkscape:current-layer=\"layer1\"/>\n  <defs id=\"defs1\"/>\n  <g inkscape:label=\"Layer 1\" inkscape:groupmode=\"layer\" id=\"layer1\">\n    <path id=\"path1\" style=\"fill: #000; fill-opacity: 1; stroke: none; stroke-width: 248.869px; stroke-linejoin: round\" d=\"M 256,8.57129 A 157.14285,157.14285 0 0 0 98.857421,165.71387 157.14285,157.14285 0 0 0 206.28516,314.78613 v 30.92774 72 13.71484 72 h 99.42968 57.14258 v -72 h -57.14258 v -13.71484 h 57.14258 v -72 H 305.71484 V 314.78613 A 157.14285,157.14285 0 0 0 413.14258,165.71387 157.14285,157.14285 0 0 0 256,8.57129 Z\"/>\n  </g>\n</svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><!-- Created with Inkscape (http://www.inkscape.org/) --><svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:svg=\"http://www.w3.org/2000/svg\" width=\"512\" height=\"512\" viewBox=\"0 0 512 512\" version=\"1.1\">\n  <g>\n    <path style=\"fill-opacity: 1; stroke: none; stroke-width: 248.869px; stroke-linejoin: round\" d=\"M 256,8.57129 A 157.14285,157.14285 0 0 0 98.857421,165.71387 157.14285,157.14285 0 0 0 206.28516,314.78613 v 30.92774 72 13.71484 72 h 99.42968 57.14258 v -72 h -57.14258 v -13.71484 h 57.14258 v -72 H 305.71484 V 314.78613 A 157.14285,157.14285 0 0 0 413.14258,165.71387 157.14285,157.14285 0 0 0 256,8.57129 Z\"/>\n  </g>\n</svg>";
 
 },{}]},["93lp4","6me0k"], "6me0k", "parcelRequire04ca", {})
 
