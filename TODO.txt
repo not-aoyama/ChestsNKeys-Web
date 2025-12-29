@@ -1,0 +1,13 @@
+* Add icons for keys and Items That Do Nothing
+* Change the key icon's color/label depending on the key number and whether it's a local item
+* Allow item animations to be disabled
+* Stylize the win message
+* Change name of free item location from "Desk" to "Free Item" in client and APWorld
+* Add YAML option to decide what percent of chests need to be opened for the game to be won
+* (Optional) Remove Free Item if keys are disabled
+* (Optional) Make background more than just a plain color
+* (Optional) Make YAML creation page
+* Allow the chest div and log div to be resized vertically
+* Add README
+* Add main page and/or setup page to WebWorld
+* Make the game 508-conformant
