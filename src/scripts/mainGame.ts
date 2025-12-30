@@ -6,7 +6,7 @@ i.e. everything after the login screen and before the win screen.
 import * as $ from "jquery";
 import {Item} from "archipelago.js";
 import { client } from "./login.js";
-import { areSoundsEnabled, getVolume } from "./settings.js";
+import { areSoundsEnabled, getVolume, areAnimationsEnabled } from "./settings.js";
 // @ts-ignore
 import freeItemSvg from "bundle-text:../../assets/images/Free Item.svg";
 // @ts-ignore
@@ -286,13 +286,15 @@ export function updateIcon() : void {
     }
 }
 
-export function displayItemSent(locationID : number) {
+export function displayItemSent(locationID : number) : void {
+    // If animations are disabled, this function should do nothing.
+    if (!areAnimationsEnabled())
+        return;
+
     // Get the item that is at this location.
     client.scout([locationID]).then((items : Item[]) => {
         // There should only be one item in the list because we only scouted one location.
         let item : Item = items[0];
-
-        console.log(item); // Debug statement until I figure out what to do.
 
         let liID : string; // ID of the li tag representing the location with the given ID
         if (locationID == DESK_ID) {

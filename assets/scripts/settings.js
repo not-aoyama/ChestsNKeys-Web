@@ -160,7 +160,7 @@
       });
     }
   }
-})({"6sMxa":[function(require,module,exports,__globalThis) {
+})({"4URKy":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = 1234;
@@ -168,7 +168,7 @@ var HMR_SERVER_PORT = 1234;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d6ea1d42532a7575";
 var HMR_USE_SSE = false;
-module.bundle.HMR_BUNDLE_ID = "7f728fd057eae2cf";
+module.bundle.HMR_BUNDLE_ID = "8b0106d814f53868";
 "use strict";
 /* global HMR_HOST, HMR_PORT, HMR_SERVER_PORT, HMR_ENV_HASH, HMR_SECURE, HMR_USE_SSE, chrome, browser, __parcel__import__, __parcel__importScripts__, ServiceWorkerGlobalScope */ /*::
 import type {
@@ -673,7 +673,10 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "areSoundsEnabled", ()=>areSoundsEnabled);
 // Enables other scripts to see what the volume is set to
 parcelHelpers.export(exports, "getVolume", ()=>getVolume);
+// Enables other scripts to see whether animations are enabled
+parcelHelpers.export(exports, "areAnimationsEnabled", ()=>areAnimationsEnabled);
 var _jquery = require("jquery");
+var animationsEnabled = true;
 var soundsEnabled = true;
 var volume = 1;
 _jquery(document).ready(()=>{
@@ -692,7 +695,14 @@ _jquery(document).ready(()=>{
         volume = parseFloat(localStorage.getItem("volume")); // convert string to float
         _jquery("#sound-volume").attr("value", volume);
     }
-    // Toggle whether the settings menu is shown when the settings button is clicked.
+    if (localStorage.getItem("animations-enabled") == null) {
+        animationsEnabled = true;
+        _jquery("#enable-animations").prop("checked", true);
+    } else {
+        animationsEnabled = localStorage.getItem("animations-enabled") == "true";
+        _jquery("#enable-animations").prop("checked", animationsEnabled);
+    }
+    // Toggle whether the settings menu is shown or hidden when the settings button is clicked.
     _jquery("#settings-button").click(()=>{
         // If the settings menu is hidden, show it.
         if (_jquery("#settings-menu").css("display") == "none") _jquery("#settings-menu").show();
@@ -706,6 +716,8 @@ _jquery(document).ready(()=>{
     _jquery("#enable-sounds").click(toggleSoundsEnabled);
     // Adjusting the "Sound volume" slider will change the volume.
     _jquery("#sound-volume").change(adjustVolume);
+    // Clicking the "Enable animations" checkbox will toggle whether animations are enabled.
+    _jquery("#enable-animations").click(toggleAnimationsEnabled);
 });
 function toggleSoundsEnabled() {
     // This code checks if the checkbox is checked.
@@ -722,11 +734,22 @@ function adjustVolume() {
     // Save this setting to local storage so it can be remembered if the page is reloaded.
     localStorage.setItem("volume", "" + volume);
 }
+function toggleAnimationsEnabled() {
+    // This code checks if the checkbox is checked.
+    var checkbox = document.getElementById("enable-animations");
+    // If it is checked, enable sounds. Otherwise, disable them.
+    animationsEnabled = checkbox.checked;
+    // Save this setting to local storage so it can be remembered if the page is reloaded.
+    localStorage.setItem("animations-enabled", "" + animationsEnabled);
+}
 function areSoundsEnabled() {
     return soundsEnabled;
 }
 function getVolume() {
     return volume;
+}
+function areAnimationsEnabled() {
+    return animationsEnabled;
 }
 
 },{"jquery":"hgMhh","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hgMhh":[function(require,module,exports,__globalThis) {
@@ -7460,6 +7483,6 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}]},["6sMxa","hHf3b"], "hHf3b", "parcelRequire04ca", {})
+},{}]},["4URKy","hHf3b"], "hHf3b", "parcelRequire04ca", {})
 
 //# sourceMappingURL=settings.js.map
