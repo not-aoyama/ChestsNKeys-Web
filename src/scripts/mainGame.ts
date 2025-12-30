@@ -19,6 +19,14 @@ import lockedChestSvg from "bundle-text:../../assets/images/Locked Chest.svg";
 import unlockedChestSvg from "bundle-text:../../assets/images/Unlocked Chest.svg";
 // @ts-ignore
 import apIconSvg from "bundle-text:../../assets/images/AP Icon.svg";
+// @ts-ignore
+import apIconColorlessSvg from "bundle-text:../../assets/images/AP Icon colorless.svg";
+// @ts-ignore
+import apIconProgressionSvg from "bundle-text:../../assets/images/AP Icon progression.svg";
+// @ts-ignore
+import keySvg from "bundle-text:../../assets/images/Key.svg";
+// @ts-ignore
+import poopIconSvg from "bundle-text:../../assets/images/poop-svgrepo-com.svg";
 
 export const LOCATION_ID_PREFIX = 420000;
 export const DESK_ID = LOCATION_ID_PREFIX;
@@ -75,6 +83,7 @@ export function setupMainGameContainer(numChests : number) : void {
         // Add a number label to the chest.
         var label = document.createElement("span");
         $(label).text(i);
+        $(label).attr("class", "chest-label");
         $(chest).append(label);
 
         // Give the chest a unique color so it stands out!
@@ -312,8 +321,66 @@ export function displayItemSent(locationID : number) : void {
         I can't figure out how to attach the event listener to the SVG itself.
         */
         let svgContainer = document.createElement("div");
-        $(svgContainer).append(apIconSvg); // only one SVG icon for the time being
+
+        // Choose which SVG icon to add based on the type of item.
+        // Items from Chests 'n' Keys will have their own unique sprites.
+        if (item.game == "Chests 'n' Keys") {
+            // Use a poop icon for Items That Do Nothing.
+            if (item.id == ITEM_THAT_DOES_NOTHING_ID) {
+                $(svgContainer).append(poopIconSvg);
+            }
+            // Every other item in this game is a key, so use a key icon.
+            else {
+                $(svgContainer).append(keySvg);
+
+                // Add a label for what number the key is.
+                let keyNumber = item.id - ITEM_ID_PREFIX;
+                let label = document.createElement("span");
+                $(label).text(keyNumber);
+                $(label).attr("class", "key-label");
+                $(svgContainer).append(label);
+
+                // Keys to chests in this slot should be colored the same as their corresponding chests.
+                if (item.receiver.slot == item.sender.slot) { // The sender is always this slot.
+                    // Get the ID of the corresponding chest
+                    let chestID = "#chest" + keyNumber;
+                    // Get the color of the corresponding chest
+                    let chestColor = $(chestID).css("fill");
+                    // Set the color of the key icon to match
+                    $(svgContainer).css("fill", chestColor);
+                }
+                // Keys to chests in other slots should be black.
+                else {
+                    $(svgContainer).css("fill", "black");
+                }
+            }
+        } else {
+            // Use progressive AP icon (AP icon with an arrow in the bottom right) for progression items
+            if (item.progression) {
+                $(svgContainer).append(apIconProgressionSvg);
+            }
+            // Use red AP icon for trap items.
+            else if (item.trap) {
+                // The SVG file being imported shouldn't have its own colors. We want to add our own instead.
+                $(svgContainer).append(apIconColorlessSvg);
+                $(svgContainer).css("fill", "red");
+            }
+            // Use black AP icon for filler items.
+            else if (item.filler) {
+                // The SVG file being imported shouldn't have its own colors. We want to add our own instead.
+                $(svgContainer).append(apIconColorlessSvg);
+                $(svgContainer).css("fill", "black");
+            }
+            // Use the normal, rainbow-colored AP icon for normal items.
+            else {
+                // The normal SVG comes with its own colors.
+                $(svgContainer).append(apIconSvg);
+            }
+        }
+
+        // This class will be used for CSS styling
         $(svgContainer).attr("class", "item-icon");
+
         /*
         Make the div delete itself once its animation is finished.
         This way, the page isn't cluttered with hundreds of SVGs that aren't being used.

@@ -36,6 +36,7 @@ div.item-icon {
   height: 50%;
   animation: 1s linear move-up-fade;
   position: relative;
+  top: -85px;
   left: 25%;
 }
 
@@ -94,7 +95,7 @@ div.item-icon {
   fill: #4b4b4b;
 }
 
-#locations-list li span {
+.chest-label {
   color: #fff;
   z-index: 1;
   width: 100px;
@@ -103,5 +104,15 @@ div.item-icon {
   font-weight: bold;
   position: relative;
   top: 20px;
+}
+
+.key-label {
+  color: #fff;
+  z-index: 2;
+  cursor: inherit;
+  font-size: 13pt;
+  font-weight: bold;
+  position: relative;
+  top: -72.5px;
 }
 /*# sourceMappingURL=mainGame.54a188b1.css.map */
