@@ -18,6 +18,7 @@
         <link rel="stylesheet" href="assets/style/popups.css">
         <link rel="stylesheet" href="assets/style/main-game.css">
         <link rel="stylesheet" href="assets/style/text-client.css">
+        <link rel="stylesheet" href="assets/style/win.css">
 
         <!-- Website icon -->
         <link rel="icon" id="website-icon" href="assets/images/Unlocked Chest.svg" />
@@ -65,7 +66,10 @@
             </div>
         </div>
         <div id="win-message" class="container">
-            <h1>U R WINNAR!!!1</h1>
+            <p>U R WINNAR!!!1</p>
+            <audio id="win-sound">
+                <source src="assets/sounds/651641__krizin__crowd-cheer-3.wav" type="audio/wav" />
+            </audio>
         </div>
         <button type="button" id="settings-button" class="icon-button">
             <img src="assets/images/Settings.svg" width="50" height="50" title="Settings" />
@@ -82,7 +86,7 @@
             <label for="sound-volume">Sound volume:</label>
             <input type="range" id="sound-volume" min="0" max="1" step="0.01" value="1" />
             <br>
-            <label for="enable-animations">Enable chest open animations:</label>
+            <label for="enable-animations">Enable animations:</label>
             <input type="checkbox" id="enable-animations" checked />
         </div>
         <div id="credits-menu" class="popup-menu">
@@ -106,6 +110,7 @@
             <ul>
                 <li><b>steprock</b>: <a href="https://freesound.org/s/771164/">Chest open sound</a> (<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>)</li>
                 <li><b>xkeril</b>: <a href="https://freesound.org/s/815493/">Chest unlock sound</a> (<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>)</li>
+                <li><b>Krizin</b>: <a href="https://freesound.org/people/Krizin/sounds/651641/">Applause sound</a> (<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>)</li>
             </ul>
         </div>
         <footer>

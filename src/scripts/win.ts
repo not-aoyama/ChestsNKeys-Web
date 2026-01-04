@@ -6,6 +6,7 @@ and displaying the win message once they have.
 import * as $ from "jquery";
 import { client } from "./login.js";
 import { DESK_ID } from "./mainGame.js";
+import { areAnimationsEnabled, areSoundsEnabled, getVolume } from "./settings.js";
 
 var hasWon = false;
 
@@ -13,7 +14,7 @@ var hasWon = false;
 This function sees if the user has won and if the win message has been shown yet.
 If it has, this function then shows the win message and tells the server that this slot has goaled.
 */
-export function displayIfWin() {
+export function displayIfWin() : void {
     var missingLocations = client.room.missingLocations;
     if (missingLocations.length == 0 || (missingLocations.length == 1 && missingLocations.includes(DESK_ID))) {
         /*
@@ -28,13 +29,40 @@ export function displayIfWin() {
             */
             if (!hasWon) {
                 client.goal();
+
+                // Enable the animation for the win message text if animations are enabled in the settings.
+                if (areAnimationsEnabled()) {
+                    $("#win-message").attr("class", $("#win-message").attr("class") + " animated-text");
+                }
+
                 $("#win-message").show();
+
+                // Play the win sound if sounds are enabled in the settings.
+                // Also set the sound volume to whatever volume is in the settings.
+                var audioToPlay : HTMLAudioElement = document.getElementById("win-sound") as HTMLAudioElement;
+                audioToPlay.volume = getVolume();
+                if (areSoundsEnabled()) {
+                    audioToPlay.play();
+                }
 
                 // Record that the player has won so the win message won't be shown again.
                 hasWon = true;
+
+                // Make it so that whenever the player clicks anywhere or types any key, the win message goes away.
+                $(document).click(hideWinMessage);
+                $(document).keydown(hideWinMessage);
             }
         } catch (error) {
-            // Do nothing 'cause I'm lazy.
+            // Do nothing because I'm lazy :P
         }
     }
+}
+
+function hideWinMessage() : void {
+    // Stop the win sound if it is still playing.
+    var audioToStop : HTMLAudioElement = document.getElementById("win-sound") as HTMLAudioElement;
+    audioToStop.pause();
+
+    // Hide the visual win message.
+    $("#win-message").hide();
 }
