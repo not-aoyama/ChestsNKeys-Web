@@ -17,7 +17,7 @@ $(document).ready(() => {
         volume = 1;
         $("#sound-volume").attr("value", 1);
     } else {
-        volume = parseFloat(localStorage.getItem("volume")); // convert string to float
+        volume = parseFloat(localStorage.getItem("volume") as string); // convert string to float
         $("#sound-volume").attr("value", volume);
     }
 

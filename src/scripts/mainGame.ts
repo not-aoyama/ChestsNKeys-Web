@@ -210,7 +210,8 @@ function playSound(soundURL : string) : void {
     $(audioSource).attr("src", soundURL);
 
     // Use the extension to determine the audio type.
-    var fileExtension = soundURL.split(".")[-1];
+    var urlSplitByDot : string[] = soundURL.split(".");
+    var fileExtension : string = urlSplitByDot[urlSplitByDot.length - 1];
     switch(fileExtension) {
         case "mp3":
             $(audioSource).attr("type", "audio/mpeg");
