@@ -297,15 +297,8 @@ export function displayItemSent(locationID : number) : void {
         // There should only be one item in the list because we only scouted one location.
         let item : Item = items[0];
 
-        let liID : string; // ID of the li tag representing the location with the given ID
-        if (locationID == DESK_ID) {
-            // Location is the Desk
-            liID = "#desk";
-        } else {
-            // Location is a chest
-            let chestNumber = locationID - LOCATION_ID_PREFIX;
-            liID = "#chest" + chestNumber;
-        }
+        let chestNumber = locationID - LOCATION_ID_PREFIX;
+        let liID = "#chest" + chestNumber; // ID of the li tag representing the location with the given ID
 
         /*
         Append an SVG representing the item.

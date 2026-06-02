@@ -14,16 +14,10 @@ var hasWon = false;
 This function sees if the user has won and if the win message has been shown yet.
 If it has, this function then shows the win message and tells the server that this slot has goaled.
 */
-<<<<<<< HEAD
 export function displayIfWin() {
     // In order to have won, the user must have opened at least the required number of chests.
     var openedChests : number[] = client.room.checkedLocations;
     if (openedChests.length >= getNumberRequiredChests()) {
-=======
-export function displayIfWin() : void {
-    var missingLocations = client.room.missingLocations;
-    if (missingLocations.length == 0 || (missingLocations.length == 1 && missingLocations.includes(DESK_ID))) {
->>>>>>> animation
         /*
         If the user has opened enough chests, tell the server the player has goaled and display the win message!
         But make sure to wrap it in a try/catch statement.
