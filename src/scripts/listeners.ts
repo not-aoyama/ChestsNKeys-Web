@@ -2,7 +2,7 @@
 This file contains all of the event listeners that the Archipelago.js Client needs to function.
 */
 
-import { ConnectedPacket, Item, MessageNode } from "archipelago.js";
+import { ConnectedPacket, Item, JSONRecord, MessageNode } from "archipelago.js";
 import { client } from "./login.js";
 import {
     displayChestUnlocked,
@@ -10,9 +10,11 @@ import {
     ITEM_THAT_DOES_NOTHING_ID,
     ITEM_ID_PREFIX,
     LOCATION_ID_PREFIX,
-    setKeysEnabled,
+    setNumberChests,
     setupMainGameContainer,
-    updateIcon
+    updateIcon,
+    setNumberLockedChests,
+    setNumberRequiredChests
 } from "./mainGame.js";
 import { addToLog, setupTextClient } from "./textClient.js";
 import { displayIfWin } from "./win.js";
@@ -22,17 +24,15 @@ const connectedListener = (packet : ConnectedPacket) => {
     Find the total amount of chests in this slot.
     This is the total amount of locations (checked and missing) - 1, because the desk is the only non-chest location.
     */
-    var numChests = packet.checked_locations.length + packet.missing_locations.length - 1;
+    setNumberChests(packet.checked_locations.length + packet.missing_locations.length - 1);
 
-    // Find and record in a global variable whether keys are enabled in the options YAML.
-    if (packet.slot_data["keys_enabled"] == 0) {
-        setKeysEnabled(false);
-    } else {
-        setKeysEnabled(true);
-    }
+    // Find and record in a global variable the number of locked chests and required chests, as specified in the options YAML.
+    var slotData : JSONRecord = packet.slot_data as JSONRecord;
+    setNumberLockedChests(slotData["number_of_locked_chests"] as number);
+    setNumberRequiredChests(slotData["number_of_required_chests"] as number);
 
     // Set up and display the main game container.
-    setupMainGameContainer(numChests);
+    setupMainGameContainer();
 
     // Set up the text client/log.
     setupTextClient();

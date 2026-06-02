@@ -19,7 +19,6 @@ import lockedChestSvg from "bundle-text:../../assets/images/Locked Chest.svg";
 import unlockedChestSvg from "bundle-text:../../assets/images/Unlocked Chest.svg";
 
 export const LOCATION_ID_PREFIX = 420000;
-export const DESK_ID = LOCATION_ID_PREFIX;
 export const ITEM_ID_PREFIX = 69000;
 export const ITEM_THAT_DOES_NOTHING_ID = ITEM_ID_PREFIX + 420;
 
@@ -27,8 +26,14 @@ export const ITEM_THAT_DOES_NOTHING_ID = ITEM_ID_PREFIX + 420;
 const CHEST_UNLOCK_SOUND = "assets/sounds/815493__xkeril__mechanical-switch-latch-02.wav";
 const CHEST_OPEN_SOUND = "assets/sounds/771164__steprock__treasure-chest-open.mp3";
 
-// Whether keys are enabled in this slot. This is determined by reading the slot data from the server.
-var keysEnabled : boolean;
+// How many total chests there are in this slot. This is determined by counting how many locations there are in the slot.
+var numberChests : number;
+
+// How many chests are locked in this slot. This is determined by reading the slot data from the server.
+var numberLockedChests : number;
+
+// How many chests need to be opened in order to goal. This is determined by reading the slot data from the server.
+var numberRequiredChests : number;
 
 /*
 So, here's the thing. At first, before the player does anything, the client processes all the checks that have happened
@@ -41,31 +46,12 @@ check that happens from here on out is a result of the player's current actions.
 var isLoading : boolean = true;
 
 // The number of possible hue values for an HSL color. This will be important later.
-const NUMBER_HUES = 300;
+const NUMBER_HUES = 360;
 
-// Display the main game screen, complete with a desk and the given number of chests.
-export function setupMainGameContainer(numChests : number) : void {
-    // Create and display the li tag representing the desk.
-    var desk = document.createElement("li");
-    $(desk).attr("id", "desk");
-    // The li tag will contain an svg tag that is imported from an SVG file.
-    $(desk).append(freeItemSvg);
-
-    // main-game.css will display that this desk is clickable if it's part of the "clickable" class.
-    $(desk).attr("class", "clickable");
-
-    // Add a cursor tooltip to the desk.
-    $(desk).attr("title", "Click for a free item!");
-
-    // Make it so the desk sends a check when clicked on.
-    $(desk).click(() => {
-        client.check(DESK_ID);
-    })
-
-    // Display the desk among the other locations!
-    $("#locations-list").append(desk);
-
-    for (var i = 1; i <= numChests; i++) {
+// Display the main game screen, complete with chests.
+export function setupMainGameContainer() : void {
+    // Create and display each of the chests.
+    for (var i = 1; i <= numberChests; i++) {
         // Create the li tag representing the chest.
         var chest = document.createElement("li");
         $(chest).attr("id", "chest" + i);
@@ -76,7 +62,7 @@ export function setupMainGameContainer(numChests : number) : void {
         $(chest).append(label);
 
         // Give the chest a unique color so it stands out!
-        var hue = NUMBER_HUES / numChests * i;
+        var hue = NUMBER_HUES / numberChests * i;
         $(chest).css("fill", "hsl(" + hue + ", 90%, 50%)");
 
         /*
@@ -86,8 +72,8 @@ export function setupMainGameContainer(numChests : number) : void {
         */
         $("#locations-list").append(chest);
 
-        // Unlock the chest if keys are disabled or if its corresponding key has been received.
-        if (!keysEnabled || client.items.received.map(item => item.id).includes(ITEM_ID_PREFIX + i)) {
+        // Unlock the chest if the chest starts unlocked or if its corresponding key has been received.
+        if (!doesChestStartLocked(i) || client.items.received.map(item => item.id).includes(ITEM_ID_PREFIX + i)) {
             displayChestUnlocked(i);
         }
         // Otherwise, the chest will be locked.
@@ -115,47 +101,59 @@ export function setupMainGameContainer(numChests : number) : void {
     isLoading = false;
 }
 
-// This setter method allows keysEnabled to be accessed in other JS files.
-export function setKeysEnabled(newKeysEnabled : boolean) : void {
-    keysEnabled = newKeysEnabled;
+// This setter method allows numberChests to be accessed in other JS files.
+export function setNumberChests(newNumberChests : number) : void {
+    numberChests = newNumberChests;
+}
+
+// This setter method allows numberLockedChests to be accessed in other JS files.
+export function setNumberLockedChests(newNumberLockedChests : number) : void {
+    // Force the number of locked chests to be no greater than the total number of chests minus 1.
+    numberLockedChests = Math.min(newNumberLockedChests, numberChests - 1);
+}
+
+// Getter method for numberRequiredChests
+export function getNumberRequiredChests() : number {
+    return numberRequiredChests;
+}
+
+// This setter method allows numberRequiredChests to be accessed in other JS files.
+export function setNumberRequiredChests(newNumberRequiredChests : number) : void {
+    // Force the number of required chests to be no greater than the total number of chests.
+    numberRequiredChests = Math.min(newNumberRequiredChests, numberChests);
+}
+
+// Given the number of a chest, returns whether the chest starts out locked.
+function doesChestStartLocked(chestNumber : number) : boolean {
+    var numberUnlockedChests : number = numberChests - numberLockedChests;
+
+    /*
+    All of the unlocked chests come before all of the locked chests.
+    For example, if there are 5 total chests and 2 of them are unlocked, 
+    Chests 1 and 2 start unlocked and Chests 3, 4, and 5 start locked.
+    */
+   return chestNumber > numberUnlockedChests;
 }
 
 // Updates the appearance and functionality of the location with the given ID to show it has been checked.
 export function displayLocationChecked(locationId : number) : void {
-    if (locationId == DESK_ID) {
-        // Empty the SVG from the li tag so it can be replaced with a new SVG.
-        $("#desk svg").remove();
+    var chestNumber = locationId - LOCATION_ID_PREFIX;
+    var chestID = "#chest" + chestNumber;
 
-        // Return the cursor to normal. (It was a pointer before, to show that this was clickable.)
-        $("#desk").attr("class", null);
+    // Empty the SVG from the li tag so it can be replaced with a new SVG.
+    $(chestID + " svg").remove();
 
-        // Change the tooltip
-        $("#desk").attr("title", "No more free item.");
+    // Return the cursor to normal. (It was a pointer before, to show that this was clickable.)
+    $(chestID).attr("class", null);
 
-        // Remove the click function.
-        $("#desk").prop("onclick", null).off("click");
+    // Change the tooltip
+    $(chestID).attr("title", "Chest " + chestNumber + " (Empty)");
 
-        // Put the SVG tag inside of the li.
-        $("#desk").append(noMoreFreeItemsSvg);
-    } else { // if the location is a chest
-        var chestNumber = locationId - LOCATION_ID_PREFIX;
-        var chestID = "#chest" + chestNumber;
+    // Remove the click function.
+    $(chestID).prop("onclick", null).off("click");
 
-        // Empty the SVG from the li tag so it can be replaced with a new SVG.
-        $(chestID + " svg").remove();
-
-        // Return the cursor to normal. (It was a pointer before, to show that this was clickable.)
-        $(chestID).attr("class", null);
-
-        // Change the tooltip
-        $(chestID).attr("title", "Chest " + chestNumber + " (Empty)");
-
-        // Remove the click function.
-        $(chestID).prop("onclick", null).off("click");
-
-        // Put the SVG tag inside of the li.
-        $(chestID).append(emptyChestSvg);
-    }
+    // Put the SVG tag inside of the li.
+    $(chestID).append(emptyChestSvg);
 
     // Play a sound to show that the chest was opened.
     // We'll do this even for the free item, since I'm too lazy to search for another sound effect.
@@ -190,10 +188,10 @@ export function displayChestUnlocked(chestNumber : number) : void {
 
     // Play a "chest unlocked" sound.
     // That is, unless this chest is already empty. In that case, the user doesn't need to be alerted.
-    // Also unless keys are disabled. In that case, the chest doesn't need to be unlocked because it was never 
+    // Also unless the chest started unlocked. In that case, the chest doesn't need to be unlocked because it was never 
     // locked in the first place.
     let chestIsEmpty = client.room.checkedLocations.includes(chestLocationID);
-    if (keysEnabled && !chestIsEmpty)
+    if (doesChestStartLocked(chestNumber) && !chestIsEmpty)
         playSound(CHEST_UNLOCK_SOUND);
 }
 
@@ -212,7 +210,7 @@ function playSound(soundURL : string) : void {
     $(audioSource).attr("src", soundURL);
 
     // Use the extension to determine the audio type.
-    var fileExtension = soundURL.split(".").at(-1);
+    var fileExtension = soundURL.split(".")[-1];
     switch(fileExtension) {
         case "mp3":
             $(audioSource).attr("type", "audio/mpeg");
@@ -255,22 +253,15 @@ export function updateIcon() : void {
     let iconRed : boolean = false; // Whether or not the icon should be red.
     // Loop through all of the unchecked locations.
     for (let locationID of client.room.missingLocations) {
-        // Is this location the Free Item?
-        if (locationID == DESK_ID) {
-            // If so, this item is in logic no matter what! The icon should be red.
-            // We can skip the rest of the loop.
+        // The location is a chest.
+        // If the chest starts out unlocked, it can be opened no matter what.
+        // If the chest starts locked, we need to check if we have the chest's corresponding key.
+        let chestNumber = locationID - LOCATION_ID_PREFIX;
+        let keyID = ITEM_ID_PREFIX + chestNumber;
+        if (!doesChestStartLocked(chestNumber) || client.items.received.map(item => item.id).includes(keyID)) {
+            // The chest can be opened! We don't need to continue through the rest of the loop.
             iconRed = true;
             break;
-        } else {
-            // The location is a chest.
-            // If keys are disabled, the chest can be opened no matter what.
-            // If they're enabled, we need to check if we have the chest's corresponding key.
-            let keyID = locationID - LOCATION_ID_PREFIX + ITEM_ID_PREFIX;
-            if (!keysEnabled || client.items.received.map(item => item.id).includes(keyID)) {
-                // The chest can be opened! We don't need to continue through the rest of the loop.
-                iconRed = true;
-                break;
-            }
         }
     }
 
