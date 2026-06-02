@@ -1,7 +1,7 @@
-* Allow item animations to be disabled
-* Stylize the win message
 * (Optional) Make background more than just a plain color
 * Allow the chest div and log div to be resized vertically
 * Add README
 * Add main page and/or setup page to WebWorld
 * Make the game 508-conformant
+* Fix item animations for !release
+* Fix the ear-hurting cacophony of "chest open" sounds when many items are released at once
