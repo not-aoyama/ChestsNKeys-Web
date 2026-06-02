@@ -160,7 +160,7 @@
       });
     }
   }
-})({"9hT45":[function(require,module,exports,__globalThis) {
+})({"jGYdb":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = 1234;
@@ -168,7 +168,7 @@ var HMR_SERVER_PORT = 1234;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d6ea1d42532a7575";
 var HMR_USE_SSE = false;
-module.bundle.HMR_BUNDLE_ID = "197251884d8ebfb2";
+module.bundle.HMR_BUNDLE_ID = "954c69f1307d5952";
 "use strict";
 /* global HMR_HOST, HMR_PORT, HMR_SERVER_PORT, HMR_ENV_HASH, HMR_SECURE, HMR_USE_SSE, chrome, browser, __parcel__import__, __parcel__importScripts__, ServiceWorkerGlobalScope */ /*::
 import type {
@@ -681,9 +681,10 @@ var _loginJs = require("./login.js");
 var _mainGameJs = require("./mainGame.js");
 var hasWon = false;
 function displayIfWin() {
-    var missingLocations = (0, _loginJs.client).room.missingLocations;
-    if (missingLocations.length == 0 || missingLocations.length == 1 && missingLocations.includes((0, _mainGameJs.DESK_ID))) /*
-        If it has, tell the server the player has goaled and display the win message!
+    // In order to have won, the user must have opened at least the required number of chests.
+    var openedChests = (0, _loginJs.client).room.checkedLocations;
+    if (openedChests.length >= (0, _mainGameJs.getNumberRequiredChests)()) /*
+        If the user has opened enough chests, tell the server the player has goaled and display the win message!
         But make sure to wrap it in a try/catch statement.
         There could be an error if we haven't finished connecting yet.
         */ try {
@@ -9175,12 +9176,13 @@ const connectedListener = (packet)=>{
     /*
     Find the total amount of chests in this slot.
     This is the total amount of locations (checked and missing) - 1, because the desk is the only non-chest location.
-    */ var numChests = packet.checked_locations.length + packet.missing_locations.length - 1;
-    // Find and record in a global variable whether keys are enabled in the options YAML.
-    if (packet.slot_data["keys_enabled"] == 0) (0, _mainGameJs.setKeysEnabled)(false);
-    else (0, _mainGameJs.setKeysEnabled)(true);
+    */ (0, _mainGameJs.setNumberChests)(packet.checked_locations.length + packet.missing_locations.length - 1);
+    // Find and record in a global variable the number of locked chests and required chests, as specified in the options YAML.
+    var slotData = packet.slot_data;
+    (0, _mainGameJs.setNumberLockedChests)(slotData["number_of_locked_chests"]);
+    (0, _mainGameJs.setNumberRequiredChests)(slotData["number_of_required_chests"]);
     // Set up and display the main game container.
-    (0, _mainGameJs.setupMainGameContainer)(numChests);
+    (0, _mainGameJs.setupMainGameContainer)();
     // Set up the text client/log.
     (0, _textClientJs.setupTextClient)();
 };
@@ -9228,13 +9230,18 @@ i.e. everything after the login screen and before the win screen.
 */ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "LOCATION_ID_PREFIX", ()=>LOCATION_ID_PREFIX);
-parcelHelpers.export(exports, "DESK_ID", ()=>DESK_ID);
 parcelHelpers.export(exports, "ITEM_ID_PREFIX", ()=>ITEM_ID_PREFIX);
 parcelHelpers.export(exports, "ITEM_THAT_DOES_NOTHING_ID", ()=>ITEM_THAT_DOES_NOTHING_ID);
-// Display the main game screen, complete with a desk and the given number of chests.
+// Display the main game screen, complete with chests.
 parcelHelpers.export(exports, "setupMainGameContainer", ()=>setupMainGameContainer);
-// This setter method allows keysEnabled to be accessed in other JS files.
-parcelHelpers.export(exports, "setKeysEnabled", ()=>setKeysEnabled);
+// This setter method allows numberChests to be accessed in other JS files.
+parcelHelpers.export(exports, "setNumberChests", ()=>setNumberChests);
+// This setter method allows numberLockedChests to be accessed in other JS files.
+parcelHelpers.export(exports, "setNumberLockedChests", ()=>setNumberLockedChests);
+// Getter method for numberRequiredChests
+parcelHelpers.export(exports, "getNumberRequiredChests", ()=>getNumberRequiredChests);
+// This setter method allows numberRequiredChests to be accessed in other JS files.
+parcelHelpers.export(exports, "setNumberRequiredChests", ()=>setNumberRequiredChests);
 // Updates the appearance and functionality of the location with the given ID to show it has been checked.
 parcelHelpers.export(exports, "displayLocationChecked", ()=>displayLocationChecked);
 // Updates the appearance and functionality of the chest with the given ID to show it has been unlocked.
@@ -9245,12 +9252,6 @@ var _jquery = require("jquery");
 var _loginJs = require("./login.js");
 var _settingsJs = require("./settings.js");
 // @ts-ignore
-var _freeItemSvg = require("bundle-text:../../assets/images/Free Item.svg");
-var _freeItemSvgDefault = parcelHelpers.interopDefault(_freeItemSvg);
-// @ts-ignore
-var _noMoreFreeItemSvg = require("bundle-text:../../assets/images/No More Free Item.svg");
-var _noMoreFreeItemSvgDefault = parcelHelpers.interopDefault(_noMoreFreeItemSvg);
-// @ts-ignore
 var _emptyChestSvg = require("bundle-text:../../assets/images/Empty Chest.svg");
 var _emptyChestSvgDefault = parcelHelpers.interopDefault(_emptyChestSvg);
 // @ts-ignore
@@ -9260,14 +9261,17 @@ var _lockedChestSvgDefault = parcelHelpers.interopDefault(_lockedChestSvg);
 var _unlockedChestSvg = require("bundle-text:../../assets/images/Unlocked Chest.svg");
 var _unlockedChestSvgDefault = parcelHelpers.interopDefault(_unlockedChestSvg);
 const LOCATION_ID_PREFIX = 420000;
-const DESK_ID = LOCATION_ID_PREFIX;
 const ITEM_ID_PREFIX = 69000;
 const ITEM_THAT_DOES_NOTHING_ID = ITEM_ID_PREFIX + 420;
 // URLs for sounds
 const CHEST_UNLOCK_SOUND = "assets/sounds/815493__xkeril__mechanical-switch-latch-02.wav";
 const CHEST_OPEN_SOUND = "assets/sounds/771164__steprock__treasure-chest-open.mp3";
-// Whether keys are enabled in this slot. This is determined by reading the slot data from the server.
-var keysEnabled;
+// How many total chests there are in this slot. This is determined by counting how many locations there are in the slot.
+var numberChests;
+// How many chests are locked in this slot. This is determined by reading the slot data from the server.
+var numberLockedChests;
+// How many chests need to be opened in order to goal. This is determined by reading the slot data from the server.
+var numberRequiredChests;
 /*
 So, here's the thing. At first, before the player does anything, the client processes all the checks that have happened
 in the history of the multiworld. So, a bunch of chests are "opened" without the player actually doing anything during
@@ -9277,24 +9281,10 @@ To start with, the game is in a "loading" state, so this variable is true. Once 
 check that happens from here on out is a result of the player's current actions.
 */ var isLoading = true;
 // The number of possible hue values for an HSL color. This will be important later.
-const NUMBER_HUES = 300;
-function setupMainGameContainer(numChests) {
-    // Create and display the li tag representing the desk.
-    var desk = document.createElement("li");
-    _jquery(desk).attr("id", "desk");
-    // The li tag will contain an svg tag that is imported from an SVG file.
-    _jquery(desk).append((0, _freeItemSvgDefault.default));
-    // main-game.css will display that this desk is clickable if it's part of the "clickable" class.
-    _jquery(desk).attr("class", "clickable");
-    // Add a cursor tooltip to the desk.
-    _jquery(desk).attr("title", "Click for a free item!");
-    // Make it so the desk sends a check when clicked on.
-    _jquery(desk).click(()=>{
-        (0, _loginJs.client).check(DESK_ID);
-    });
-    // Display the desk among the other locations!
-    _jquery("#locations-list").append(desk);
-    for(var i = 1; i <= numChests; i++){
+const NUMBER_HUES = 360;
+function setupMainGameContainer() {
+    // Create and display each of the chests.
+    for(var i = 1; i <= numberChests; i++){
         // Create the li tag representing the chest.
         var chest = document.createElement("li");
         _jquery(chest).attr("id", "chest" + i);
@@ -9303,15 +9293,15 @@ function setupMainGameContainer(numChests) {
         _jquery(label).text(i);
         _jquery(chest).append(label);
         // Give the chest a unique color so it stands out!
-        var hue = NUMBER_HUES / numChests * i;
+        var hue = NUMBER_HUES / numberChests * i;
         _jquery(chest).css("fill", "hsl(" + hue + ", 90%, 50%)");
         /*
         Add this chest to the displayed locations.
         We have to do this before any SVG is added, or else displayChestUnlocked() will reference an element that 
         doesn't yet exist on the page and will therefore fail.
         */ _jquery("#locations-list").append(chest);
-        // Unlock the chest if keys are disabled or if its corresponding key has been received.
-        if (!keysEnabled || (0, _loginJs.client).items.received.map((item)=>item.id).includes(ITEM_ID_PREFIX + i)) displayChestUnlocked(i);
+        // Unlock the chest if the chest starts unlocked or if its corresponding key has been received.
+        if (!doesChestStartLocked(i) || (0, _loginJs.client).items.received.map((item)=>item.id).includes(ITEM_ID_PREFIX + i)) displayChestUnlocked(i);
         else {
             // Create a tooltip for the li
             _jquery(chest).attr("title", "Chest " + i + " (Locked)");
@@ -9328,35 +9318,42 @@ function setupMainGameContainer(numChests) {
     // Now that everything is set up, the game is no longer loading!
     isLoading = false;
 }
-function setKeysEnabled(newKeysEnabled) {
-    keysEnabled = newKeysEnabled;
+function setNumberChests(newNumberChests) {
+    numberChests = newNumberChests;
+}
+function setNumberLockedChests(newNumberLockedChests) {
+    // Force the number of locked chests to be no greater than the total number of chests minus 1.
+    numberLockedChests = Math.min(newNumberLockedChests, numberChests - 1);
+}
+function getNumberRequiredChests() {
+    return numberRequiredChests;
+}
+function setNumberRequiredChests(newNumberRequiredChests) {
+    // Force the number of required chests to be no greater than the total number of chests.
+    numberRequiredChests = Math.min(newNumberRequiredChests, numberChests);
+}
+// Given the number of a chest, returns whether the chest starts out locked.
+function doesChestStartLocked(chestNumber) {
+    var numberUnlockedChests = numberChests - numberLockedChests;
+    /*
+    All of the unlocked chests come before all of the locked chests.
+    For example, if there are 5 total chests and 2 of them are unlocked, 
+    Chests 1 and 2 start unlocked and Chests 3, 4, and 5 start locked.
+    */ return chestNumber > numberUnlockedChests;
 }
 function displayLocationChecked(locationId) {
-    if (locationId == DESK_ID) {
-        // Empty the SVG from the li tag so it can be replaced with a new SVG.
-        _jquery("#desk svg").remove();
-        // Return the cursor to normal. (It was a pointer before, to show that this was clickable.)
-        _jquery("#desk").attr("class", null);
-        // Change the tooltip
-        _jquery("#desk").attr("title", "No more free item.");
-        // Remove the click function.
-        _jquery("#desk").prop("onclick", null).off("click");
-        // Put the SVG tag inside of the li.
-        _jquery("#desk").append((0, _noMoreFreeItemSvgDefault.default));
-    } else {
-        var chestNumber = locationId - LOCATION_ID_PREFIX;
-        var chestID = "#chest" + chestNumber;
-        // Empty the SVG from the li tag so it can be replaced with a new SVG.
-        _jquery(chestID + " svg").remove();
-        // Return the cursor to normal. (It was a pointer before, to show that this was clickable.)
-        _jquery(chestID).attr("class", null);
-        // Change the tooltip
-        _jquery(chestID).attr("title", "Chest " + chestNumber + " (Empty)");
-        // Remove the click function.
-        _jquery(chestID).prop("onclick", null).off("click");
-        // Put the SVG tag inside of the li.
-        _jquery(chestID).append((0, _emptyChestSvgDefault.default));
-    }
+    var chestNumber = locationId - LOCATION_ID_PREFIX;
+    var chestID = "#chest" + chestNumber;
+    // Empty the SVG from the li tag so it can be replaced with a new SVG.
+    _jquery(chestID + " svg").remove();
+    // Return the cursor to normal. (It was a pointer before, to show that this was clickable.)
+    _jquery(chestID).attr("class", null);
+    // Change the tooltip
+    _jquery(chestID).attr("title", "Chest " + chestNumber + " (Empty)");
+    // Remove the click function.
+    _jquery(chestID).prop("onclick", null).off("click");
+    // Put the SVG tag inside of the li.
+    _jquery(chestID).append((0, _emptyChestSvgDefault.default));
     // Play a sound to show that the chest was opened.
     // We'll do this even for the free item, since I'm too lazy to search for another sound effect.
     // However, do NOT do this if the game is still loading, i.e. the player didn't click it.
@@ -9381,10 +9378,10 @@ function displayChestUnlocked(chestNumber) {
     _jquery(chestHtmlID).append((0, _unlockedChestSvgDefault.default));
     // Play a "chest unlocked" sound.
     // That is, unless this chest is already empty. In that case, the user doesn't need to be alerted.
-    // Also unless keys are disabled. In that case, the chest doesn't need to be unlocked because it was never 
+    // Also unless the chest started unlocked. In that case, the chest doesn't need to be unlocked because it was never 
     // locked in the first place.
     let chestIsEmpty = (0, _loginJs.client).room.checkedLocations.includes(chestLocationID);
-    if (keysEnabled && !chestIsEmpty) playSound(CHEST_UNLOCK_SOUND);
+    if (doesChestStartLocked(chestNumber) && !chestIsEmpty) playSound(CHEST_UNLOCK_SOUND);
 }
 // Plays the sound with the given URL.
 function playSound(soundURL) {
@@ -9397,7 +9394,7 @@ function playSound(soundURL) {
     var audioSource = document.createElement("source");
     _jquery(audioSource).attr("src", soundURL);
     // Use the extension to determine the audio type.
-    var fileExtension = soundURL.split(".").at(-1);
+    var fileExtension = soundURL.split(".")[-1];
     switch(fileExtension){
         case "mp3":
             _jquery(audioSource).attr("type", "audio/mpeg");
@@ -9430,18 +9427,13 @@ function playSound(soundURL) {
 function updateIcon() {
     let iconRed = false; // Whether or not the icon should be red.
     // Loop through all of the unchecked locations.
-    for (let locationID of (0, _loginJs.client).room.missingLocations)// Is this location the Free Item?
-    if (locationID == DESK_ID) {
-        // If so, this item is in logic no matter what! The icon should be red.
-        // We can skip the rest of the loop.
-        iconRed = true;
-        break;
-    } else {
+    for (let locationID of (0, _loginJs.client).room.missingLocations){
         // The location is a chest.
-        // If keys are disabled, the chest can be opened no matter what.
-        // If they're enabled, we need to check if we have the chest's corresponding key.
-        let keyID = locationID - LOCATION_ID_PREFIX + ITEM_ID_PREFIX;
-        if (!keysEnabled || (0, _loginJs.client).items.received.map((item)=>item.id).includes(keyID)) {
+        // If the chest starts out unlocked, it can be opened no matter what.
+        // If the chest starts locked, we need to check if we have the chest's corresponding key.
+        let chestNumber = locationID - LOCATION_ID_PREFIX;
+        let keyID = ITEM_ID_PREFIX + chestNumber;
+        if (!doesChestStartLocked(chestNumber) || (0, _loginJs.client).items.received.map((item)=>item.id).includes(keyID)) {
             // The chest can be opened! We don't need to continue through the rest of the loop.
             iconRed = true;
             break;
@@ -9452,7 +9444,7 @@ function updateIcon() {
     else _jquery("#website-icon").attr("href", "assets/images/Unlocked Chest.svg");
 }
 
-},{"jquery":"hgMhh","./login.js":"ly455","./settings.js":"hHf3b","bundle-text:../../assets/images/Free Item.svg":"iKdNn","bundle-text:../../assets/images/No More Free Item.svg":"ddYWf","bundle-text:../../assets/images/Empty Chest.svg":"66Z07","bundle-text:../../assets/images/Locked Chest.svg":"gUeNL","bundle-text:../../assets/images/Unlocked Chest.svg":"erxC6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hHf3b":[function(require,module,exports,__globalThis) {
+},{"jquery":"hgMhh","./login.js":"ly455","./settings.js":"hHf3b","bundle-text:../../assets/images/Empty Chest.svg":"66Z07","bundle-text:../../assets/images/Locked Chest.svg":"gUeNL","bundle-text:../../assets/images/Unlocked Chest.svg":"erxC6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hHf3b":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 // Enables other scripts to see whether sound is enabled
@@ -9515,13 +9507,7 @@ function getVolume() {
     return volume;
 }
 
-},{"jquery":"hgMhh","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iKdNn":[function(require,module,exports,__globalThis) {
-module.exports = "<?xml-stylesheet type=\"text/css\" href=\"/mainGame.54a188b1.css\"?><!-- Created with Inkscape (http://www.inkscape.org/) --><svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:svg=\"http://www.w3.org/2000/svg\" id=\"free-item-unchecked-svg\" width=\"512\" height=\"512\" viewBox=\"0 0 512 512\" version=\"1.1\">\n   <title>Click for a free item!</title>\n   <path style=\"display: inline\" d=\"M 0 0 L 0 512 L 512 512 L 512 0 L 0 0 z M 63.859375 66.15625 L 158.07812 66.15625 L 158.07812 89.40625 L 91.609375 89.40625 L 91.609375 121.9375 L 148.98438 121.9375 L 148.98438 145.1875 L 91.609375 145.1875 L 91.609375 203.59375 L 63.859375 203.59375 L 63.859375 66.15625 z M 226.79688 101.78125 C 232.79688 101.78125 238.57812 103.4375 244.14062 106.75 L 235.98438 129.71875 C 231.54688 126.84375 227.42188 125.40625 223.60938 125.40625 C 219.92188 125.40625 216.79688 126.4375 214.23438 128.5 C 211.67188 130.5 209.64062 134.15625 208.14062 139.46875 C 206.70312 144.78125 205.98438 155.90625 205.98438 172.84375 L 205.98438 203.59375 L 179.64062 203.59375 L 179.64062 104.03125 L 204.10938 104.03125 L 204.10938 118.1875 C 208.29688 111.5 212.04688 107.09375 215.35938 104.96875 C 218.73438 102.84375 222.54688 101.78125 226.79688 101.78125 z M 293.45312 101.78125 C 308.26562 101.78125 319.95312 106.6875 328.51562 116.5 C 337.07812 126.25 341.17188 141.21875 340.79688 161.40625 L 274.79688 161.40625 C 274.98438 169.21875 277.10938 175.3125 281.17188 179.6875 C 285.23438 184 290.29688 186.15625 296.35938 186.15625 C 300.48438 186.15625 303.95312 185.03125 306.76562 182.78125 C 309.57812 180.53125 311.70312 176.90625 313.14062 171.90625 L 339.39062 176.3125 C 336.01562 185.9375 330.67188 193.28125 323.35938 198.34375 C 316.10938 203.34375 307.01562 205.84375 296.07812 205.84375 C 278.76562 205.84375 265.95312 200.1875 257.64062 188.875 C 251.07812 179.8125 247.79688 168.375 247.79688 154.5625 C 247.79688 138.0625 252.10938 125.15625 260.73438 115.84375 C 269.35938 106.46875 280.26562 101.78125 293.45312 101.78125 z M 400.23438 101.78125 C 415.04688 101.78125 426.73438 106.6875 435.29688 116.5 C 443.85938 126.25 447.95312 141.21875 447.57812 161.40625 L 381.57812 161.40625 C 381.76562 169.21875 383.89062 175.3125 387.95312 179.6875 C 392.01562 184 397.07812 186.15625 403.14062 186.15625 C 407.26562 186.15625 410.73438 185.03125 413.54688 182.78125 C 416.35938 180.53125 418.48438 176.90625 419.92188 171.90625 L 446.17188 176.3125 C 442.79688 185.9375 437.45312 193.28125 430.14062 198.34375 C 422.89062 203.34375 413.79688 205.84375 402.85938 205.84375 C 385.54688 205.84375 372.73438 200.1875 364.42188 188.875 C 357.85938 179.8125 354.57812 168.375 354.57812 154.5625 C 354.57812 138.0625 358.89062 125.15625 367.51562 115.84375 C 376.14062 106.46875 387.04688 101.78125 400.23438 101.78125 z M 295.04688 121.9375 C 289.29688 121.9375 284.54688 124.03125 280.79688 128.21875 C 277.04688 132.40625 275.20312 138.09375 275.26562 145.28125 L 314.64062 145.28125 C 314.45312 137.65625 312.48438 131.875 308.73438 127.9375 C 304.98438 123.9375 300.42188 121.9375 295.04688 121.9375 z M 401.82812 121.9375 C 396.07812 121.9375 391.32812 124.03125 387.57812 128.21875 C 383.82812 132.40625 381.98438 138.09375 382.04688 145.28125 L 421.42188 145.28125 C 421.23438 137.65625 419.26562 131.875 415.51562 127.9375 C 411.76562 123.9375 407.20312 121.9375 401.82812 121.9375 z M 68.21875 306.15625 L 95.96875 306.15625 L 95.96875 443.59375 L 68.21875 443.59375 L 68.21875 306.15625 z M 149.875 308.875 L 149.875 344.03125 L 167.875 344.03125 L 167.875 365.03125 L 149.875 365.03125 L 149.875 405.15625 C 149.875 413.28125 150.03125 418.03125 150.34375 419.40625 C 150.71875 420.71875 151.5 421.8125 152.6875 422.6875 C 153.9375 423.5625 155.4375 424 157.1875 424 C 159.625 424 163.15625 423.15625 167.78125 421.46875 L 170.03125 441.90625 C 163.90625 444.53125 156.96875 445.84375 149.21875 445.84375 C 144.46875 445.84375 140.1875 445.0625 136.375 443.5 C 132.5625 441.875 129.75 439.8125 127.9375 437.3125 C 126.1875 434.75 124.96875 431.3125 124.28125 427 C 123.71875 423.9375 123.4375 417.75 123.4375 408.4375 L 123.4375 365.03125 L 111.34375 365.03125 L 111.34375 344.03125 L 123.4375 344.03125 L 123.4375 324.25 L 149.875 308.875 z M 224.125 341.78125 C 238.9375 341.78125 250.625 346.6875 259.1875 356.5 C 267.75 366.25 271.84375 381.21875 271.46875 401.40625 L 205.46875 401.40625 C 205.65625 409.21875 207.78125 415.3125 211.84375 419.6875 C 215.90625 424 220.96875 426.15625 227.03125 426.15625 C 231.15625 426.15625 234.625 425.03125 237.4375 422.78125 C 240.25 420.53125 242.375 416.90625 243.8125 411.90625 L 270.0625 416.3125 C 266.6875 425.9375 261.34375 433.28125 254.03125 438.34375 C 246.78125 443.34375 237.6875 445.84375 226.75 445.84375 C 209.4375 445.84375 196.625 440.1875 188.3125 428.875 C 181.75 419.8125 178.46875 408.375 178.46875 394.5625 C 178.46875 378.0625 182.78125 365.15625 191.40625 355.84375 C 200.03125 346.46875 210.9375 341.78125 224.125 341.78125 z M 346.28125 341.78125 C 352.65625 341.78125 358.1875 343.09375 362.875 345.71875 C 367.5625 348.34375 371.40625 352.3125 374.40625 357.625 C 378.78125 352.3125 383.5 348.34375 388.5625 345.71875 C 393.625 343.09375 399.03125 341.78125 404.78125 341.78125 C 412.09375 341.78125 418.28125 343.28125 423.34375 346.28125 C 428.40625 349.21875 432.1875 353.5625 434.6875 359.3125 C 436.5 363.5625 437.40625 370.4375 437.40625 379.9375 L 437.40625 443.59375 L 411.0625 443.59375 L 411.0625 386.6875 C 411.0625 376.8125 410.15625 370.4375 408.34375 367.5625 C 405.90625 363.8125 402.15625 361.9375 397.09375 361.9375 C 393.40625 361.9375 389.9375 363.0625 386.6875 365.3125 C 383.4375 367.5625 381.09375 370.875 379.65625 375.25 C 378.21875 379.5625 377.5 386.40625 377.5 395.78125 L 377.5 443.59375 L 351.15625 443.59375 L 351.15625 389.03125 C 351.15625 379.34375 350.6875 373.09375 349.75 370.28125 C 348.8125 367.46875 347.34375 365.375 345.34375 364 C 343.40625 362.625 340.75 361.9375 337.375 361.9375 C 333.3125 361.9375 329.65625 363.03125 326.40625 365.21875 C 323.15625 367.40625 320.8125 370.5625 319.375 374.6875 C 318 378.8125 317.3125 385.65625 317.3125 395.21875 L 317.3125 443.59375 L 290.96875 443.59375 L 290.96875 344.03125 L 315.25 344.03125 L 315.25 357.625 C 323.9375 347.0625 334.28125 341.78125 346.28125 341.78125 z M 225.71875 361.9375 C 219.96875 361.9375 215.21875 364.03125 211.46875 368.21875 C 207.71875 372.40625 205.875 378.09375 205.9375 385.28125 L 245.3125 385.28125 C 245.125 377.65625 243.15625 371.875 239.40625 367.9375 C 235.65625 363.9375 231.09375 361.9375 225.71875 361.9375 z \"/>\n</svg>";
-
-},{}],"ddYWf":[function(require,module,exports,__globalThis) {
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><?xml-stylesheet type=\"text/css\" href=\"/mainGame.54a188b1.css\"?><!-- Created with Inkscape (http://www.inkscape.org/) --><svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:svg=\"http://www.w3.org/2000/svg\" id=\"free-item-checked-svg\" width=\"512\" height=\"512\" viewBox=\"0 0 512 512\" version=\"1.1\">\n  <title>No more free items.</title>\n  <path id=\"rect3\" style=\"fill-opacity: 1; display: inline\" d=\"M 0 0 L 0 512 L 512 512 L 512 0 L 0 0 z M 11 11 L 501 11 L 501 501 L 11 501 L 11 11 z M 66.353516 31 L 481 445.64648 L 481 31 L 66.353516 31 z M 122.72461 66.15625 L 158.07812 66.15625 L 158.07812 89.40625 L 145.97461 89.40625 L 122.72461 66.15625 z M 31 66.353516 L 31 481 L 445.64648 481 L 31 66.353516 z M 226.79688 101.78125 C 232.79688 101.78125 238.57813 103.4375 244.14062 106.75 L 235.98438 129.71875 C 231.54688 126.84375 227.42188 125.40625 223.60938 125.40625 C 219.92188 125.40625 216.79688 126.4375 214.23438 128.5 C 211.67188 130.5 209.64063 134.15625 208.14062 139.46875 C 207.49814 141.84316 206.99986 145.37954 206.64453 150.07617 L 179.64062 123.07227 L 179.64062 104.03125 L 204.10938 104.03125 L 204.10938 118.1875 C 208.29688 111.5 212.04688 107.09375 215.35938 104.96875 C 218.73438 102.84375 222.54688 101.78125 226.79688 101.78125 z M 293.45312 101.78125 C 308.26562 101.78125 319.95312 106.6875 328.51562 116.5 C 337.07812 126.25 341.17188 141.21875 340.79688 161.40625 L 274.79688 161.40625 C 274.98438 169.21875 277.10938 175.3125 281.17188 179.6875 C 285.23438 184 290.29688 186.15625 296.35938 186.15625 C 300.48438 186.15625 303.95312 185.03125 306.76562 182.78125 C 309.57812 180.53125 311.70312 176.90625 313.14062 171.90625 L 339.39062 176.3125 C 336.01562 185.9375 330.67188 193.28125 323.35938 198.34375 C 316.10938 203.34375 307.01562 205.84375 296.07812 205.84375 C 278.76562 205.84375 265.95312 200.1875 257.64062 188.875 C 251.07812 179.8125 247.79687 168.375 247.79688 154.5625 C 247.79688 138.0625 252.10938 125.15625 260.73438 115.84375 C 269.35938 106.46875 280.26562 101.78125 293.45312 101.78125 z M 400.23438 101.78125 C 415.04688 101.78125 426.73438 106.6875 435.29688 116.5 C 443.85938 126.25 447.95316 141.21875 447.57812 161.40625 L 381.57812 161.40625 C 381.76562 169.21875 383.89062 175.3125 387.95312 179.6875 C 392.01562 184 397.07812 186.15625 403.14062 186.15625 C 407.26562 186.15625 410.73434 185.03125 413.54688 182.78125 C 416.35938 180.53125 418.48438 176.90625 419.92188 171.90625 L 446.17188 176.3125 C 442.79688 185.9375 437.45316 193.28125 430.14062 198.34375 C 422.89062 203.34375 413.79684 205.84375 402.85938 205.84375 C 385.54688 205.84375 372.73438 200.1875 364.42188 188.875 C 357.85938 179.8125 354.57816 168.375 354.57812 154.5625 C 354.57812 138.0625 358.89062 125.15625 367.51562 115.84375 C 376.14062 106.46875 387.04684 101.78125 400.23438 101.78125 z M 63.859375 120.42773 L 91.609375 148.17773 L 91.609375 203.59375 L 63.859375 203.59375 L 63.859375 120.42773 z M 295.04688 121.9375 C 289.29688 121.9375 284.54688 124.03125 280.79688 128.21875 C 277.04688 132.40625 275.20312 138.09375 275.26562 145.28125 L 314.64062 145.28125 C 314.45312 137.65625 312.48438 131.875 308.73438 127.9375 C 304.98438 123.9375 300.42188 121.9375 295.04688 121.9375 z M 401.82812 121.9375 C 396.07812 121.9375 391.32812 124.03125 387.57812 128.21875 C 383.82812 132.40625 381.98434 138.09375 382.04688 145.28125 L 421.42188 145.28125 C 421.23438 137.65625 419.26566 131.875 415.51562 127.9375 C 411.76562 123.9375 407.20312 121.9375 401.82812 121.9375 z M 68.21875 306.15625 L 95.96875 306.15625 L 95.96875 443.59375 L 68.21875 443.59375 L 68.21875 306.15625 z M 149.875 308.875 L 149.875 344.03125 L 167.875 344.03125 L 167.875 365.03125 L 149.875 365.03125 L 149.875 405.15625 C 149.875 413.28125 150.03125 418.03125 150.34375 419.40625 C 150.71875 420.71875 151.5 421.8125 152.6875 422.6875 C 153.9375 423.5625 155.4375 424 157.1875 424 C 159.625 424 163.15625 423.15625 167.78125 421.46875 L 170.03125 441.90625 C 163.90625 444.53125 156.96875 445.84375 149.21875 445.84375 C 144.46875 445.84375 140.1875 445.0625 136.375 443.5 C 132.5625 441.875 129.75 439.8125 127.9375 437.3125 C 126.1875 434.75 124.96875 431.3125 124.28125 427 C 123.71875 423.9375 123.4375 417.75 123.4375 408.4375 L 123.4375 365.03125 L 111.34375 365.03125 L 111.34375 344.03125 L 123.4375 344.03125 L 123.4375 324.25 L 149.875 308.875 z M 224.125 341.78125 C 238.9375 341.78125 250.625 346.6875 259.1875 356.5 C 267.75 366.25 271.84375 381.21875 271.46875 401.40625 L 205.46875 401.40625 C 205.65625 409.21875 207.78125 415.3125 211.84375 419.6875 C 215.90625 424 220.96875 426.15625 227.03125 426.15625 C 231.15625 426.15625 234.625 425.03125 237.4375 422.78125 C 240.25 420.53125 242.375 416.90625 243.8125 411.90625 L 270.0625 416.3125 C 266.6875 425.9375 261.34375 433.28125 254.03125 438.34375 C 246.78125 443.34375 237.6875 445.84375 226.75 445.84375 C 209.4375 445.84375 196.625 440.1875 188.3125 428.875 C 181.75 419.8125 178.46875 408.375 178.46875 394.5625 C 178.46875 378.0625 182.78125 365.15625 191.40625 355.84375 C 200.03125 346.46875 210.9375 341.78125 224.125 341.78125 z M 404.78125 341.78125 C 412.09375 341.78125 418.28125 343.28125 423.34375 346.28125 C 428.40625 349.21875 432.1875 353.5625 434.6875 359.3125 C 436.5 363.5625 437.40625 370.4375 437.40625 379.9375 L 437.40625 380.83789 L 398.89062 342.32227 C 400.81732 342.00126 402.77049 341.78125 404.78125 341.78125 z M 290.96875 347.53711 L 319.12305 375.69141 C 317.93293 379.88145 317.3125 386.32234 317.3125 395.21875 L 317.3125 443.59375 L 290.96875 443.59375 L 290.96875 347.53711 z M 225.71875 361.9375 C 219.96875 361.9375 215.21875 364.03125 211.46875 368.21875 C 207.71875 372.40625 205.875 378.09375 205.9375 385.28125 L 245.3125 385.28125 C 245.125 377.65625 243.15625 371.875 239.40625 367.9375 C 235.65625 363.9375 231.09375 361.9375 225.71875 361.9375 z M 351.15625 407.72461 L 377.5 434.06836 L 377.5 443.59375 L 351.15625 443.59375 L 351.15625 407.72461 z \"/>\n</svg>";
-
-},{}],"66Z07":[function(require,module,exports,__globalThis) {
+},{"jquery":"hgMhh","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"66Z07":[function(require,module,exports,__globalThis) {
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><!-- Created with Inkscape (http://www.inkscape.org/) --><svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:svg=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"682.66669\" height=\"682.66669\" viewBox=\"0 0 682.66669 682.66669\">\n   <title>Chest (empty)</title>\n   <path style=\"fill-opacity: 1; stroke: none\" d=\"M 207.38217,7.1722126 C 183.68169,21.81635 159.46478,31.611413 137.51499,38.162446 V 101.02963 H 255.91928 V 7.1722126 Z m 53.87891,0 V 74.754243 h 79.07227 2 79.07226 V 7.1722126 h -79.07226 -2 z m 165.48633,0 V 101.02963 h 118.4043 V 38.162446 C 523.20193,31.611413 498.985,21.81635 475.28452,7.1722126 Z M 106.70444,45.744478 c -30.59268,5.980153 -51.703129,5.61914 -51.703129,5.61914 v 71.792962 h 285.332039 2 285.33203 V 51.363618 c 0,0 -21.11046,0.361013 -51.70313,-5.61914 v 66.285152 h -30.81054 v -0.28516 h -202.81836 -2 -202.81836 v 0.28516 H 106.70444 Z M 69.66928,133.94369 v 274.04492 h 270.66407 2 270.66406 V 133.94369 h -270.66406 -2 z m -7.439453,286.6211 c 0,0 59.155863,160.56348 16.902344,254.92968 h 261.201179 2 261.20117 c -42.25351,-94.3662 16.90234,-254.92968 16.90234,-254.92968 h -278.10351 -2 z m 58.738283,35.58398 h 219.36524 2 219.36523 l -4.87305,14.38672 c 0,0 -29.49051,89.92532 -12.52148,159.12305 l 3.31445,13.51171 h -205.28515 -2 -205.28516 l 3.31445,-13.51171 C 155.33167,560.46081 125.84116,470.53549 125.84116,470.53549 Z m 31.3457,22.0332 c 7.42386,26.27527 21.16909,86.08229 11.42579,142.95508 H 264.97592 V 478.18197 Z m 117.79688,0 v 142.95508 h 70.22266 2 70.22265 V 478.18197 h -70.22265 -2 z m 147.58008,0 V 621.13705 H 518.9271 c -9.74329,-56.87279 4.00191,-116.67981 11.42578,-142.95508 z\"/>\n</svg>";
 
 },{}],"gUeNL":[function(require,module,exports,__globalThis) {
@@ -9682,6 +9668,6 @@ function toggleShowOnlyRelevantMessages() {
     _jquery(".irrelevant").css("display", "list-item");
 }
 
-},{"jquery":"hgMhh","./login":"ly455","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["9hT45","jSjH5"], "jSjH5", "parcelRequire04ca", {})
+},{"jquery":"hgMhh","./login":"ly455","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["jGYdb","jSjH5"], "jSjH5", "parcelRequire04ca", {})
 
 //# sourceMappingURL=win.js.map
