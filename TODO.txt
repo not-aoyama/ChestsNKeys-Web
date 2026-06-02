@@ -1,5 +1,3 @@
-* Add icons for keys and Items That Do Nothing
-* Change the key icon's color/label depending on the key number and whether it's a local item
 * Allow item animations to be disabled
 * Stylize the win message
 * (Optional) Make background more than just a plain color

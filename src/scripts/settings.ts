@@ -1,5 +1,6 @@
 import * as $ from "jquery";
 
+var animationsEnabled : boolean = true;
 var soundsEnabled : boolean = true;
 var volume : number = 1;
 
@@ -21,7 +22,15 @@ $(document).ready(() => {
         $("#sound-volume").attr("value", volume);
     }
 
-    // Toggle whether the settings menu is shown when the settings button is clicked.
+    if (localStorage.getItem("animations-enabled") == null) {
+        animationsEnabled = true;
+        $("#enable-animations").prop("checked", true);
+    } else {
+        animationsEnabled = (localStorage.getItem("animations-enabled") == "true");
+        $("#enable-animations").prop("checked", animationsEnabled);
+    }
+
+    // Toggle whether the settings menu is shown or hidden when the settings button is clicked.
     $("#settings-button").click(() => {
         // If the settings menu is hidden, show it.
         if ($("#settings-menu").css("display") == "none") {
@@ -41,6 +50,9 @@ $(document).ready(() => {
 
     // Adjusting the "Sound volume" slider will change the volume.
     $("#sound-volume").change(adjustVolume);
+
+    // Clicking the "Enable animations" checkbox will toggle whether animations are enabled.
+    $("#enable-animations").click(toggleAnimationsEnabled);
 });
 
 function toggleSoundsEnabled() : void {
@@ -60,6 +72,15 @@ function adjustVolume() : void {
     localStorage.setItem("volume", "" + volume);
 }
 
+function toggleAnimationsEnabled() : void {
+    // This code checks if the checkbox is checked.
+    var checkbox = document.getElementById("enable-animations");
+    // If it is checked, enable sounds. Otherwise, disable them.
+    animationsEnabled = (checkbox as HTMLInputElement).checked;
+    // Save this setting to local storage so it can be remembered if the page is reloaded.
+    localStorage.setItem("animations-enabled", "" + animationsEnabled);
+}
+
 // Enables other scripts to see whether sound is enabled
 export function areSoundsEnabled() : boolean {
     return soundsEnabled;
@@ -68,4 +89,9 @@ export function areSoundsEnabled() : boolean {
 // Enables other scripts to see what the volume is set to
 export function getVolume() : number {
     return volume;
+}
+
+// Enables other scripts to see whether animations are enabled
+export function areAnimationsEnabled() : boolean {
+    return animationsEnabled;
 }

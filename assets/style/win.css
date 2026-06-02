@@ -1,0 +1,28 @@
+#win-message {
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    font-size: 95pt;
+    font-weight: bold;
+}
+
+.animated-text {
+    /* Animation to make the win message grow from nothing to 90pt */
+    animation: grow-text 0.5s linear;
+}
+
+#win-message p {
+    background: linear-gradient(to right, red, red, orange, yellow, green, cyan, blue, violet, violet);
+    background-clip: text;
+    color: transparent;
+    -webkit-text-stroke: 5px #241414;
+}
+
+@keyframes grow-text {
+    0% {
+        font-size: 0pt;
+    }
+    100% {
+        font-size: 90pt;
+    }
+}

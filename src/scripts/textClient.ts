@@ -27,9 +27,6 @@ export function setupTextClient() : void {
 }
 
 export function addToLog(message : MessageNode[]) : void {
-    // Debug console log statement
-    console.log(message);
-
     // The entire message will be stored in a single li tag.
     var li = document.createElement("li");
 
