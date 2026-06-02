@@ -24,7 +24,7 @@ const connectedListener = (packet : ConnectedPacket) => {
     Find the total amount of chests in this slot.
     This is the total amount of locations (checked and missing) - 1, because the desk is the only non-chest location.
     */
-    setNumberChests(packet.checked_locations.length + packet.missing_locations.length - 1);
+    setNumberChests(packet.checked_locations.length + packet.missing_locations.length);
 
     // Find and record in a global variable the number of locked chests and required chests, as specified in the options YAML.
     var slotData : JSONRecord = packet.slot_data as JSONRecord;
