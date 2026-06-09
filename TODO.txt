@@ -4,4 +4,3 @@
 * Add main page and/or setup page to WebWorld
 * Make the game 508-conformant
 * Fix item animations for !release
-* Fix the ear-hurting cacophony of "chest open" sounds when many items are released at once
