@@ -213,6 +213,14 @@ function playSound(soundURL : string) : void {
         return;
     
     /*
+    In addition, this method will do nothing if we have too many sounds playing already.
+    If there are too many sounds at once, the player's ears will hurt!
+    */
+    const MAX_NUMBER_SOUNDS = 5;
+    if (document.getElementsByTagName("audio").length >= MAX_NUMBER_SOUNDS)
+        return;
+
+    /*
     Create a new audio element every time this function is called.
     This way, multiple of the same sound can play at the same time.
     */
