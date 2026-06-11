@@ -3,7 +3,7 @@ This file contains all the necessary code for checking if the user has won
 and displaying the win message once they have.
 */
 
-import * as $ from "jquery";
+import $ from "jquery";
 import { client } from "./login.js";
 import { getNumberRequiredChests } from "./mainGame.js";
 import { areAnimationsEnabled, areSoundsEnabled, getVolume } from "./settings.js";
@@ -50,8 +50,8 @@ export function displayIfWin() {
                 hasWon = true;
 
                 // Make it so that whenever the player clicks anywhere or types any key, the win message goes away.
-                $(document).click(hideWinMessage);
-                $(document).keydown(hideWinMessage);
+                $(document).on("click", hideWinMessage);
+                $(document).on("keydown", hideWinMessage);
             }
         } catch (error) {
             // Do nothing because I'm lazy :P

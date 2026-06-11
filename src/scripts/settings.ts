@@ -1,10 +1,10 @@
-import * as $ from "jquery";
+import $ from "jquery";
 
 var animationsEnabled : boolean = true;
 var soundsEnabled : boolean = true;
 var volume : number = 1;
 
-$(document).ready(() => {
+$(() => {
     // Load settings from local storage. Use defaults if the settings aren't there.
     if (localStorage.getItem("sounds-enabled") == null) {
         soundsEnabled = true;
@@ -31,7 +31,7 @@ $(document).ready(() => {
     }
 
     // Toggle whether the settings menu is shown or hidden when the settings button is clicked.
-    $("#settings-button").click(() => {
+    $("#settings-button").on("click", () => {
         // If the settings menu is hidden, show it.
         if ($("#settings-menu").css("display") == "none") {
             $("#settings-menu").show();
@@ -41,18 +41,18 @@ $(document).ready(() => {
     });
 
     // Hide the settings menu when the X button is clicked.
-    $("#settings-x").click(() => {
+    $("#settings-x").on("click", () => {
         $("#settings-menu").hide();
     });
 
     // Clicking the "Enable audio" checkbox will toggle whether audio is enabled.
-    $("#enable-sounds").click(toggleSoundsEnabled);
+    $("#enable-sounds").on("click", toggleSoundsEnabled);
 
     // Adjusting the "Sound volume" slider will change the volume.
-    $("#sound-volume").change(adjustVolume);
+    $("#sound-volume").on("change", adjustVolume);
 
     // Clicking the "Enable animations" checkbox will toggle whether animations are enabled.
-    $("#enable-animations").click(toggleAnimationsEnabled);
+    $("#enable-animations").on("click", toggleAnimationsEnabled);
 });
 
 function toggleSoundsEnabled() : void {

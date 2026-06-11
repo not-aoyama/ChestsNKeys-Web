@@ -1,5 +1,5 @@
-import { ItemMessageNode, LocationMessageNode, MessageNode, PlayerMessageNode, TextualMessageNode } from "archipelago.js";
-import * as $ from "jquery";
+import { MessageNode } from "archipelago.js";
+import $ from "jquery";
 import { client } from "./login";
 
 const SERVER_HELP_MSG : string = "Now that you are connected, you can use !help to list commands to run via the " +
@@ -12,13 +12,13 @@ This function adds event listeners to them to make them work!
 */
 export function setupTextClient() : void {
     // Pressing the "Send Chat" button will send a chat message.
-    $("#send-chat-submit").click(sendChat);
+    $("#send-chat-submit").on("click", sendChat);
 
     // Clicking the "Only messages about me" checkbox will toggle whether irrelevant messages are shown.
-    $("#only-relevant-messages").click(toggleShowOnlyRelevantMessages);
+    $("#only-relevant-messages").on("click", toggleShowOnlyRelevantMessages);
 
     // Pressing the Enter key while in the chat text box will send a chat message.
-    $("#send-chat-input").keypress((event) => {
+    $("#send-chat-input").on("keypress", (event) => {
         // Check if Enter key was pressed (has code 13)
         if (event.which == 13) {
             sendChat();
@@ -46,7 +46,7 @@ export function addToLog(message : MessageNode[]) : void {
 
         // The hover text and CSS class(es) of the span will depend on what type the node is.
         let spanClass : string;
-        let spanHoverText : string;
+        let spanHoverText : string = "";
         switch (node.type) {
             case "item":
                 // The hover text CSS classes will depend on what type of item this node represents.
@@ -161,7 +161,7 @@ export function addToLog(message : MessageNode[]) : void {
     }
 
     // Before adding the message to the log, check to see if the log is scrolled to the bottom.
-    var log = document.getElementById("log");
+    var log = document.getElementById("log") as HTMLElement;
     var isScrolledToBottom : boolean = log.scrollHeight - log.clientHeight <= log.scrollTop + 1;
     
     // Add the message to the end of the log.
@@ -176,7 +176,7 @@ export function addToLog(message : MessageNode[]) : void {
 function sendChat() : void {
     // Get the text that's currently in the chat textbox.
     var textbox = $("#send-chat-input");
-    var message : string = textbox.val();
+    var message : string = textbox.val() as string;
 
     // Do nothing if the textbox is empty.
     if (message == "")

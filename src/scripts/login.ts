@@ -1,25 +1,21 @@
-import * as $ from "jquery";
+import $ from "jquery";
 import { Client } from "archipelago.js";
 import { setupClientListeners } from "./listeners.js";
-import {
-    displayItemSent,
-    LOCATION_ID_PREFIX
-} from "./mainGame.js";
 import { displayIfWin } from "./win.js";
 
 export var client: Client;
 
-$(document).ready(function () {
+$(() => {
     /*
     Before displaying the login screen, fill the text fields with the credentials saved from last time.
     This way, the player doesn't have to repeatedly input the same credentials.
     */
-    $("#host-port-input").val(localStorage.getItem("host-port"));
-    $("#slot-name-input").val(localStorage.getItem("slot-name"));
-    $("#password-input").val(localStorage.getItem("password"));
+    $("#host-port-input").val(localStorage.getItem("host-port") as string);
+    $("#slot-name-input").val(localStorage.getItem("slot-name") as string);
+    $("#password-input").val(localStorage.getItem("password") as string);
 
     // Connect to the server when the login button is clicked.
-    $("#login-submit").click(function () {
+    $("#login-submit").on("click", () => {
         /*
         Hide the login button and display a loading symbol.
         This way, the player won't send multiple connection requests at a time.
@@ -44,16 +40,16 @@ $(document).ready(function () {
 
         client
             .login(
-                connectionInfo.hostport,
-                connectionInfo.slot,
+                connectionInfo.hostport as string,
+                connectionInfo.slot as string,
                 connectionInfo.game,
-                {password: connectionInfo.password}
+                {password: connectionInfo.password as string}
             )
             .then(() => {
                 // Save the login credentials for later so the player doesn't have to enter them again next time.
-                localStorage.setItem("host-port", connectionInfo.hostport);
-                localStorage.setItem("slot-name", connectionInfo.slot);
-                localStorage.setItem("password", connectionInfo.password);
+                localStorage.setItem("host-port", connectionInfo.hostport as string);
+                localStorage.setItem("slot-name", connectionInfo.slot as string);
+                localStorage.setItem("password", connectionInfo.password as string);
 
                 // Hide the login menu to make way for the actual game to be shown.
                 // The actual game will be shown by the connectionListener.

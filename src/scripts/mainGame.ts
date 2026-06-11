@@ -8,10 +8,6 @@ import {Item} from "archipelago.js";
 import { client } from "./login.js";
 import { areSoundsEnabled, getVolume, areAnimationsEnabled } from "./settings.js";
 // @ts-ignore
-import freeItemSvg from "bundle-text:../../assets/images/Free Item.svg";
-// @ts-ignore
-import noMoreFreeItemsSvg from "bundle-text:../../assets/images/No More Free Item.svg";
-// @ts-ignore
 import emptyChestSvg from "bundle-text:../../assets/images/Empty Chest.svg";
 // @ts-ignore
 import lockedChestSvg from "bundle-text:../../assets/images/Locked Chest.svg";
@@ -261,7 +257,7 @@ function playSound(soundURL : string) : void {
     This way, the page isn't cluttered with hundreds of audio elements that aren't being used.
     */
     audioToPlay.addEventListener("ended", (event) => {
-        $(event.target).remove();
+        $(event.target as EventTarget).remove();
     });
 
     // Add the audio source to the HTML page so that it will work.
@@ -395,7 +391,7 @@ export function displayItemSent(locationID : number) : void {
         This way, the page isn't cluttered with hundreds of SVGs that aren't being used.
         */
         svgContainer.addEventListener("animationend", (event) => {
-            $(event.target).remove();
+            $(event.target as EventTarget).remove();
         });
 
         $(liID).append(svgContainer);
