@@ -4,3 +4,4 @@
 * Add main page and/or setup page to WebWorld
 * Make the game 508-conformant
 * Fix item animations for !release
+* Add text displaying how many chests need to be opened to goal
