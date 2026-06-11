@@ -3,7 +3,7 @@ This file contains the code directly relevant to the main game screen;
 i.e. everything after the login screen and before the win screen.
 */
 
-import * as $ from "jquery";
+import $ from "jquery";
 import {Item} from "archipelago.js";
 import { client } from "./login.js";
 import { areSoundsEnabled, getVolume, areAnimationsEnabled } from "./settings.js";
@@ -60,6 +60,9 @@ const NUMBER_HUES = 360;
 
 // Display the main game screen, complete with chests.
 export function setupMainGameContainer() : void {
+    // Set up the goal message.
+    updateGoalMessage();
+
     // Create and display each of the chests.
     for (var i = 1; i <= numberChests; i++) {
         // Create the li tag representing the chest.
@@ -293,6 +296,19 @@ export function updateIcon() : void {
     else {
         $("#website-icon").attr("href", "assets/images/Unlocked Chest.svg");
     }
+}
+
+/**
+Updates the message at the top of the screen telling the player how many chests they need to goal, 
+and how many chests they've opened so far.
+*/
+export function updateGoalMessage() : void {
+    let newGoalMessage : string = "You need to open <b>";
+    newGoalMessage += numberRequiredChests;
+    newGoalMessage += "</b> chests in order to goal. So far, you have opened <b>";
+    newGoalMessage += client.room.checkedLocations.length;
+    newGoalMessage += "</b>.";
+    $("#goal-message").html(newGoalMessage);
 }
 
 export function displayItemSent(locationID : number) : void {

@@ -2,6 +2,15 @@
     height: 95vh; /* Make the main game take up almost the entire height of the window. */
 }
 
+#goal-message {
+    position: absolute;
+    top: 0;
+    z-index: 2;
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(180deg, #bfbacb, transparent);
+}
+
 #locations-list {
     list-style-type: none;
     padding: 0;

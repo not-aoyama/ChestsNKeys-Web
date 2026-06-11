@@ -13,6 +13,7 @@ import {
     LOCATION_ID_PREFIX,
     setNumberChests,
     setupMainGameContainer,
+    updateGoalMessage,
     updateIcon,
     setNumberLockedChests,
     setNumberRequiredChests
@@ -77,6 +78,9 @@ const locationsCheckedListener = (locations : number[]) => {
 
     // Now that there may no longer be any openable chests, update the website icon.
     updateIcon();
+
+    // Update the message at the top of the screen that shows how many chests have been opened.
+    updateGoalMessage();
 
     // Check if all chests have been opened yet, and display the win message if so.
     displayIfWin();
