@@ -1,0 +1,13 @@
+* 2.D: Set up ARIA live region(s) for the automatically updating content.
+* 4.A: Make the chests and the credits link accessible using the keyboard.
+* 4.F: Make it so that keyboard focus always remains within the modal being displayed.
+* 5.F: Make it so that if the user doesn't enter a slot name when logging in, the error message lists the lack of slot name as the issue.
+* 7.A: Fix the alt text of the X button of the Credits modal so it says, "Close credits menu" instead of, "Close settings menu".
+* 7.A: Fix the alt text of the empty chests so it lists the chest number.
+* 7.B: Make it so non-empty chests also have ANDI output.
+* 9.A: Even though it isn't necessary for this test, include a way for keyboard users to skip over the chests.
+* 13.C: Fix color contrast between:
+    * Textbox placeholder text and textbox background
+    * Chest icons and background
+    * Chest labels and chest icons
+* 18.A: Make it so the credits modal doesn't get its top cropped out at 200% zoom.
