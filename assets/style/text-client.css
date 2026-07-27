@@ -1,3 +1,10 @@
+.invisible-except-screen-readers {
+    display: block; /* Enables text to have a set width and height */
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
 #text-client {
     height: 20%;
 }
