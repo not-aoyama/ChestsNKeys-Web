@@ -36,9 +36,16 @@
                 <input type="text" class="login-input" id="slot-name-input" name="slot-name" placeholder="The player name for your slot">
                 <label for="password-input">Password</label>
                 <input type="password" class="login-input" id="password-input" name="password" placeholder="Leave blank if no password">
-                <p id="error-message"><!-- This element is empty by default. --></p>
+                <p id="error-message" role="alert" aria-live="assertive"><!-- This element is empty by default. --></p>
                 <input type="submit" id="login-submit" value="Login">
                 <div class="loader" id="login-loader">
+                    <p id="login-loader-toast" class="sr-only" role="status" aria-live="polite">
+                        <!--
+                        This text is invisible and can only be accessed by screen readers.
+                        It's empty by default, but when the loading icon is shown, this text is populated and screen readers get notified.
+                        Then, when the loading icon disappears, this text is made empty again.
+                        -->
+                    </p>
                     <!--
                     This is shown while the client is attempting to connect to the server.
                     It's empty, but it has a visible border and animation thanks to CSS.
@@ -46,6 +53,12 @@
                 </div>
             </div>
         </div>
+        <p id="login-success-toast" class="sr-only" aria-live="assertive" aria-atomic="true">
+            <!--
+            An ARIA live region that will automatically notify screen readers when login is successful.
+            A "login success" message will be dynamically shown here.
+            -->
+        </p>
         <div id="main-game-container" class="container">
             <p id="goal-message">
                 <!--

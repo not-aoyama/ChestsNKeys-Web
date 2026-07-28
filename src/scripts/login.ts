@@ -21,9 +21,12 @@ $(() => {
         This way, the player won't send multiple connection requests at a time.
         Also hide any previously shown error message to avoid confusion.
         */
+        $("#login-submit").prop("disabled", true);
         $("#login-submit").hide();
+        $("#error-message").text(""); // Empty out the error message so screen readers don't "see" it anymore.
         $("#error-message").hide();
         $("#login-loader").show();
+        $("#login-loader-toast").text("Loading..."); // Notifies screen readers that the page is loading.
 
         var connectionInfo = {
             hostport: $("#host-port-input").val(),
@@ -53,12 +56,26 @@ $(() => {
 
                 // Hide the login menu to make way for the actual game to be shown.
                 // The actual game will be shown by the connectionListener.
+                $("#login-loader-toast").text(""); // Make it so the screen reader will no longer say that the game is loading.
                 $("#login-container").hide();
+
+                // Notify screen reader users that login was successful.
+                $("#login-success-toast").text("Login successful!");
+                // This toast message should disappear after 5 seconds.
+                setTimeout(() => {
+                    $("#login-success-toast").text("");
+                }, 5000);
 
                 // Now that we've connected, we can check if we've already won and display the win message.
                 displayIfWin();
             })
             .catch((error) => {
+                /*
+                The error message element must be shown before it has its text updated.
+                Otherwise, screen readers won't notify about the change.
+                */
+                $("#error-message").show();
+
                 // Display the correct error message.
                 if (error.errors) {
                     const errorType = error.errors[0];
@@ -79,8 +96,9 @@ $(() => {
 
                 // Hide the loading symbol and show the login button so the user can try logging in again.
                 $("#login-loader").hide();
-                $("#error-message").show();
+                $("#login-loader-toast").text(""); // Empties out the screen reader notification. This way, if the page starts loading again, the user will be notified again.
                 $("#login-submit").show();
+                $("#login-submit").prop("disabled", false);
             });
     });
 

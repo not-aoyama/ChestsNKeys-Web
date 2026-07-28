@@ -107,6 +107,9 @@ export function setupMainGameContainer() : void {
     // Update the website icon to show whether any items are in logic.
     updateIcon();
 
+    // Set the focus to the main game container. This makes it more accessible.
+    document.getElementById("main-game-container")?.focus();
+
     // Now that everything is set up, the game is no longer loading!
     isLoading = false;
 }
