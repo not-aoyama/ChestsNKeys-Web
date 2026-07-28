@@ -2,6 +2,14 @@
     height: 95vh; /* Make the main game take up almost the entire height of the window. */
 }
 
+/* Elements that are invisible and only accessible to screen readers */
+.sr-only {
+    display: block; /* Enables text to have a set width and height */
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
 #goal-message {
     position: absolute;
     top: 0;
