@@ -56,7 +56,7 @@
             <div id="audio-container">
                 <!-- All audio in the game will be dynamically played here. -->
             </div>
-            <div id="locations-toast" class="sr-only" aria-live="polite">
+            <div id="locations-toast" class="sr-only" aria-live="polite" aria-atomic="false">
                 <!--
                 An ARIA live region that will automatically notify screen readers whenever a chest is unlocked or emptied.
                 Text will be dynamically "shown" here.
@@ -66,7 +66,9 @@
                 <!-- All locations in the game will be dynamically shown here. -->
             </ul>
             <div id="text-client">
-                <ul id="log"></ul>
+                <ul id="log" role="log" aria-live="polite" aria-atomic="false">
+                    <!-- Chat messages will be dynamically shown here. -->
+                </ul>
                 <br>
                 <div id="send-chat-form">
                     <label for="send-chat-input" class="sr-only">Enter text to send in the chat.</label> <!-- This label is invisible except to screen readers. -->
