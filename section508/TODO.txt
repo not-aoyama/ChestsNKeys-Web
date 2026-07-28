@@ -1,5 +1,4 @@
-* 2.D: Set up ARIA live region(s) for the automatically updating content.
-    * The win message (?)
+* Make the win message into a normal modal that gets closed with an X icon instead of by clicking anywhere or typing any key.
 * 4.A: Make the chests and the credits link accessible using the keyboard.
 * 4.F: Make it so that keyboard focus always remains within the modal being displayed.
 * 5.F: Make it so that if the user doesn't enter a slot name when logging in, the error message lists the lack of slot name as the issue.

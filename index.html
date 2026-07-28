@@ -92,8 +92,14 @@
                 </div>
             </div>
         </div>
-        <div id="win-message" class="container">
-            <p>U R WINNAR!!!1</p>
+        <div id="win-message" class="container" role="alert" aria-live="assertive">
+            <p id="win-text">
+                <!--
+                This text must be dynamically populated using Javascript.
+                This is because simply changing display from "none" to "block" isn't enough to have the ARIA live region notify screen readers.
+                There must be a change to the content itself, not just the CSS.
+                -->
+            </p>
             <audio id="win-sound">
                 <source src="assets/sounds/651641__krizin__crowd-cheer-3.wav" type="audio/wav" />
             </audio>

@@ -38,6 +38,15 @@ export function displayIfWin() {
 
                 $("#win-message").show();
 
+                /*
+                We have to dynamically populate the text,
+                or else the ARIA live region will not notify screen readers of the change.
+                */
+                $("#win-text").text("U R WINNAR!!!1");
+
+                // Move keyboard focus to the win message.
+                document.getElementById("win-message")?.focus();
+
                 // Play the win sound if sounds are enabled in the settings.
                 // Also set the sound volume to whatever volume is in the settings.
                 var audioToPlay : HTMLAudioElement = document.getElementById("win-sound") as HTMLAudioElement;
