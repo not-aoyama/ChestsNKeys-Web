@@ -9793,6 +9793,8 @@ var animationsEnabled = true;
 var soundsEnabled = true;
 var volume = 1;
 (0, _jqueryDefault.default)(()=>{
+    // Get the settings menu and store it in a variable. It will be used multiple times later.
+    let settingsMenu = document.getElementById("settings-menu");
     // Load settings from local storage. Use defaults if the settings aren't there.
     if (localStorage.getItem("sounds-enabled") == null) {
         soundsEnabled = true;
@@ -9815,15 +9817,13 @@ var volume = 1;
         animationsEnabled = localStorage.getItem("animations-enabled") == "true";
         (0, _jqueryDefault.default)("#enable-animations").prop("checked", animationsEnabled);
     }
-    // Toggle whether the settings menu is shown or hidden when the settings button is clicked.
+    // Show the settings menu when the settings button is clicked.
     (0, _jqueryDefault.default)("#settings-button").on("click", ()=>{
-        // If the settings menu is hidden, show it.
-        if ((0, _jqueryDefault.default)("#settings-menu").css("display") == "none") (0, _jqueryDefault.default)("#settings-menu").show();
-        else (0, _jqueryDefault.default)("#settings-menu").hide();
+        settingsMenu.showModal();
     });
     // Hide the settings menu when the X button is clicked.
     (0, _jqueryDefault.default)("#settings-x").on("click", ()=>{
-        (0, _jqueryDefault.default)("#settings-menu").hide();
+        settingsMenu.close();
     });
     // Clicking the "Enable audio" checkbox will toggle whether audio is enabled.
     (0, _jqueryDefault.default)("#enable-sounds").on("click", toggleSoundsEnabled);

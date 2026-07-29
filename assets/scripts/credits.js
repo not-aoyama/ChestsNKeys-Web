@@ -671,17 +671,17 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _jquery = require("jquery");
 var _jqueryDefault = parcelHelpers.interopDefault(_jquery);
 (0, _jqueryDefault.default)(()=>{
-    // Toggle whether the credits is shown when the credits hyperlink is clicked.
+    let creditsMenu = document.getElementById("credits-menu");
+    // Show the credits menu when the credits hyperlink is clicked.
     (0, _jqueryDefault.default)("#credits-link").on("click", (event)=>{
         // Prevents the cursor from jumping to the top of the page.
         event?.preventDefault();
-        // If the settings menu is hidden, show it.
-        if ((0, _jqueryDefault.default)("#credits-menu").css("display") == "none") (0, _jqueryDefault.default)("#credits-menu").show();
-        else (0, _jqueryDefault.default)("#credits-menu").hide();
+        // Show the credits menu.
+        creditsMenu.showModal();
     });
     // Hide the settings menu when the X button is clicked.
     (0, _jqueryDefault.default)("#credits-x").on("click", ()=>{
-        (0, _jqueryDefault.default)("#credits-menu").hide();
+        creditsMenu.close();
     });
 });
 

@@ -5,6 +5,9 @@ var soundsEnabled : boolean = true;
 var volume : number = 1;
 
 $(() => {
+    // Get the settings menu and store it in a variable. It will be used multiple times later.
+    let settingsMenu : HTMLDialogElement = document.getElementById("settings-menu") as HTMLDialogElement;
+
     // Load settings from local storage. Use defaults if the settings aren't there.
     if (localStorage.getItem("sounds-enabled") == null) {
         soundsEnabled = true;
@@ -30,19 +33,14 @@ $(() => {
         $("#enable-animations").prop("checked", animationsEnabled);
     }
 
-    // Toggle whether the settings menu is shown or hidden when the settings button is clicked.
+    // Show the settings menu when the settings button is clicked.
     $("#settings-button").on("click", () => {
-        // If the settings menu is hidden, show it.
-        if ($("#settings-menu").css("display") == "none") {
-            $("#settings-menu").show();
-        } else {
-            $("#settings-menu").hide();
-        }
+        settingsMenu.showModal();
     });
 
     // Hide the settings menu when the X button is clicked.
     $("#settings-x").on("click", () => {
-        $("#settings-menu").hide();
+        settingsMenu.close();
     });
 
     // Clicking the "Enable audio" checkbox will toggle whether audio is enabled.
