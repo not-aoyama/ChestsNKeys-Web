@@ -1,4 +1,3 @@
-* 4.A: Make the credits link accessible using the keyboard.
 * 4.F: Make it so that keyboard focus always remains within the modal being displayed.
 * 5.F: Make it so that if the user doesn't enter a slot name when logging in, the error message lists the lack of slot name as the issue.
 * 7.A: Fix the alt text of the empty chests so it lists the chest number.
