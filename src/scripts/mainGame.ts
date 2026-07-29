@@ -65,11 +65,16 @@ export function setupMainGameContainer() : void {
         var chest = document.createElement("li");
         $(chest).attr("id", "chest" + i);
 
-        // Add a number label to the chest.
+        // Add a button to the li to make it clickable and keyboard focusable.
+        var button = document.createElement("button");
+        $(button).attr("id", "chest-button-" + i)
+        $(chest).append(button);
+
+        // Add a number label to the button.
         var label = document.createElement("span");
         $(label).text(i);
         $(label).attr("class", "chest-label");
-        $(chest).append(label);
+        $(button).append(label);
 
         // Give the chest a unique color so it stands out!
         var hue = NUMBER_HUES / numberChests * i;
@@ -91,8 +96,11 @@ export function setupMainGameContainer() : void {
             // Create a tooltip for the li
             $(chest).attr("title", "Chest " + i + " (Locked)");
 
-            // Add the SVG icon inside of the li. We have to make a copy each time.
-            $(chest).append(lockedChestSvg);
+            // Disable the button
+            $(button).prop("disabled", true);
+
+            // Add the SVG icon inside of the button. We have to make a copy each time.
+            $(button).append(lockedChestSvg);
         }
 
         // If any location has been checked on/before startup, display that.
@@ -171,22 +179,23 @@ function displayToScreenReader(screenReaderMessage : string) : void {
 // Updates the appearance and functionality of the location with the given ID to show it has been checked.
 export function displayLocationChecked(locationId : number) : void {
     var chestNumber = locationId - LOCATION_ID_PREFIX;
-    var chestID = "#chest" + chestNumber;
+    var chestButtonID = "#chest-button-" + chestNumber;
 
     // Empty the SVG from the li tag so it can be replaced with a new SVG.
-    $(chestID + " svg").remove();
+    $(chestButtonID + " svg").remove();
 
     // Return the cursor to normal. (It was a pointer before, to show that this was clickable.)
-    $(chestID).attr("class", null);
+    $(chestButtonID).attr("class", null);
 
     // Change the tooltip
-    $(chestID).attr("title", "Chest " + chestNumber + " (Empty)");
+    $(chestButtonID).attr("title", "Chest " + chestNumber + " (Empty)");
 
     // Remove the click function.
-    $(chestID).prop("onclick", null).off("click");
+    $(chestButtonID).prop("onclick", null).off("click");
+    $(chestButtonID).prop("disabled", true);
 
     // Put the SVG tag inside of the li.
-    $(chestID).append(emptyChestSvg);
+    $(chestButtonID).append(emptyChestSvg);
 
     // Play a sound to show that the chest was opened.
     // However, do NOT do this if the game is still loading, i.e. the player didn't click it.
@@ -202,25 +211,26 @@ export function displayLocationChecked(locationId : number) : void {
 
 // Updates the appearance and functionality of the chest with the given ID to show it has been unlocked.
 export function displayChestUnlocked(chestNumber : number) : void {
-    var chestHtmlID = "#chest" + chestNumber;
+    var chestButtonID = "#chest-button-" + chestNumber;
 
     // Empty the SVG from the li tag so it can be replaced with a new SVG.
-    $(chestHtmlID + " svg").remove();
+    $(chestButtonID + " svg").remove();
 
     // Edit the li's tooltip
-    $(chestHtmlID).attr("title", "Chest " + chestNumber + " (Unlocked)");
+    $(chestButtonID).attr("title", "Chest " + chestNumber + " (Unlocked)");
 
     // main-game.css gives all "clickable"-class objects a pointer cursor to show they can be clicked.
-    $(chestHtmlID).attr("class", "clickable");
+    $(chestButtonID).attr("class", "clickable");
 
     // Now that the chest is unlocked, clicking it should send a check.
     var chestLocationID = LOCATION_ID_PREFIX + chestNumber;
-    $(chestHtmlID).click(() => {
+    $(chestButtonID).on("click", () => {
         client.check(chestLocationID);
     });
+    $(chestButtonID).prop("disabled", false);
 
     // Add the SVG icon.
-    $(chestHtmlID).append(unlockedChestSvg);
+    $(chestButtonID).append(unlockedChestSvg);
 
     // Play a "chest unlocked" sound 
     // That is, unless this chest is already empty. In that case, the user doesn't need to be alerted.

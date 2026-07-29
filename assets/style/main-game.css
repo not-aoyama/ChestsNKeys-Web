@@ -43,6 +43,25 @@
     This way, item icons won't be clipped as they ascend upwards.
     */
     overflow-y: hidden;
+    /* Allows for the outline around the button inside the li to be visible. */
+    padding: 4px;
+}
+
+#locations-list button {
+    /*
+    Causes the clickable/focusable chest buttons to not look like buttons.
+    They will just look like icons with text labels.
+    */
+    background: none;
+    border: none;
+    /*
+    Allows the chest icon to take up the entire button.
+    */
+    padding: 0;
+    /*
+    Makes the button's height the same as the li containing it.
+    */
+    height: 100%;
 }
 
 li svg {
@@ -53,14 +72,6 @@ li svg {
     /* Allows the SVG to overlap with its label without sticking outside of the li. */
     position: relative;
     top: -25px;
-}
-
-li#desk svg {
-    /*
-    Special rule for the SVG representing the free item.
-    This SVG must have a top of 0px, or else it will stick outside of the top of its li.
-    */
-    top: 0px;
 }
 
 /* div containing an SVG representing a sent item */
@@ -89,29 +100,13 @@ div.item-icon {
     }
 }
 
-#locations-list li.clickable {
+#locations-list .clickable {
     cursor: pointer;
-    fill-opacity: 100%;
 }
 
-#locations-list li.clickable:hover {
-    fill-opacity: 50%;
-}
-
-#free-item-unchecked-svg {
-    animation: color-shift 5s linear infinite;
-}
-
-@keyframes color-shift {
-    0% { fill: hsl(0, 100%, 50%); }
-    25% { fill: hsl(90, 100%, 50%); }
-    50% { fill: hsl(180, 100%, 50%); }
-    75% { fill: hsl(270, 100%, 50%); }
-    100% { fill: hsl(360, 100%, 50%); }
-}
-
-#free-item-checked-svg {
-    fill: #4b4b4b;
+#locations-list .clickable:hover, #locations-list .clickable:focus {
+    background-color: rgba(255, 255, 255, 20%);
+    outline: 4px dashed #660066;
 }
 
 /* Chest number labels */
