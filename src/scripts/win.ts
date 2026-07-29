@@ -58,9 +58,8 @@ export function displayIfWin() {
                 // Record that the player has won so the win message won't be shown again.
                 hasWon = true;
 
-                // Make it so that whenever the player clicks anywhere or types any key, the win message goes away.
-                $(document).on("click", hideWinMessage);
-                $(document).on("keydown", hideWinMessage);
+                // Make it so that when the user clicks the X button, the win message goes away.
+                $("#win-x").on("click", hideWinMessage);
             }
         } catch (error) {
             // Do nothing because I'm lazy :P

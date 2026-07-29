@@ -18,6 +18,12 @@
     -webkit-text-stroke: 5px #241414;
 }
 
+#win-x {
+    position: absolute;
+    right: 5px;
+    color: black;
+}
+
 @keyframes grow-text {
     0% {
         font-size: 0pt;
