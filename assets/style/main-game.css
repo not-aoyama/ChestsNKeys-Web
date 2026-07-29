@@ -64,6 +64,10 @@
     height: 100%;
 }
 
+#locations-list button:disabled {
+    cursor: not-allowed;
+}
+
 li svg {
     /* Every image inside of a li will be no bigger than that li. */
     width: 100%;
