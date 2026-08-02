@@ -109,8 +109,8 @@ div.item-icon {
 }
 
 #locations-list .clickable:hover, #locations-list .clickable:focus {
-    background-color: rgba(255, 255, 255, 20%);
-    outline: 4px dashed #660066;
+    background-color: rgba(255, 255, 255, 33%);
+    outline: 3px dashed #660066;
 }
 
 /* Chest number labels */
