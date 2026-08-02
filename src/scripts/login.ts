@@ -90,8 +90,12 @@ $(() => {
                             $("#error-message").text("Failed to connect to slot. Reason: " + errorType);
                     }
                 } else {
-                    // If error.errors is undefined, it's probably because the host/port are incorrect.
-                    $("#error-message").text("Failed to connect to server. Are your host URL and port correct?");
+                    // If error.errors is undefined, it may be because no slot name was provided.
+                    if (connectionInfo.slot == "" || connectionInfo.slot == null)
+                        $("#error-message").text("No slot name provided.");
+                    // Othewrise, it's probably because the host/port are incorrect.
+                    else
+                        $("#error-message").text("Failed to connect to server. Are your host URL and port correct?");
                 }
 
                 // Hide the loading symbol and show the login button so the user can try logging in again.

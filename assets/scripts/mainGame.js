@@ -7800,8 +7800,9 @@ var client;
                     default:
                         (0, _jqueryDefault.default)("#error-message").text("Failed to connect to slot. Reason: " + errorType);
                 }
-            } else // If error.errors is undefined, it's probably because the host/port are incorrect.
-            (0, _jqueryDefault.default)("#error-message").text("Failed to connect to server. Are your host URL and port correct?");
+            } else // If error.errors is undefined, it may be because no slot name was provided.
+            if (connectionInfo.slot == "" || connectionInfo.slot == null) (0, _jqueryDefault.default)("#error-message").text("No slot name provided.");
+            else (0, _jqueryDefault.default)("#error-message").text("Failed to connect to server. Are your host URL and port correct?");
             // Hide the loading symbol and show the login button so the user can try logging in again.
             (0, _jqueryDefault.default)("#login-loader").hide();
             (0, _jqueryDefault.default)("#login-loader-toast").text(""); // Empties out the screen reader notification. This way, if the page starts loading again, the user will be notified again.
