@@ -36,7 +36,8 @@ export function displayIfWin() {
                     $("#win-message").attr("class", $("#win-message").attr("class") + " animated-text");
                 }
 
-                $("#win-message").show();
+                let winDialog : HTMLDialogElement = document.getElementById("win-message") as HTMLDialogElement;
+                winDialog.showModal();
 
                 /*
                 We have to dynamically populate the text,
@@ -73,5 +74,6 @@ function hideWinMessage() : void {
     audioToStop.pause();
 
     // Hide the visual win message.
-    $("#win-message").hide();
+    let winDialog : HTMLDialogElement = document.getElementById("win-message") as HTMLDialogElement;
+    winDialog.close();
 }

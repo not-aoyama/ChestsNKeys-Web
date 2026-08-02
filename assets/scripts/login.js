@@ -9860,7 +9860,8 @@ function displayIfWin() {
             (0, _loginJs.client).goal();
             // Enable the animation for the win message text if animations are enabled in the settings.
             if ((0, _settingsJs.areAnimationsEnabled)()) (0, _jqueryDefault.default)("#win-message").attr("class", (0, _jqueryDefault.default)("#win-message").attr("class") + " animated-text");
-            (0, _jqueryDefault.default)("#win-message").show();
+            let winDialog = document.getElementById("win-message");
+            winDialog.showModal();
             /*
                 We have to dynamically populate the text,
                 or else the ARIA live region will not notify screen readers of the change.
@@ -9886,7 +9887,8 @@ function hideWinMessage() {
     var audioToStop = document.getElementById("win-sound");
     audioToStop.pause();
     // Hide the visual win message.
-    (0, _jqueryDefault.default)("#win-message").hide();
+    let winDialog = document.getElementById("win-message");
+    winDialog.close();
 }
 
 },{"jquery":"hgMhh","./login.js":"ly455","./mainGame.js":"6me0k","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./settings.js":"hHf3b"}]},["d5KqA","ly455"], "ly455", "parcelRequire04ca", {})
