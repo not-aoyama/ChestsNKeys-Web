@@ -94,13 +94,20 @@ export function setupMainGameContainer() : void {
         // Otherwise, the chest will be locked.
         else {
             // Create a tooltip for the li
-            $(chest).attr("title", "Chest " + i + " (Locked)");
+            let tooltip : string = "Chest " + i + " (Locked)";
+            $(chest).attr("title", tooltip);
 
             // Disable the button
             $(button).prop("disabled", true);
 
             // Add the SVG icon inside of the button. We have to make a copy each time.
             $(button).append(lockedChestSvg);
+
+            // Create alt text for the SVG
+            let titleElem = document.createElement("title");
+            $(titleElem).text(tooltip);
+            let svgElem = $(button).children("svg")[0]; // The SVG inside of the button
+            svgElem.append(titleElem);
         }
 
         // If any location has been checked on/before startup, display that.
@@ -188,7 +195,8 @@ export function displayLocationChecked(locationId : number) : void {
     $(chestButtonID).attr("class", null);
 
     // Change the tooltip
-    $(chestButtonID).attr("title", "Chest " + chestNumber + " (Empty)");
+    let tooltip : string = "Chest " + chestNumber + " (Empty)";
+    $(chestButtonID).attr("title", tooltip);
 
     // Remove the click function.
     $(chestButtonID).prop("onclick", null).off("click");
@@ -196,6 +204,14 @@ export function displayLocationChecked(locationId : number) : void {
 
     // Put the SVG tag inside of the li.
     $(chestButtonID).append(emptyChestSvg);
+
+    // Add alt text to the SVG
+    let titleElem = document.createElement("title");
+    $(titleElem).text(tooltip);
+    let svgElem = $(chestButtonID).children("svg")[0];
+    // For some reason, it's possible for svgElem to be undefined. We have to account for that possibility.
+    if (svgElem != undefined)
+        $(svgElem).append(titleElem);
 
     // Play a sound to show that the chest was opened.
     // However, do NOT do this if the game is still loading, i.e. the player didn't click it.
@@ -217,7 +233,8 @@ export function displayChestUnlocked(chestNumber : number) : void {
     $(chestButtonID + " svg").remove();
 
     // Edit the li's tooltip
-    $(chestButtonID).attr("title", "Chest " + chestNumber + " (Unlocked)");
+    let tooltip : string = "Chest " + chestNumber + " (Unlocked)";
+    $(chestButtonID).attr("title", tooltip);
 
     // main-game.css gives all "clickable"-class objects a pointer cursor to show they can be clicked.
     $(chestButtonID).attr("class", "clickable");
@@ -231,6 +248,14 @@ export function displayChestUnlocked(chestNumber : number) : void {
 
     // Add the SVG icon.
     $(chestButtonID).append(unlockedChestSvg);
+
+    // Add alt text to the SVG icon.
+    let titleElem = document.createElement("title");
+    $(titleElem).text(tooltip);
+    let svgElem = $(chestButtonID).children("svg")[0];
+    // Just in case...
+    if (svgElem != undefined)
+        $(svgElem).append(titleElem);
 
     // Play a "chest unlocked" sound 
     // That is, unless this chest is already empty. In that case, the user doesn't need to be alerted.
