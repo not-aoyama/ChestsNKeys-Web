@@ -2,4 +2,3 @@
 * 13.C: Fix color contrast between:
     * Chest icons and background
     * Chest labels and chest icons
-* 18.A: Make it so the credits modal doesn't get its top cropped out at 200% zoom.
