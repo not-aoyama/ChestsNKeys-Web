@@ -1,4 +1,3 @@
-* 9.A: Even though it isn't necessary for this test, include a way for keyboard users to skip over the chests.
 * 13.C: Fix color contrast between:
     * Chest icons and background
     * Chest labels and chest icons
