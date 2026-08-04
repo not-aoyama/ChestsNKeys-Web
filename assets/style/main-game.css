@@ -3,20 +3,27 @@
 }
 
 /* Elements that are invisible and only accessible to screen readers */
-.sr-only {
-    display: block; /* Enables text to have a set width and height */
+/* This code was shamelessly stolen from https://webaim.org/techniques/css/invisiblecontent/ */
+.sr-only, .focus-only {
+    position: absolute;
+    left: -10000px;
+    top: auto;
     width: 1px;
     height: 1px;
     overflow: hidden;
 }
 
-#goal-message {
-    position: absolute;
-    top: 0;
-    z-index: 2;
-    width: 100%;
-    height: 50px;
-    background: linear-gradient(180deg, #bfbacb, transparent);
+/* Links that are only visible when given keyboard focus */
+.focus-only {
+    color: inherit;
+}
+
+.focus-only:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    /* The "left" property should be ignored now that position is static, but it's best to reset it just in case. */
+    left: auto;
 }
 
 #locations-list {
