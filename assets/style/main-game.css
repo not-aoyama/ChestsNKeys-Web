@@ -29,7 +29,7 @@
 #locations-list {
     list-style-type: none;
     padding: 0;
-    height: 70%;
+    height: 65%;
     overflow-y: auto;
 }
 
@@ -117,12 +117,11 @@ div.item-icon {
 
 #locations-list .clickable:hover, #locations-list .clickable:focus {
     background-color: rgba(255, 255, 255, 33%);
-    outline: 3px dashed #660066;
+    outline: 3px dashed #d1aeff;
 }
 
 /* Chest number labels */
 .chest-label {
-    color: white;
     position: relative; /* Allows the label and the image to overlap */
     top: 20px;
     z-index: 1;
@@ -134,7 +133,6 @@ div.item-icon {
 
 /* Key number labels */
 .key-label {
-    color: white;
     position: relative;
     top: -72.5px;
     z-index: 2;

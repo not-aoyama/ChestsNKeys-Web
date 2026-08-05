@@ -3,12 +3,13 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-color: #2b2d46;
+    background-color: #72688e;
     color: white;
     border-radius: 5px;
     padding: 20px;
     margin: auto; /* Centers the menu horizontally. */
     width: 300px;
+    border: 1px solid #888;
 }
 
 #login-form {  
@@ -32,15 +33,15 @@
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     border-radius: 4px;
     box-sizing: border-box;
-    background-color: #484649;
-    color: white;
+    background-color: #bbb2bf;
+    color: black;
 }
 
 .login-input::placeholder {
-    color: #999;
+    color: #777;
 }
 
 #error-message {

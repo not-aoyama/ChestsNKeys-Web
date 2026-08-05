@@ -77,8 +77,11 @@ export function setupMainGameContainer() : void {
         $(button).append(label);
 
         // Give the chest a unique color so it stands out!
-        var hue = NUMBER_HUES / numberChests * (i - 1);
-        $(chest).css("fill", "hsl(" + hue + ", 90%, 50%)");
+        var hue = getHueForChest(i);
+        $(chest).css("fill", "hsl(" + hue + ", 100%, 70%)");
+
+        // Set the number label's color so that it has sufficient contrast with its chest.
+        $(label).css("color", getLabelColorForChest(i));
 
         /*
         Add this chest to the displayed locations.
@@ -127,6 +130,38 @@ export function setupMainGameContainer() : void {
 
     // Now that everything is set up, the game is no longer loading!
     isLoading = false;
+}
+
+/**
+ * Given a chest's number (1 to 360), returns a number representing a hue that will be unique to just that chest.
+ * This hue will be used to calculate a color in HSL format. It will be the number used for "H".
+ * 
+ * @param chestNumber The number labelling a chest. It should be an integer between 1 and 360 (both inclusive).
+ * @returns A number representing the chest's hue. It should be between 0 (inclusive) and 360 (exclusive).
+ */
+function getHueForChest(chestNumber : number) : number {
+    return NUMBER_HUES / numberChests * (chestNumber - 1);
+}
+
+/**
+ * Given a chest's number (1 to 360), returns a text color that will properly contrast with the color of the chest.
+ * This function will return either "white" or "black".
+ * 
+ * @param chestNumber The number labelling a chest. It should be an integer between 1 and 360 (both inclusive).
+ * @returns A string containing the name of a color to be applied to this chest's text label.
+ */
+function getLabelColorForChest(chestNumber : number) : string {
+    // Get the HSL hue of this chest.
+    let chestHue = getHueForChest(chestNumber);
+
+    /*
+    This function will almost always return "black".
+    The only time the function will return "white" is when the hue is between 235 and 251 (both inclusive).
+    */
+    if (chestHue >= 235 && chestHue <= 251)
+        return "white";
+    else
+        return "black";
 }
 
 // This setter method allows numberChests to be accessed in other JS files.
@@ -418,10 +453,16 @@ export function displayItemSent(locationID : number) : void {
                     let chestColor = $(chestID).css("fill");
                     // Set the color of the key icon to match
                     $(svgContainer).css("fill", chestColor);
+
+                    // Set the color of the key's label so that it contrasts enough with the key itself.
+                    $(label).css("color", getLabelColorForChest(keyNumber));
                 }
                 // Keys to chests in other slots should be black.
                 else {
                     $(svgContainer).css("fill", "black");
+
+                    // The key's label should be white to contrast with the black key.
+                    $(label).css("color", "white");
                 }
             }
         } else {

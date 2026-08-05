@@ -1,8 +1,8 @@
 body {
     text-align: center;
     /* For now, light background color and dark text color. */
-    background-color: #bfbacb;
-    color: black;
+    background-color: #2b2d46;
+    color: white;
     margin: 0;
     padding: 0;
     overflow-y: auto;
@@ -31,7 +31,7 @@ body {
 }
 
 .icon-button:hover img {
-    opacity: 50%;
+    opacity: 70%;
 }
 
 #settings-button {
