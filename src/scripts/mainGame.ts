@@ -77,7 +77,7 @@ export function setupMainGameContainer() : void {
         $(button).append(label);
 
         // Give the chest a unique color so it stands out!
-        var hue = NUMBER_HUES / numberChests * i;
+        var hue = NUMBER_HUES / numberChests * (i - 1);
         $(chest).css("fill", "hsl(" + hue + ", 90%, 50%)");
 
         /*

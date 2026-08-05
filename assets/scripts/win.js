@@ -9371,7 +9371,7 @@ function setupMainGameContainer() {
         (0, _jqueryDefault.default)(label).attr("class", "chest-label");
         (0, _jqueryDefault.default)(button).append(label);
         // Give the chest a unique color so it stands out!
-        var hue = NUMBER_HUES / numberChests * i;
+        var hue = NUMBER_HUES / numberChests * (i - 1);
         (0, _jqueryDefault.default)(chest).css("fill", "hsl(" + hue + ", 90%, 50%)");
         /*
         Add this chest to the displayed locations.
