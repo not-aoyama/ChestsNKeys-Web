@@ -1,4 +1,3 @@
-* 2.C: Why would we want the player to be able to stop automatic updates? If the game doesn't continuously update to reflect what the other players are doing, it won't function properly anymore.
 * 9.A: Why does repetitive content have to appear on multiple pages for it to qualify for this test?
 * 13.C: How does this apply to placeholder text for text boxes? If no CSS is applied to a text box, the Color Contrast Analyzer says the placeholder text doesn't contrast enough with the text box background. But ANDi doesn't show any issues and doesn't prompt the user to manually test. Should placeholder text be ignored for this test?
     * AI answer: It doesn't. (Should verify this with a human)

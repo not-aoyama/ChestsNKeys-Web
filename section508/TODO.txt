@@ -1,1 +1,2 @@
 * 2.C: Implement a disconnect/reconnect feature that will pause automatic updates when disconnected.
+* 13.C: Fix color contrast issues with the text log.
