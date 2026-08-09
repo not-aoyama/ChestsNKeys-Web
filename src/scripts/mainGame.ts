@@ -78,10 +78,13 @@ export function setupMainGameContainer() : void {
 
         // Give the chest a unique color so it stands out!
         var hue = getHueForChest(i);
-        $(chest).css("fill", "hsl(" + hue + ", 100%, 70%)");
+        var chestColor = "hsl(" + hue + ", 100%, 70%)";
+        $(chest).css("fill", chestColor);
 
         // Set the number label's color so that it has sufficient contrast with its chest.
         $(label).css("color", getLabelColorForChest(i));
+        // Also set the label's background color so that ANDI won't complain.
+        $(label).css("background-color", chestColor);
 
         /*
         Add this chest to the displayed locations.
