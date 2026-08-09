@@ -3,11 +3,11 @@
 }
 
 #log {
-    border: 1px solid black;
+    border: 1px solid white;
     width: 95%;
     height: 80%;
     margin: auto;
-    background-color: #66636d;
+    background-color: #1b242f;
     overflow-y: scroll;
     list-style-type: none;
     padding: 0 5px;
@@ -19,11 +19,11 @@
 }
 
 .locationMessage {
-    color: #00FF7F;
+    color: #01E774;
 }
 
 .entranceMessage {
-    color: #4c7bcf;
+    color: #658CD2;
 }
 
 .playerMessage, .itemMessage {
@@ -31,26 +31,26 @@
 }
 
 .thisPlayerMessage {
-    color: rgb(238, 0, 238);
+    color: #FA00FA;
 }
 
 .otherPlayerMessage {
-    color: rgb(250, 250, 210);
+    color: #EDEEC9;
 }
 
 /* Just for filler items. This is overridden for any item that is non-filler. */
 .itemMessage {
-    color: rgb(6, 217, 217);
+    color: #00E8E8;
 }
 
 /* Just for items that are progression and nothing else. This is overridden for items with multiple flags. */
 .itemMessage.progressionItemMessage {
-    color: rgb(117, 87, 198);
+    color: #A38FDF;
 }
 
 /* Just for items that are useful and nothing else. This is overridden for items with multiple flags. */
 .itemMessage.usefulItemMessage {
-    color: rgb(78, 99, 166);
+    color: #718AD6;
 }
 
 /* Just for items that are progression and useful, but not traps. This is overridden for items with all three flags. */
@@ -60,7 +60,7 @@
 
 /* Just for items that are traps and nothing else. This is overridden for items with multiple flags. */
 .itemMessage.trapItemMessage {
-    color: rgb(203, 105, 94);
+    color: rgb(211, 113, 102);
 }
 
 /* Just for items that are progression and traps, but not useful. This is overridden for items with all three flags. */
@@ -70,7 +70,7 @@
 
 /* Just for items that are useful and traps, but not progression. This is overridden for items with all three flags. */
 .itemMessage.usefulItemMessage.trapItemMessage {
-    color: rgb(155, 89, 182);
+    color: rgb(174, 120, 196);
 }
 
 /* Items that are progression, useful, and traps all at once somehow. */
