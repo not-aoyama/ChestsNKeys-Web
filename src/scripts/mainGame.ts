@@ -41,7 +41,7 @@ var numberLockedChests : number;
 // How many chests need to be opened in order to goal. This is determined by reading the slot data from the server.
 var numberRequiredChests : number;
 
-/*
+/**
 So, here's the thing. At first, before the player does anything, the client processes all the checks that have happened
 in the history of the multiworld. So, a bunch of chests are "opened" without the player actually doing anything during
 this session. During this time, we consider the game to be "loading".
@@ -53,6 +53,23 @@ var isLoading : boolean = true;
 
 // The number of possible hue values for an HSL color. This will be important later.
 const NUMBER_HUES = 360;
+
+/**
+ * Returns whether or not the main game screen has finished loading. 
+ * This will only return `true` if all of the following are true:
+ * 
+ * 1. Slot data (e.g. the number of required chests) is loaded in.
+ * 2. All of the chests are displayed and functional.
+ * 3. The text client is displayed and functional.
+ * 4. The header (which contains the goal message and the disconnect/reconnect button) is displayed and functional.
+ * 
+ * Once this function starts returning `true`, it will never return `false` again unless the page is reloaded.
+ * 
+ * @returns whether or not the main game screen has finished loading
+ */
+export function hasLoaded() : boolean {
+    return !isLoading;
+}
 
 // Display the main game screen, complete with chests.
 export function setupMainGameContainer() : void {
@@ -133,6 +150,50 @@ export function setupMainGameContainer() : void {
 
     // Now that everything is set up, the game is no longer loading!
     isLoading = false;
+}
+
+/**
+ * Sets the text of the disconnect/reconnect button to "Disconnect".
+ * Makes it so that when this button is clicked, the client starts disconnecting from the server, 
+ * and the disconnect/reconnect button is disabled.
+ */
+export function setupDisconnectButton() : void {
+    let disconnectReconnectButton = $("#disconnect-reconnect-button");
+    $(disconnectReconnectButton).prop("disabled", false);
+    $(disconnectReconnectButton).text("Disconnect");
+    $(disconnectReconnectButton).prop("onclick", null).off("click"); // Remove any existing onclick function.
+    $(disconnectReconnectButton).on("click", () => {
+        $(disconnectReconnectButton).prop("disabled", true);
+        client.socket.disconnect();
+    });
+}
+
+/**
+ * Sets the text of the disconnect/reconnect button to "Reconnect".
+ * Makes it so that when this button is clicked, the client starts reconnecting to the server, 
+ * and the disconnect/reconnect button is disabled.
+ */
+export function setupReconnectButton() : void {
+    let disconnectReconnectButton = $("#disconnect-reconnect-button");
+    $(disconnectReconnectButton).prop("disabled", false);
+    $(disconnectReconnectButton).text("Reconnect");
+    $(disconnectReconnectButton).prop("onclick", null).off("click"); // Remove any existing onclick function.
+    $(disconnectReconnectButton).on("click", () => {
+        $(disconnectReconnectButton).prop("disabled", true);
+        // Log back into the game.
+        let connectionInfo = {
+            hostport: localStorage.getItem("host-port") as string,
+            game: "Chests 'n' Keys",
+            slot: localStorage.getItem("slot-name") as string,
+            password: localStorage.getItem("password") as string
+        };
+        client.login(
+            connectionInfo.hostport as string,
+            connectionInfo.slot as string,
+            connectionInfo.game,
+            {password: connectionInfo.password as string}
+        );
+    });
 }
 
 /**

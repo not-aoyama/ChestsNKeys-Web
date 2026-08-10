@@ -8,44 +8,55 @@ import {
     displayChestUnlocked,
     displayItemSent,
     displayLocationChecked,
+    hasLoaded,
     ITEM_THAT_DOES_NOTHING_ID,
     ITEM_ID_PREFIX,
     LOCATION_ID_PREFIX,
-    setNumberChests,
+    setupDisconnectButton,
     setupMainGameContainer,
-    updateGoalMessage,
-    updateIcon,
+    setNumberChests,
     setNumberLockedChests,
-    setNumberRequiredChests
+    setNumberRequiredChests,
+    setupReconnectButton,
+    updateGoalMessage,
+    updateIcon
 } from "./mainGame.js";
 import { addToLog, setupTextClient } from "./textClient.js";
 import { displayIfWin } from "./win.js";
 
 const connectedListener = (packet : ConnectedPacket) => {
+    // If the game hasn't already been set up, set everything up.
+    if (!hasLoaded()) {
+        /*
+        Find the total amount of chests in this slot.
+        This is the total amount of locations (checked and missing) - 1, because the desk is the only non-chest location.
+        */
+        setNumberChests(packet.checked_locations.length + packet.missing_locations.length);
+
+        // Find and record in a global variable the number of locked chests and required chests, as specified in the options YAML.
+        var slotData : JSONRecord = packet.slot_data as JSONRecord;
+        setNumberLockedChests(slotData["number_of_locked_chests"] as number);
+        setNumberRequiredChests(slotData["number_of_required_chests"] as number);
+
+        // Set up and display the main game container.
+        setupMainGameContainer();
+
+        // Set up the text client/log.
+        setupTextClient();
+    }
+
     /*
-    Find the total amount of chests in this slot.
-    This is the total amount of locations (checked and missing) - 1, because the desk is the only non-chest location.
+    Regardless of whether the game has already been set up or not,
+    set up the "Disconnect" button so the user can leave the server without having to reload or exit the page.
     */
-    setNumberChests(packet.checked_locations.length + packet.missing_locations.length);
-
-    // Find and record in a global variable the number of locked chests and required chests, as specified in the options YAML.
-    var slotData : JSONRecord = packet.slot_data as JSONRecord;
-    setNumberLockedChests(slotData["number_of_locked_chests"] as number);
-    setNumberRequiredChests(slotData["number_of_required_chests"] as number);
-
-    // Set up and display the main game container.
-    setupMainGameContainer();
-
-    // Set up the text client/log.
-    setupTextClient();
+    setupDisconnectButton();
 };
 
 const disconnectedListener = () => {
-    /*
-    Someday, I'll change this code to try to reconnect every 10 seconds,
-    but for now, I'll just send an alert because it's easier.
-    */
-    alert("You've been disconnected from the server! Reload the page and log in again in order to reconnect.");
+    alert("You've been disconnected from the server! Click the \"Reconnect\" button at the top of the page to reconnect.");
+
+    // Turn the "Disconnect" button into the "Reconnect" button, so the user can join the server again.
+    setupReconnectButton();
 };
 
 const itemsReceivedListener = (items : Item[], index : number) => {
