@@ -7,6 +7,7 @@ import $ from "jquery";
 import {Item} from "archipelago.js";
 import { client } from "./login.js";
 import { areSoundsEnabled, getVolume, areAnimationsEnabled } from "./settings.js";
+import { addPlainTextToLog } from "./textClient.js";
 // @ts-ignore
 import emptyChestSvg from "bundle-text:../../assets/images/Empty Chest.svg";
 // @ts-ignore
@@ -180,6 +181,15 @@ export function setupReconnectButton() : void {
     $(disconnectReconnectButton).prop("onclick", null).off("click"); // Remove any existing onclick function.
     $(disconnectReconnectButton).on("click", () => {
         $(disconnectReconnectButton).prop("disabled", true);
+
+        /*
+        Since it might take a while, we should notify the player that reconnection is in progress.
+        This should be done via the text client chat log, and (for the sake of screen readers) a toast message.
+        */
+        const reconnectingMessage : string = "Trying to reconnect to the server...";
+        addPlainTextToLog(reconnectingMessage);
+        displayToScreenReader(reconnectingMessage);
+
         // Log back into the game.
         let connectionInfo = {
             hostport: localStorage.getItem("host-port") as string,
@@ -192,7 +202,22 @@ export function setupReconnectButton() : void {
             connectionInfo.slot as string,
             connectionInfo.game,
             {password: connectionInfo.password as string}
-        );
+        ).then(() => {
+            // If reconnection is successful, a toast message should be sent to screen readers.
+            displayToScreenReader("Reconnected to the server!");
+        }).catch((error) => {
+            /*
+            If reconnection fails:
+            1. The text log should be updated.
+            2. An alert should appear (simplest way to satisfy Section 508 requirements)
+            3. The "Reconnect" button should be re-enabled so the user can try again.
+            */
+            const failedMessage : string = "Failed to reconnect to the server.";
+            addPlainTextToLog(failedMessage);
+            alert(failedMessage);
+            console.warn(error); // Send it to the console just in case!
+            $(disconnectReconnectButton).prop("disabled", false);
+        });
     });
 }
 
