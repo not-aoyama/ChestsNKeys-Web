@@ -33,7 +33,7 @@ export function displayIfWin() {
 
                 // Enable the animation for the win message text if animations are enabled in the settings.
                 if (areAnimationsEnabled()) {
-                    $("#win-message").attr("class", $("#win-message").attr("class") + " animated-text");
+                    $("#win-text").attr("class", "animated-text");
                 }
 
                 let winDialog : HTMLDialogElement = document.getElementById("win-message") as HTMLDialogElement;

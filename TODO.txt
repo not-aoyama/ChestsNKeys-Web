@@ -5,3 +5,4 @@
 * Make the game 508-conformant
 * Fix item animations for !release
 * Protect chat section against malicious HTML injection
+* Print an error message in the log and re-enable the "Reconnect" button if reconnection fails.
