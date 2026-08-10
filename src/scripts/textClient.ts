@@ -5,7 +5,7 @@ import { client } from "./login";
 const SERVER_HELP_MSG : string = "Now that you are connected, you can use !help to list commands to run via the " +
     "server. If your client supports it, you may have additional local commands you can list with /help.";
 
-/*
+/**
 At first, the form to send a chat message and the checkbox to filter out irrelevant messages will exist as HTML, but
 they will be non-functional.
 This function adds event listeners to them to make them work!
@@ -26,6 +26,12 @@ export function setupTextClient() : void {
     });
 }
 
+/**
+ * Displays a message from Archipelago in the text client. This message can be from any player (even this game's player), 
+ * or from the server.
+ * 
+ * @param message an array of `MessageNode`s that comprises a single, entire Archipelago message
+ */
 export function addToLog(message : MessageNode[]) : void {
     // The entire message will be stored in a single li tag.
     var li = document.createElement("li");
@@ -161,6 +167,32 @@ export function addToLog(message : MessageNode[]) : void {
     }
 
     // Before adding the message to the log, check to see if the log is scrolled to the bottom.
+    var log = document.getElementById("log") as HTMLElement;
+    var isScrolledToBottom : boolean = log.scrollHeight - log.clientHeight <= log.scrollTop + 1;
+    
+    // Add the message to the end of the log.
+    $("#log").append(li);
+
+    // If the log was scrolled all the way down before,
+    // make the log automatically stay scrolled all the way down.
+    if (isScrolledToBottom)
+        log.scrollTop = log.scrollHeight - log.clientHeight;
+}
+
+/**
+ * Adds some plain, ordinary text to the player's chat log.
+ * This text will NOT be visible to anybody other than this game's player. It also won't get any formatting, hover text, etc.
+ * 
+ * @param plainText plain text to display in the chat log
+ */
+export function addPlainTextToLog(plainText : string) : void {
+    // The text will be contained in a span contained in a li.
+    let li : HTMLLIElement = document.createElement("li");
+    let span : HTMLSpanElement = document.createElement("span");
+    $(span).text(plainText);
+    $(li).append(span);
+
+    // Before adding the text to the log, check to see if the log is scrolled to the bottom.
     var log = document.getElementById("log") as HTMLElement;
     var isScrolledToBottom : boolean = log.scrollHeight - log.clientHeight <= log.scrollTop + 1;
     

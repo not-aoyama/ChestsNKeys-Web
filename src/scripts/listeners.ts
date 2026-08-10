@@ -21,7 +21,7 @@ import {
     updateGoalMessage,
     updateIcon
 } from "./mainGame.js";
-import { addToLog, setupTextClient } from "./textClient.js";
+import { addToLog, addPlainTextToLog, setupTextClient } from "./textClient.js";
 import { displayIfWin } from "./win.js";
 
 const connectedListener = (packet : ConnectedPacket) => {
@@ -53,6 +53,9 @@ const connectedListener = (packet : ConnectedPacket) => {
 };
 
 const disconnectedListener = () => {
+    // Add a "you've been disconnected" message to the chat log.
+    addPlainTextToLog("Disconnected from the server.");
+
     alert("You've been disconnected from the server! Click the \"Reconnect\" button at the top of the page to reconnect.");
 
     // Turn the "Disconnect" button into the "Reconnect" button, so the user can join the server again.
