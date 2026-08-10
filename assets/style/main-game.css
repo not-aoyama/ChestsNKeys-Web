@@ -2,6 +2,22 @@
     height: 95vh; /* Make the main game take up almost the entire height of the window. */
 }
 
+header {
+    display: flex;
+    align-items: center; /* Centers child elements vertically. */
+    padding: 15px 0;
+}
+
+#disconnect-reconnect-button {
+    position: absolute; /* The goal message will not take this button into account, so it will be exactly centered. */
+    margin-left: 2.5%;
+    padding: 10px;
+}
+
+#goal-message {
+    margin: auto; /* Centers the element horizontally. */
+}
+
 /* Elements that are invisible and only accessible to screen readers */
 /* This code was shamelessly stolen from https://webaim.org/techniques/css/invisiblecontent/ */
 .sr-only, .focus-only {
