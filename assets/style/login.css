@@ -45,7 +45,8 @@
 }
 
 #error-message {
-    color: red;
+    background-color: #ef0000;
+    color: white;
     font-size: 15.5px;
 }
 
