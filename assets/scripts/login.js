@@ -9651,6 +9651,8 @@ function displayItemSent(locationID) {
                     // The key's label should be white to contrast with the black key.
                     (0, _jqueryDefault.default)(label).css("color", "white");
                 }
+                // Set the background color of the label itself. This way, ANDI won't flag it as insufficient contrast.
+                (0, _jqueryDefault.default)(label).css("background-color", (0, _jqueryDefault.default)(svgContainer).css("fill"));
             }
         } else {
             // Use progressive AP icon (AP icon with an arrow in the bottom right) for progression items
@@ -9668,6 +9670,12 @@ function displayItemSent(locationID) {
         }
         // This class will be used for CSS styling
         (0, _jqueryDefault.default)(svgContainer).attr("class", "item-icon");
+        // Add alt text to the SVG.
+        let titleElem = document.createElement("title");
+        if (item.receiver.slot == item.sender.slot) (0, _jqueryDefault.default)(titleElem).text("Your " + item.name);
+        else (0, _jqueryDefault.default)(titleElem).text(item.receiver.alias + "'s " + item.name);
+        let svgElem = (0, _jqueryDefault.default)(svgContainer).children("svg")[0]; // The SVG inside of the button
+        svgElem.append(titleElem);
         /*
         Make the div delete itself once its animation is finished.
         This way, the page isn't cluttered with hundreds of SVGs that aren't being used.

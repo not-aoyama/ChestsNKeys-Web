@@ -521,6 +521,8 @@ export function displayItemSent(locationID : number) : void {
                     // The key's label should be white to contrast with the black key.
                     $(label).css("color", "white");
                 }
+                // Set the background color of the label itself. This way, ANDI won't flag it as insufficient contrast.
+                $(label).css("background-color", $(svgContainer).css("fill"));
             }
         } else {
             // Use progressive AP icon (AP icon with an arrow in the bottom right) for progression items
@@ -548,6 +550,16 @@ export function displayItemSent(locationID : number) : void {
 
         // This class will be used for CSS styling
         $(svgContainer).attr("class", "item-icon");
+
+        // Add alt text to the SVG.
+        let titleElem = document.createElement("title");
+        if (item.receiver.slot == item.sender.slot) { // If this is the player's own item
+            $(titleElem).text("Your " + item.name);
+        } else { // If this is another player's item
+            $(titleElem).text(item.receiver.alias + "'s " + item.name);
+        }
+        let svgElem = $(svgContainer).children("svg")[0]; // The SVG inside of the button
+        svgElem.append(titleElem);
 
         /*
         Make the div delete itself once its animation is finished.
