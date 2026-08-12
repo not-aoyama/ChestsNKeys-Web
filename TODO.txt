@@ -3,4 +3,3 @@
 * Allow the chest div and log div to be resized vertically
 * Add main page and/or setup page to WebWorld
 * Fix item animations for !release
-* Protect chat section against malicious HTML injection

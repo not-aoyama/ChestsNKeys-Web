@@ -27,6 +27,24 @@ export function setupTextClient() : void {
 }
 
 /**
+ * A helper function that strips the `<` and `>` characters out of the given text 
+ * and replaces them with the HTML entities `&lt;` and `&gt;`.
+ * 
+ * This will prevent the player from injecting code via the text client.
+ * 
+ * @param text a string to sanitize
+ * @return a version of the `text` that replaces each `<` with `&lt;` and each `>` with `&gt;`
+ */
+function sanitizeText(text : string) : string {
+    /*
+    This function works by creating a temporary <p> element without adding it to the DOM.
+    It uses the JQuery text() function to set the inner text of this unseen element. text() automatically sanitizes all input.
+    Then, we grab the now-sanitized text out of the unshown <p>, return the text, and forget all about the <p>'s existence!
+    */
+    return $("<p>").text(text).html();
+}
+
+/**
  * Displays a message from Archipelago in the text client. This message can be from any player (even this game's player), 
  * or from the server.
  * 
@@ -144,7 +162,8 @@ export function addToLog(message : MessageNode[]) : void {
             if (i > 0) {
                 $(span).append(document.createElement("br"));
             }
-            $(span).append(linesOfText[i]);
+            // Sanitize each line of text to prevent cross-site scripting!
+            $(span).append(sanitizeText(linesOfText[i]));
         }
 
         // Add the span to the li.
