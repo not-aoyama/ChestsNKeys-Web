@@ -25,6 +25,16 @@ dialog input {
     height: 16px;
 }
 
+/*
+For some reason, ANDI will complain about the foreground/background color contrast for the range input,
+even though it has no text, so there shouldn't even be anything for ANDI to detect.
+Changing the text color of this particular type of input won't do anything visually, 
+but it will get ANDI to shut up.
+*/
+dialog input[type="range"] {
+    color: black;
+}
+
 #settings-menu * {
     /* Add vertical spacing */
     margin: 7.5px 0;
