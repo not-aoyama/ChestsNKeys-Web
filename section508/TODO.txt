@@ -1,0 +1,2 @@
+* 2.D: I think I should make the <ul> containing all the chests a live region after all. Hopefully, this means I can do away with all the toast messages and simplify my code!!
+* 2.D: Once login succeeds, move the user's focus to the relevant part of the game.
