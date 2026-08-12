@@ -184,11 +184,10 @@ export function setupReconnectButton() : void {
 
         /*
         Since it might take a while, we should notify the player that reconnection is in progress.
-        This should be done via the text client chat log, and (for the sake of screen readers) a toast message.
+        This should be done via the text client chat log.
         */
         const reconnectingMessage : string = "Trying to reconnect to the server...";
         addPlainTextToLog(reconnectingMessage);
-        displayToScreenReader(reconnectingMessage);
 
         // Log back into the game.
         let connectionInfo = {
@@ -202,10 +201,7 @@ export function setupReconnectButton() : void {
             connectionInfo.slot as string,
             connectionInfo.game,
             {password: connectionInfo.password as string}
-        ).then(() => {
-            // If reconnection is successful, a toast message should be sent to screen readers.
-            displayToScreenReader("Reconnected to the server!");
-        }).catch((error) => {
+        ).catch((error) => {
             /*
             If reconnection fails:
             1. The text log should be updated.
@@ -287,26 +283,6 @@ function doesChestStartLocked(chestNumber : number) : boolean {
    return chestNumber > numberUnlockedChests;
 }
 
-/**
- * In the main game window, there is an ARIA live region that notifies screen readers of automatic changes.
- * This live region cannot consist of the entire list of chests; otherwise, the screen reader will be overwhelmed.
- * There also cannot be one live region for each chest; otherwise, the screen reader will have too much overhead.
- * Instead, the live region solely consists of some text: one or more "toast messages".
- * This text is invisible, and can only be accessed by a screen reader.
- * Each time a chest is unlocked or emptied, a toast message is added to announce this.
- * After a short amount of time, each toast message should be deleted to avoid clutter.
- * 
- * @param screenReaderMessage the new message to display. This will completely override the old one.
- */
-function displayToScreenReader(screenReaderMessage : string) : void {
-    let newToastMsg : HTMLParagraphElement = document.createElement("p");
-    $(newToastMsg).text(screenReaderMessage);
-    $("#locations-toast").append(newToastMsg);
-    setTimeout(() => {
-        newToastMsg.remove();
-    }, 2000);
-}
-
 // Updates the appearance and functionality of the location with the given ID to show it has been checked.
 export function displayLocationChecked(locationId : number) : void {
     var chestNumber = locationId - LOCATION_ID_PREFIX;
@@ -343,10 +319,6 @@ export function displayLocationChecked(locationId : number) : void {
     // and the display is just being updated to show that.
     if (!isLoading)
         playSound(CHEST_OPEN_SOUND);
-
-    // Notify screen readers that this chest is opened, how many chests have been opened so far, 
-    // and how many total still need to be opened.
-    displayToScreenReader("Chest " + chestNumber + " opened! ");
 }
 
 // Updates the appearance and functionality of the chest with the given ID to show it has been unlocked.
@@ -388,10 +360,6 @@ export function displayChestUnlocked(chestNumber : number) : void {
     let chestIsEmpty = client.room.checkedLocations.includes(chestLocationID);
     if (doesChestStartLocked(chestNumber) && !chestIsEmpty)
         playSound(CHEST_UNLOCK_SOUND);
-
-    // Notify screen readers that the chest was unlocked, unless the chest is already empty.
-    if (!chestIsEmpty)
-        displayToScreenReader("Chest " + chestNumber + " unlocked!");
 }
 
 // Plays the sound with the given URL.
