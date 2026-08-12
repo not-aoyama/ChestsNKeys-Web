@@ -1,6 +1,6 @@
 {
   "name": "chests-n-keys-web",
-  "version": "0.3-SNAPSHOT",
+  "version": "0.3.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx parcel build",
